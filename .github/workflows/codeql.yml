@@ -1,0 +1,63 @@
+name: CodeQL
+
+# Static analysis for security and quality issues. Runs on PRs (so we
+# catch new findings before merge), on push to main (to keep the default
+# branch's analysis fresh), and weekly (so newly published CodeQL
+# queries get applied to existing code).
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    # Weekly, Mondays 04:17 UTC. Off-peak; non-zero minute reduces
+    # contention with other scheduled jobs.
+    - cron: "17 4 * * 1"
+
+concurrency:
+  group: codeql-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+jobs:
+  analyze:
+    name: Analyze (${{ matrix.language }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      # Required to upload SARIF results to the Security tab.
+      security-events: write
+      # Required by some queries that read action metadata.
+      actions: read
+      contents: read
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [javascript-typescript]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ matrix.language }}
+          # security-extended = the default suite plus extra security
+          # queries. security-and-quality also includes maintainability
+          # queries; security-extended is a good balance for a runtime
+          # library.
+          queries: security-extended
+
+      - name: Autobuild
+        # JS/TS does not require a build step for analysis; autobuild is
+        # a no-op but kept for symmetry with other languages.
+        uses: github/codeql-action/autobuild@v3
+
+      - name: Perform CodeQL analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:${{ matrix.language }}"

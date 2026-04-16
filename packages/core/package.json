@@ -1,0 +1,67 @@
+{
+  "name": "virtual-frame",
+  "version": "0.1.0",
+  "description": "Framework-agnostic microfrontend projection — compose any web content into your DOM with full interactivity",
+  "keywords": [
+    "composition",
+    "cross-origin",
+    "framework-agnostic",
+    "microfrontend",
+    "projection",
+    "shadow-dom",
+    "virtual-frame",
+    "web-component"
+  ],
+  "homepage": "https://virtual-frame.level0x40.com",
+  "bugs": {
+    "url": "https://github.com/level0x40/virtual-frame/issues"
+  },
+  "license": "LicenseRef-SAL-1.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/level0x40/virtual-frame.git",
+    "directory": "packages/core"
+  },
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./element": {
+      "types": "./dist/element.d.ts",
+      "default": "./dist/element.js"
+    },
+    "./bridge": {
+      "types": "./dist/bridge.d.ts",
+      "default": "./dist/bridge.js"
+    },
+    "./ssr": {
+      "types": "./dist/ssr.d.ts",
+      "default": "./dist/ssr.js"
+    }
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "scripts": {
+    "prepack": "cp ../../LICENSE LICENSE",
+    "build": "vite build && tsc",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "node-html-parser": "^6.0.0"
+  },
+  "devDependencies": {
+    "typescript": "catalog:",
+    "vite": "catalog:"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

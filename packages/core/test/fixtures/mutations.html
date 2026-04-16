@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      body {
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="dynamic-root">
+      <p id="initial">Initial content</p>
+    </div>
+    <script>
+      // Expose a helper so tests can trigger DOM mutations from outside
+      window.addElement = function (tag, text, id) {
+        const el = document.createElement(tag);
+        el.textContent = text;
+        if (id) el.id = id;
+        document.getElementById("dynamic-root").appendChild(el);
+        return el;
+      };
+      window.removeElement = function (id) {
+        const el = document.getElementById(id);
+        if (el) el.remove();
+      };
+      window.updateText = function (id, text) {
+        const el = document.getElementById(id);
+        if (el) el.textContent = text;
+      };
+    </script>
+  </body>
+</html>

@@ -1,0 +1,43 @@
+# CODEOWNERS for level0x40/virtual-frame
+#
+# Order matters: the LAST matching pattern wins for any given file.
+# Reviewers listed here are auto-requested when matching paths change.
+#
+# The default catch-all is the maintainers team. Per-package owners can
+# be layered on as the project grows. Until a `@level0x40/maintainers`
+# team exists on GitHub, replace with an individual handle (e.g. `@viktor`).
+
+# ───────────────────────────────────────── Default
+*                                          @level0x40/maintainers
+
+# ───────────────────────────────────────── Repo / CI / governance
+/.github/                                  @level0x40/maintainers
+/.changeset/                               @level0x40/maintainers
+/CONTRIBUTING.md                           @level0x40/maintainers
+/SECURITY.md                               @level0x40/maintainers
+/CODE_OF_CONDUCT.md                        @level0x40/maintainers
+/SUPPORT.md                                @level0x40/maintainers
+/LICENSE                                   @level0x40/maintainers
+/README.md                                 @level0x40/maintainers
+
+# ───────────────────────────────────────── Packages (default — refine as sub-teams form)
+/packages/core/                            @level0x40/maintainers
+/packages/store/                           @level0x40/maintainers
+/packages/react/                           @level0x40/maintainers
+/packages/vue/                             @level0x40/maintainers
+/packages/svelte/                          @level0x40/maintainers
+/packages/solid/                           @level0x40/maintainers
+/packages/angular/                         @level0x40/maintainers
+/packages/next/                            @level0x40/maintainers
+/packages/nuxt/                            @level0x40/maintainers
+/packages/sveltekit/                       @level0x40/maintainers
+/packages/solid-start/                     @level0x40/maintainers
+/packages/tanstack-start/                  @level0x40/maintainers
+/packages/react-router/                    @level0x40/maintainers
+/packages/react-server/                    @level0x40/maintainers
+/packages/analog/                          @level0x40/maintainers
+
+# ───────────────────────────────────────── Docs & examples
+/docs/                                     @level0x40/maintainers
+/examples/                                 @level0x40/maintainers
+/e2e/                                      @level0x40/maintainers

@@ -1,0 +1,21 @@
+{
+  "name": "example-react-remote",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "start": "vite preview"
+  },
+  "dependencies": {
+    "@virtual-frame/react": "workspace:*",
+    "@virtual-frame/store": "workspace:*",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "virtual-frame": "workspace:*"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^6.0.0",
+    "vite": "catalog:"
+  }
+}

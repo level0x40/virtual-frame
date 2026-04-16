@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      body {
+        margin: 0;
+        font-family: sans-serif;
+      }
+      .inline-handler {
+        padding: 10px;
+        background: #eee;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="inline-click" onclick="this.dataset.clicked = 'true'">
+      Click handler
+    </div>
+    <div id="inline-mouseover" onmouseover="this.dataset.hovered = 'true'">
+      Hover handler
+    </div>
+    <input
+      id="inline-focus"
+      onfocus="this.dataset.focused = 'true'"
+      value="focus test"
+    />
+    <a id="test-link" href="https://example.com">Test Link</a>
+    <p id="misc-status">ready</p>
+  </body>
+</html>

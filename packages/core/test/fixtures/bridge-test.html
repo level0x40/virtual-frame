@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Bridge Test Fixture</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: sans-serif;
+        color: #333;
+      }
+      .highlight {
+        background: yellow;
+      }
+    </style>
+    <style>
+      .extra {
+        font-size: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="content" class="main" data-custom="hello">
+      Hello Bridge
+      <!-- a comment node -->
+    </div>
+
+    <script>
+      alert("should be skipped");
+    </script>
+    <noscript>also skipped</noscript>
+
+    <button id="btn" onclick="doSomething()">Click Me</button>
+
+    <form id="myform">
+      <input id="text-input" type="text" value="initial" />
+      <input id="checkbox" type="checkbox" />
+      <input id="radio" type="radio" name="r" value="a" />
+      <textarea id="textarea">some text</textarea>
+      <select id="sel">
+        <option value="one">One</option>
+        <option value="two" selected>Two</option>
+      </select>
+    </form>
+
+    <div id="scroller" style="width: 100px; height: 100px; overflow: auto">
+      <div style="width: 300px; height: 300px">tall content</div>
+    </div>
+
+    <canvas id="test-canvas" width="50" height="50"></canvas>
+
+    <div id="mutation-target"></div>
+
+    <script type="module" src="../../src/bridge.js"></script>
+  </body>
+</html>

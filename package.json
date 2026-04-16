@@ -1,0 +1,93 @@
+{
+  "name": "virtual-frame-monorepo",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "prepare": "husky",
+    "dev": "vp run -r --parallel dev",
+    "build": "vp run -r build",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "changeset": "changeset",
+    "version": "changeset version",
+    "release": "changeset publish",
+    "test:coverage": "vitest run --coverage",
+    "test:e2e": "pnpm --filter virtual-frame-e2e test",
+    "test:e2e:dev": "pnpm --filter virtual-frame-e2e test:dev",
+    "test:e2e:prod": "pnpm --filter virtual-frame-e2e test:prod",
+    "test:e2e:ui": "pnpm --filter virtual-frame-e2e test:ui",
+    "lint": "oxlint .",
+    "format": "oxfmt --write .",
+    "format:check": "oxfmt --check .",
+    "typecheck": "vp run -r typecheck",
+    "docs:dev": "vp run --filter virtual-frame-docs dev",
+    "docs:build": "vp run --filter virtual-frame-docs build",
+    "example:nextjs-app": "vp run --parallel --filter example-nextjs-app-host --filter example-nextjs-app-remote dev",
+    "example:nextjs-pages": "vp run --parallel --filter example-nextjs-pages-host --filter example-nextjs-pages-remote dev",
+    "example:vanilla": "vp run --filter example-vanilla dev",
+    "example:react": "vp run --parallel --filter example-react-host --filter example-react-remote dev",
+    "example:vue": "vp run --filter example-vue dev",
+    "example:svelte": "vp run --filter example-svelte dev",
+    "example:solid": "vp run --filter example-solid dev",
+    "example:angular": "vp run --filter example-angular dev",
+    "example:rspack-mf": "vp run --parallel --filter example-rspack-mf-host --filter example-rspack-mf-remote dev",
+    "example:react-server": "vp run --parallel --filter example-react-server-host --filter example-react-server-remote dev",
+    "example:nuxt": "vp run --parallel --filter example-nuxt-host --filter example-nuxt-remote dev",
+    "example:react-router": "vp run --parallel --filter example-react-router-host --filter example-react-router-remote dev",
+    "example:tanstack-start": "vp run --parallel --filter example-tanstack-start-host --filter example-tanstack-start-remote dev",
+    "example:analog": "vp run --parallel --filter example-analog-host --filter example-analog-remote dev",
+    "example:sveltekit": "vp run --parallel --filter example-sveltekit-host --filter example-sveltekit-remote dev",
+    "example:solid-start": "vp run --parallel --filter example-solid-start-host --filter example-solid-start-remote dev",
+    "example:vanilla:start": "vp run --filter example-vanilla start",
+    "example:react:start": "vp run --parallel --filter example-react-host --filter example-react-remote start",
+    "example:vue:start": "vp run --filter example-vue start",
+    "example:svelte:start": "vp run --filter example-svelte start",
+    "example:solid:start": "vp run --filter example-solid start",
+    "example:angular:start": "vp run --filter example-angular start",
+    "example:hono-ssr:start": "vp run --filter example-hono-ssr start",
+    "example:rspack-mf:start": "vp run --parallel --filter example-rspack-mf-host --filter example-rspack-mf-remote start",
+    "example:nextjs-app:start": "vp run --parallel --filter example-nextjs-app-host --filter example-nextjs-app-remote start",
+    "example:nextjs-pages:start": "vp run --parallel --filter example-nextjs-pages-host --filter example-nextjs-pages-remote start",
+    "example:react-server:start": "vp run --parallel --filter example-react-server-host --filter example-react-server-remote start",
+    "example:nuxt:start": "vp run --parallel --filter example-nuxt-host --filter example-nuxt-remote start",
+    "example:react-router:start": "vp run --parallel --filter example-react-router-host --filter example-react-router-remote start",
+    "example:tanstack-start:start": "vp run --parallel --filter example-tanstack-start-host --filter example-tanstack-start-remote start",
+    "example:analog:start": "vp run --parallel --filter example-analog-host --filter example-analog-remote start",
+    "example:sveltekit:start": "vp run --parallel --filter example-sveltekit-host --filter example-sveltekit-remote start",
+    "example:solid-start:start": "vp run --parallel --filter example-solid-start-host --filter example-solid-start-remote start"
+  },
+  "devDependencies": {
+    "@changesets/changelog-github": "^0.5.0",
+    "@changesets/cli": "^2.27.0",
+    "@commitlint/cli": "^20.5.0",
+    "@commitlint/config-conventional": "^20.5.0",
+    "@vitest/browser": "^4.0.0",
+    "@vitest/browser-playwright": "^4.0.0",
+    "@vitest/coverage-istanbul": "^4.0.18",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.4.0",
+    "oxfmt": "^0.36.0",
+    "oxlint": "^1.0.0",
+    "playwright": "^1.52.0",
+    "vitest": "^4.0.0"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,mjs,cjs,mts,cts}": [
+      "oxfmt --write",
+      "oxlint"
+    ],
+    "*.{json,md,yml,yaml}": [
+      "oxfmt --write"
+    ]
+  },
+  "packageManager": "pnpm@10.33.0+sha512.10568bb4a6afb58c9eb3630da90cc9516417abebd3fabbe6739f0ae795728da1491e9db5a544c76ad8eb7570f5c4bb3d6c637b2cb41bfdcdb47fa823c8649319",
+  "pnpm": {
+    "packageExtensions": {
+      "@analogjs/vite-plugin-angular": {
+        "peerDependencies": {
+          "vite": "*"
+        }
+      }
+    }
+  }
+}

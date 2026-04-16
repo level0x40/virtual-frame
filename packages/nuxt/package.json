@@ -1,0 +1,88 @@
+{
+  "name": "@virtual-frame/nuxt",
+  "version": "0.1.0",
+  "description": "Nuxt integration for Virtual Frame — SSR with server API routes and client-side resume",
+  "homepage": "https://virtual-frame.level0x40.com",
+  "bugs": {
+    "url": "https://github.com/level0x40/virtual-frame/issues"
+  },
+  "license": "LicenseRef-SAL-1.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/level0x40/virtual-frame.git",
+    "directory": "packages/nuxt"
+  },
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    },
+    "./client": {
+      "types": "./src/client.ts",
+      "default": "./src/client.ts"
+    },
+    "./store": {
+      "types": "./src/store.ts",
+      "default": "./src/store.ts"
+    },
+    "./server": {
+      "types": "./src/server.ts",
+      "default": "./src/server.ts"
+    }
+  },
+  "publishConfig": {
+    "access": "public",
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "./client": {
+        "types": "./dist/client.d.ts",
+        "default": "./dist/client.js"
+      },
+      "./store": {
+        "types": "./dist/store.d.ts",
+        "default": "./dist/store.js"
+      },
+      "./server": {
+        "types": "./dist/server.d.ts",
+        "default": "./dist/server.js"
+      }
+    },
+    "provenance": true
+  },
+  "scripts": {
+    "prepack": "cp ../../LICENSE LICENSE",
+    "build": "vite build && vue-tsc",
+    "typecheck": "vue-tsc --noEmit"
+  },
+  "devDependencies": {
+    "@virtual-frame/store": "workspace:^",
+    "@virtual-frame/vue": "workspace:^",
+    "@vitejs/plugin-vue": "^6.0.0",
+    "typescript": "catalog:",
+    "virtual-frame": "workspace:^",
+    "vite": "catalog:",
+    "vue": "^3.5.0",
+    "vue-tsc": "^3.2.5"
+  },
+  "peerDependencies": {
+    "@virtual-frame/store": "workspace:^",
+    "@virtual-frame/vue": "workspace:^",
+    "virtual-frame": "workspace:^",
+    "vue": ">=3.3.0"
+  },
+  "peerDependenciesMeta": {
+    "@virtual-frame/store": {
+      "optional": true
+    }
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

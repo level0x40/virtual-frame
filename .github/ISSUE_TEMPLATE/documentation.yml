@@ -1,0 +1,44 @@
+name: Documentation issue
+description: Report a problem with the documentation — missing, inaccurate, confusing, or broken.
+title: "[Docs]: "
+labels: ["type:docs", "needs-triage"]
+body:
+  - type: input
+    id: page
+    attributes:
+      label: Page URL
+      description: Link to the affected page on the docs site.
+      placeholder: "https://virtual-frame.level0x40.com/guide/getting-started"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Kind of issue
+      options:
+        - Inaccurate / outdated information
+        - Missing information
+        - Confusing or unclear wording
+        - Broken example or code snippet
+        - Broken link
+        - Typo
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: What's wrong?
+      description: Quote the exact passage if possible, and explain what should be there instead.
+    validations:
+      required: true
+
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: Suggested fix
+      description: If you already know how to phrase it, paste the corrected text or a diff.
+    validations:
+      required: false

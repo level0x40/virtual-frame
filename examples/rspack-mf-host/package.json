@@ -1,0 +1,25 @@
+{
+  "name": "example-rspack-mf-host",
+  "private": true,
+  "scripts": {
+    "dev": "rspack serve --mode development",
+    "build": "rspack build --mode production",
+    "start": "npx -y serve dist -l ${PORT:-3012} --no-clipboard"
+  },
+  "dependencies": {
+    "@module-federation/enhanced": "^0.15.0",
+    "@module-federation/runtime": "^0.15.0",
+    "@virtual-frame/react": "workspace:*",
+    "@virtual-frame/store": "workspace:*",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "virtual-frame": "workspace:*"
+  },
+  "devDependencies": {
+    "@rspack/cli": "^1.7.0",
+    "@rspack/core": "^1.7.0",
+    "@rspack/plugin-react-refresh": "^1.6.0",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:"
+  }
+}

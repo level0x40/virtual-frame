@@ -1,0 +1,19 @@
+{
+  "name": "example-vue",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "start": "vite preview"
+  },
+  "dependencies": {
+    "@virtual-frame/vue": "workspace:*",
+    "vue": "^3.5.0",
+    "virtual-frame": "workspace:*"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.0",
+    "vite": "catalog:"
+  }
+}

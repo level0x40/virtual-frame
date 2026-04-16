@@ -1,0 +1,1800 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      :root {
+        --bg: #0f1117;
+        --surface: #1a1d27;
+        --surface-2: #232733;
+        --border: #2d3140;
+        --text: #e4e6ef;
+        --text-muted: #8b8fa3;
+        --accent: #6366f1;
+        --accent-hover: #818cf8;
+        --green: #22c55e;
+        --red: #ef4444;
+        --amber: #f59e0b;
+        --cyan: #06b6d4;
+        --radius: 12px;
+        --radius-sm: 8px;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family:
+          "Inter",
+          system-ui,
+          -apple-system,
+          sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.5;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      /* ── Layout ───────────────────────────── */
+      .app {
+        display: grid;
+        grid-template-columns: 56px 1fr;
+        grid-template-rows: 56px 1fr;
+        height: 100vh;
+        overflow: hidden;
+      }
+
+      /* ── Sidebar ──────────────────────────── */
+      .sidebar {
+        grid-row: 1 / -1;
+        background: var(--surface);
+        border-right: 1px solid var(--border);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 12px 0;
+        gap: 4px;
+      }
+
+      .sidebar .logo {
+        width: 32px;
+        height: 32px;
+        background: var(--accent);
+        border-radius: 8px;
+        margin-bottom: 16px;
+        display: grid;
+        place-items: center;
+      }
+
+      .sidebar .logo svg {
+        width: 18px;
+        height: 18px;
+        fill: white;
+      }
+
+      .sidebar button {
+        width: 36px;
+        height: 36px;
+        border: none;
+        background: transparent;
+        border-radius: var(--radius-sm);
+        color: var(--text-muted);
+        cursor: pointer;
+        display: grid;
+        place-items: center;
+        transition: all 0.15s;
+      }
+
+      .sidebar button:hover,
+      .sidebar button.active {
+        background: var(--surface-2);
+        color: var(--text);
+      }
+
+      .sidebar button:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
+
+      .sidebar button svg {
+        width: 18px;
+        height: 18px;
+        fill: currentColor;
+      }
+
+      .sidebar .spacer {
+        flex: 1;
+      }
+
+      .sidebar .avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        overflow: hidden;
+      }
+
+      .sidebar .avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      /* ── Top bar ──────────────────────────── */
+      .topbar {
+        background: var(--surface);
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        padding: 0 24px;
+        gap: 16px;
+      }
+
+      .topbar h1 {
+        font-size: 15px;
+        font-weight: 600;
+        white-space: nowrap;
+      }
+
+      .search-box {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 6px 12px;
+        flex: 1;
+        max-width: 340px;
+      }
+
+      .search-box svg {
+        width: 14px;
+        height: 14px;
+        fill: var(--text-muted);
+        flex-shrink: 0;
+      }
+
+      .search-box input {
+        background: none;
+        border: none;
+        color: var(--text);
+        font-size: 13px;
+        width: 100%;
+        outline: none;
+        font-family: inherit;
+      }
+
+      .search-box input::placeholder {
+        color: var(--text-muted);
+      }
+
+      .search-box input:focus ~ .shortcut {
+        display: none;
+      }
+
+      .shortcut {
+        font-size: 11px;
+        color: var(--text-muted);
+        background: var(--border);
+        padding: 1px 6px;
+        border-radius: 4px;
+        white-space: nowrap;
+      }
+
+      .topbar-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-left: auto;
+      }
+
+      .topbar-actions button {
+        width: 32px;
+        height: 32px;
+        border: none;
+        background: transparent;
+        color: var(--text-muted);
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+        display: grid;
+        place-items: center;
+        transition: all 0.15s;
+        position: relative;
+      }
+
+      .topbar-actions button:hover {
+        background: var(--surface-2);
+        color: var(--text);
+      }
+
+      .topbar-actions button:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
+
+      .topbar-actions svg {
+        width: 16px;
+        height: 16px;
+        fill: currentColor;
+      }
+
+      .badge {
+        position: absolute;
+        top: 4px;
+        right: 4px;
+        width: 8px;
+        height: 8px;
+        background: var(--red);
+        border-radius: 50%;
+        border: 2px solid var(--surface);
+      }
+
+      /* ── Main content ─────────────────────── */
+      .main {
+        overflow-y: auto;
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        overflow: hidden;
+      }
+
+      .card-header {
+        padding: 16px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .card-header h2 {
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      .card-body {
+        padding: 20px;
+      }
+
+      /* ── Stats row ────────────────────────── */
+      .stats-row {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+      }
+
+      .stat-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 20px;
+      }
+
+      .stat-label {
+        font-size: 12px;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 8px;
+      }
+
+      .stat-value {
+        font-size: 28px;
+        font-weight: 700;
+        line-height: 1;
+        margin-bottom: 8px;
+      }
+
+      .stat-change {
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      .stat-change.up {
+        color: var(--green);
+      }
+
+      .stat-change.down {
+        color: var(--red);
+      }
+
+      .stat-spark {
+        margin-top: 12px;
+      }
+
+      .stat-spark canvas {
+        width: 100%;
+        height: 32px;
+        display: block;
+      }
+
+      /* ── Chart area ───────────────────────── */
+      .chart-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 16px;
+      }
+
+      .chart-canvas {
+        width: 100%;
+        height: 220px;
+        display: block;
+      }
+
+      .chart-tabs {
+        display: flex;
+        gap: 2px;
+        background: var(--surface-2);
+        border-radius: 6px;
+        padding: 2px;
+      }
+
+      .chart-tabs button {
+        padding: 4px 12px;
+        font-size: 12px;
+        border: none;
+        background: transparent;
+        color: var(--text-muted);
+        border-radius: 4px;
+        cursor: pointer;
+        font-family: inherit;
+        transition: all 0.15s;
+      }
+
+      .chart-tabs button:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
+
+      .chart-tabs button.active {
+        background: var(--accent);
+        color: white;
+      }
+
+      /* ── Donut chart ──────────────────────── */
+      .donut-wrap {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+      }
+
+      .donut-legend {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+      }
+
+      .legend-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+
+      .legend-value {
+        margin-left: auto;
+        font-weight: 600;
+        font-variant-numeric: tabular-nums;
+      }
+
+      /* ── Activity + Tasks row ─────────────── */
+      .bottom-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+
+      /* ── Activity feed ────────────────────── */
+      .activity-list {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .activity-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 12px 20px;
+        border-bottom: 1px solid var(--border);
+        transition: background 0.15s;
+      }
+
+      .activity-item:last-child {
+        border-bottom: none;
+      }
+
+      .activity-item:hover {
+        background: var(--surface-2);
+      }
+
+      .activity-avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        flex-shrink: 0;
+        display: grid;
+        place-items: center;
+        font-size: 14px;
+        font-weight: 600;
+        color: white;
+      }
+
+      .activity-text {
+        font-size: 13px;
+        flex: 1;
+      }
+
+      .activity-text strong {
+        color: var(--text);
+      }
+
+      .activity-text span {
+        color: var(--text-muted);
+      }
+
+      .activity-time {
+        font-size: 11px;
+        color: var(--text-muted);
+        white-space: nowrap;
+        margin-top: 2px;
+      }
+
+      /* ── Tasks (DnD) ──────────────────────── */
+      .task-columns {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        padding: 16px 20px;
+      }
+
+      .task-column {
+        min-height: 200px;
+      }
+
+      .task-col-header {
+        font-size: 11px;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .task-col-count {
+        background: var(--surface-2);
+        padding: 0 6px;
+        border-radius: 10px;
+        font-size: 11px;
+      }
+
+      .task-card {
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 12px;
+        margin-bottom: 8px;
+        cursor: grab;
+        transition: all 0.15s;
+        user-select: none;
+      }
+
+      .task-card:active {
+        cursor: grabbing;
+      }
+
+      .task-card:hover {
+        border-color: var(--accent);
+      }
+
+      .task-card.drag-over {
+        border-color: var(--accent);
+        background: rgba(99, 102, 241, 0.08);
+      }
+
+      .task-title {
+        font-size: 13px;
+        font-weight: 500;
+        margin-bottom: 6px;
+      }
+
+      .task-meta {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 11px;
+        color: var(--text-muted);
+      }
+
+      .task-tag {
+        padding: 2px 8px;
+        border-radius: 10px;
+        font-size: 10px;
+        font-weight: 600;
+        text-transform: uppercase;
+      }
+
+      .tag-feature {
+        background: rgba(99, 102, 241, 0.15);
+        color: var(--accent-hover);
+      }
+
+      .tag-bug {
+        background: rgba(239, 68, 68, 0.15);
+        color: var(--red);
+      }
+
+      .tag-perf {
+        background: rgba(245, 158, 11, 0.15);
+        color: var(--amber);
+      }
+
+      .tag-docs {
+        background: rgba(6, 182, 212, 0.15);
+        color: var(--cyan);
+      }
+
+      /* ── Media row ────────────────────────── */
+      .media-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+
+      .video-wrap {
+        position: relative;
+        border-radius: var(--radius-sm);
+        overflow: hidden;
+        background: #000;
+      }
+
+      .video-wrap video {
+        width: 100%;
+        display: block;
+      }
+
+      .video-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 12px 16px;
+        background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .video-overlay button {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: white;
+        border: none;
+        cursor: pointer;
+        display: grid;
+        place-items: center;
+        flex-shrink: 0;
+      }
+
+      .video-overlay button:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
+
+      .video-overlay button svg {
+        width: 12px;
+        height: 12px;
+        fill: #000;
+      }
+
+      .video-time {
+        font-size: 11px;
+        color: rgba(255, 255, 255, 0.8);
+        font-variant-numeric: tabular-nums;
+      }
+
+      .video-bar {
+        flex: 1;
+        height: 4px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 2px;
+        overflow: hidden;
+      }
+
+      .video-bar-fill {
+        height: 100%;
+        background: var(--accent);
+        border-radius: 2px;
+        width: 0%;
+        transition: width 0.3s;
+      }
+
+      /* ── Heatmap ──────────────────────────── */
+      .heatmap-area {
+        position: relative;
+        border-radius: var(--radius-sm);
+        overflow: hidden;
+        cursor: crosshair;
+        height: 220px;
+        background: var(--surface-2);
+      }
+
+      .heatmap-coords {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        font-size: 11px;
+        font-family: "SF Mono", "Cascadia Code", monospace;
+        color: var(--text-muted);
+        background: rgba(15, 17, 23, 0.8);
+        padding: 2px 8px;
+        border-radius: 4px;
+      }
+
+      .heatmap-dot {
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle,
+          rgba(99, 102, 241, 0.6),
+          transparent 70%
+        );
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+        display: none;
+      }
+
+      /* ── Focus log ────────────────────────── */
+      .focus-log {
+        font-family: "SF Mono", "Cascadia Code", monospace;
+        font-size: 11px;
+        max-height: 80px;
+        overflow-y: auto;
+        padding: 8px 12px;
+        background: var(--bg);
+        border-radius: var(--radius-sm);
+        color: var(--text-muted);
+        line-height: 1.8;
+      }
+
+      .focus-log .ev-focus {
+        color: var(--green);
+      }
+
+      .focus-log .ev-blur {
+        color: var(--red);
+      }
+
+      /* ── Responsive Picture ───────────────── */
+      .hero-picture img {
+        width: 100%;
+        height: 160px;
+        object-fit: cover;
+        display: block;
+      }
+
+      /* ── Scroll ───────────────────────────── */
+      .scroll-list {
+        max-height: 200px;
+        overflow-y: auto;
+        padding: 0;
+      }
+
+      .scroll-list::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .scroll-list::-webkit-scrollbar-thumb {
+        background: var(--border);
+        border-radius: 3px;
+      }
+
+      .scroll-row {
+        display: flex;
+        align-items: center;
+        padding: 10px 20px;
+        border-bottom: 1px solid var(--border);
+        font-size: 13px;
+        transition: background 0.15s;
+      }
+
+      .scroll-row:last-child {
+        border-bottom: none;
+      }
+
+      .scroll-row:hover {
+        background: var(--surface-2);
+      }
+
+      .scroll-row .name {
+        flex: 1;
+      }
+
+      .scroll-row .amount {
+        font-weight: 600;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .scroll-status-bar {
+        padding: 8px 20px;
+        font-size: 11px;
+        color: var(--text-muted);
+        border-top: 1px solid var(--border);
+        text-align: center;
+      }
+
+      .scroll-status-bar.reached {
+        color: var(--green);
+      }
+
+      /* ── Audio ─────────────────────────────── */
+      .audio-controls {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+      }
+
+      .audio-controls button {
+        padding: 6px 12px;
+        font-size: 12px;
+        border: 1px solid var(--border);
+        background: var(--surface-2);
+        color: var(--text);
+        border-radius: 6px;
+        cursor: pointer;
+        font-family: inherit;
+        transition: all 0.15s;
+      }
+
+      .audio-controls button:hover {
+        border-color: var(--accent);
+        color: var(--accent-hover);
+      }
+
+      .audio-controls button:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
+
+      .audio-vis {
+        width: 100%;
+        height: 48px;
+        display: block;
+        border-radius: var(--radius-sm);
+        margin-top: 10px;
+      }
+
+      /* ── Select / Forms ───────────────────── */
+      .filter-bar {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+
+      .filter-bar select,
+      .filter-bar input[type="date"] {
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+        color: var(--text);
+        font-size: 12px;
+        padding: 6px 10px;
+        border-radius: 6px;
+        font-family: inherit;
+        cursor: pointer;
+      }
+
+      .filter-bar select:focus,
+      .filter-bar input:focus {
+        border-color: var(--accent);
+        outline: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <!-- ── Sidebar ──────────────────────── -->
+      <nav class="sidebar">
+        <div class="logo">
+          <svg viewBox="0 0 24 24">
+            <path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z" />
+          </svg>
+        </div>
+        <button class="active" title="Dashboard">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"
+            />
+          </svg>
+        </button>
+        <button title="Analytics">
+          <svg viewBox="0 0 24 24">
+            <path d="M5 9.2h3V19H5zM10.6 5h2.8v14h-2.8zm5.6 8H19v6h-2.8z" />
+          </svg>
+        </button>
+        <button title="Users">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"
+            />
+          </svg>
+        </button>
+        <button title="Settings">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 00.12-.61l-1.92-3.32a.488.488 0 00-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 00-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.07.62-.07.94s.02.64.07.94l-2.03 1.58a.49.49 0 00-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6A3.6 3.6 0 1112 8.4a3.6 3.6 0 010 7.2z"
+            />
+          </svg>
+        </button>
+        <div class="spacer"></div>
+        <div class="avatar">
+          <picture>
+            <img
+              src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32'%3E%3Crect width='32' height='32' rx='16' fill='%236366f1'/%3E%3Ctext x='16' y='21' text-anchor='middle' fill='white' font-family='system-ui' font-size='14' font-weight='600'%3EL%3C/text%3E%3C/svg%3E"
+              alt="User"
+            />
+          </picture>
+        </div>
+      </nav>
+
+      <!-- ── Top bar ──────────────────────── -->
+      <header class="topbar">
+        <h1>Dashboard</h1>
+        <div class="search-box">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+            />
+          </svg>
+          <input type="text" id="searchInput" placeholder="Search…" />
+          <span class="shortcut">⌘K</span>
+        </div>
+        <div class="topbar-actions">
+          <button title="Notifications">
+            <svg viewBox="0 0 24 24">
+              <path
+                d="M12 22c1.1 0 2-.9 2-2h-4a2 2 0 002 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"
+              />
+            </svg>
+            <span class="badge"></span>
+          </button>
+          <button title="Help">
+            <svg viewBox="0 0 24 24">
+              <path
+                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"
+              />
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- ── Main ─────────────────────────── -->
+      <main class="main">
+        <!-- Hero picture -->
+        <div class="card">
+          <div class="hero-picture">
+            <img
+              class="hero-img"
+              src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='160'%3E%3Cdefs%3E%3ClinearGradient id='h' x1='0' y1='0' x2='1' y2='0.5'%3E%3Cstop offset='0%25' stop-color='%236366f1'/%3E%3Cstop offset='50%25' stop-color='%238b5cf6'/%3E%3Cstop offset='100%25' stop-color='%2306b6d4'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect fill='url(%23h)' width='1200' height='160'/%3E%3Ctext x='40' y='70' fill='white' font-family='system-ui' font-size='26' font-weight='700'%3EWelcome back%2C Alex%3C/text%3E%3Ctext x='40' y='100' fill='rgba(255%2C255%2C255%2C0.7)' font-family='system-ui' font-size='14'%3EHere's what's happening with your projects today.%3C/text%3E%3Ccircle cx='1050' cy='80' r='50' fill='rgba(255%2C255%2C255%2C0.08)'/%3E%3Ccircle cx='1120' cy='50' r='30' fill='rgba(255%2C255%2C255%2C0.05)'/%3E%3Ccircle cx='980' cy='120' r='25' fill='rgba(255%2C255%2C255%2C0.06)'/%3E%3C/svg%3E"
+              alt="Dashboard hero"
+              loading="lazy"
+            />
+          </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-label">Revenue</div>
+            <div class="stat-value" id="statRevenue">$48,352</div>
+            <div class="stat-change up">
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 12 12"
+                fill="currentColor"
+              >
+                <path d="M6 2l4 5H2z" />
+              </svg>
+              12.5%
+            </div>
+            <div class="stat-spark">
+              <canvas id="spark0" height="32"></canvas>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Users</div>
+            <div class="stat-value" id="statUsers">2,847</div>
+            <div class="stat-change up">
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 12 12"
+                fill="currentColor"
+              >
+                <path d="M6 2l4 5H2z" />
+              </svg>
+              8.2%
+            </div>
+            <div class="stat-spark">
+              <canvas id="spark1" height="32"></canvas>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Orders</div>
+            <div class="stat-value" id="statOrders">1,024</div>
+            <div class="stat-change down">
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 12 12"
+                fill="currentColor"
+              >
+                <path d="M6 10L2 5h8z" />
+              </svg>
+              3.1%
+            </div>
+            <div class="stat-spark">
+              <canvas id="spark2" height="32"></canvas>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Conversion</div>
+            <div class="stat-value" id="statConv">3.6%</div>
+            <div class="stat-change up">
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 12 12"
+                fill="currentColor"
+              >
+                <path d="M6 2l4 5H2z" />
+              </svg>
+              0.8%
+            </div>
+            <div class="stat-spark">
+              <canvas id="spark3" height="32"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Charts row -->
+        <div class="chart-grid">
+          <!-- Line chart -->
+          <div class="card">
+            <div class="card-header">
+              <h2>Revenue Overview</h2>
+              <div class="chart-tabs">
+                <button class="active" data-range="7d">7d</button>
+                <button data-range="30d">30d</button>
+                <button data-range="90d">90d</button>
+              </div>
+            </div>
+            <div class="card-body">
+              <canvas id="lineChart" class="chart-canvas"></canvas>
+            </div>
+          </div>
+          <!-- Donut -->
+          <div class="card">
+            <div class="card-header">
+              <h2>Traffic Sources</h2>
+            </div>
+            <div class="card-body">
+              <div class="donut-wrap">
+                <svg
+                  id="donutChart"
+                  width="130"
+                  height="130"
+                  viewBox="0 0 42 42"
+                >
+                  <circle
+                    cx="21"
+                    cy="21"
+                    r="15.9"
+                    fill="none"
+                    stroke="var(--surface-2)"
+                    stroke-width="4"
+                  />
+                </svg>
+                <div class="donut-legend">
+                  <div class="legend-item">
+                    <span class="legend-dot" style="background: #6366f1"></span>
+                    Direct
+                    <span class="legend-value">42%</span>
+                  </div>
+                  <div class="legend-item">
+                    <span class="legend-dot" style="background: #22c55e"></span>
+                    Organic
+                    <span class="legend-value">28%</span>
+                  </div>
+                  <div class="legend-item">
+                    <span class="legend-dot" style="background: #f59e0b"></span>
+                    Referral
+                    <span class="legend-value">18%</span>
+                  </div>
+                  <div class="legend-item">
+                    <span class="legend-dot" style="background: #06b6d4"></span>
+                    Social
+                    <span class="legend-value">12%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Media row: video + heatmap -->
+        <div class="media-row">
+          <div class="card">
+            <div class="card-header">
+              <h2>Preview Stream</h2>
+            </div>
+            <div class="card-body" style="padding: 12px">
+              <div class="video-wrap">
+                <video id="previewVideo" muted playsinline></video>
+                <div class="video-overlay">
+                  <button id="vidPlayBtn" onclick="toggleVideoPlay()">
+                    <svg viewBox="0 0 24 24">
+                      <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
+                    </svg>
+                  </button>
+                  <div class="video-bar">
+                    <div class="video-bar-fill" id="vidBar"></div>
+                  </div>
+                  <span class="video-time" id="vidTime">00:00</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <h2>Click Heatmap</h2>
+              <span style="font-size: 11px; color: var(--text-muted)"
+                >Move mouse to track</span
+              >
+            </div>
+            <div class="card-body" style="padding: 12px">
+              <div class="heatmap-area" id="heatmapArea">
+                <canvas id="heatmapCanvas"></canvas>
+                <span class="heatmap-coords" id="heatCoords">—</span>
+                <div class="heatmap-dot" id="heatDot"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom row: activity + tasks -->
+        <div class="bottom-row">
+          <!-- Activity feed = scrollable -->
+          <div class="card">
+            <div class="card-header">
+              <h2>Recent Activity</h2>
+              <div class="filter-bar">
+                <select id="activityFilter">
+                  <option value="all">All</option>
+                  <option value="commits">Commits</option>
+                  <option value="deploys">Deploys</option>
+                  <option value="reviews">Reviews</option>
+                </select>
+                <input type="date" id="activityDate" />
+              </div>
+            </div>
+            <div class="scroll-list" id="scrollList"></div>
+            <div class="scroll-status-bar" id="scrollStatus">
+              Scroll to see all activity
+            </div>
+          </div>
+
+          <!-- Tasks = DnD -->
+          <div class="card">
+            <div class="card-header">
+              <h2>Sprint Board</h2>
+            </div>
+            <div class="task-columns">
+              <div class="task-column" id="colTodo">
+                <div class="task-col-header">
+                  To Do <span class="task-col-count" id="todoCount">4</span>
+                </div>
+              </div>
+              <div class="task-column" id="colDone">
+                <div class="task-col-header">
+                  Done <span class="task-col-count" id="doneCount">0</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Audio + Focus log -->
+        <div class="bottom-row">
+          <div class="card">
+            <div class="card-header">
+              <h2>Audio Monitor</h2>
+            </div>
+            <div class="card-body">
+              <div class="audio-controls">
+                <button onclick="playTone('sine')">Sine</button>
+                <button onclick="playTone('triangle')">Triangle</button>
+                <button onclick="playTone('square')">Square</button>
+                <button onclick="playMelody()">Melody</button>
+              </div>
+              <canvas id="audioVis" class="audio-vis"></canvas>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <h2>Focus Events</h2>
+            </div>
+            <div class="card-body">
+              <div class="focus-log" id="focusLog">
+                Interact with any element to see focus/blur events…
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      /* ─── Sparklines (mini canvas charts in stat cards) ──────── */
+      function drawSparkline(id, data, color) {
+        const c = document.getElementById(id);
+        const ctx = c.getContext("2d");
+        const w = (c.width = c.offsetWidth * 2);
+        const h = (c.height = 64);
+        ctx.clearRect(0, 0, w, h);
+        const max = Math.max(...data);
+        const min = Math.min(...data);
+        const range = max - min || 1;
+        ctx.beginPath();
+        data.forEach((v, i) => {
+          const x = (i / (data.length - 1)) * w;
+          const y = h - ((v - min) / range) * (h - 8) - 4;
+          i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+        });
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // Fill under
+        ctx.lineTo(w, h);
+        ctx.lineTo(0, h);
+        ctx.closePath();
+        const grad = ctx.createLinearGradient(0, 0, 0, h);
+        grad.addColorStop(
+          0,
+          color.replace(")", ",0.15)").replace("rgb", "rgba"),
+        );
+        grad.addColorStop(1, "transparent");
+        ctx.fillStyle = grad;
+        ctx.fill();
+      }
+
+      const sparkData = [
+        [12, 19, 15, 22, 18, 25, 30, 28, 35, 32, 38, 42],
+        [60, 55, 70, 65, 80, 75, 90, 85, 95, 100, 92, 105],
+        [40, 38, 42, 35, 30, 28, 32, 25, 22, 20, 24, 18],
+        [1.2, 1.5, 1.8, 2.1, 2.4, 2.0, 2.6, 2.9, 3.1, 3.0, 3.4, 3.6],
+      ];
+      const sparkColors = [
+        "rgb(34, 197, 94)",
+        "rgb(99, 102, 241)",
+        "rgb(239, 68, 68)",
+        "rgb(6, 182, 212)",
+      ];
+
+      sparkData.forEach((d, i) =>
+        drawSparkline(`spark${i}`, d, sparkColors[i]),
+      );
+
+      /* ─── Line chart (animated) ──────────────────────────────── */
+      const lineCanvas = document.getElementById("lineChart");
+      const lineCtx = lineCanvas.getContext("2d");
+      let lineTime = 0;
+
+      function generateLineData(points) {
+        const d = [];
+        for (let i = 0; i < points; i++) {
+          const t = i / points;
+          d.push(
+            50 +
+              Math.sin(t * Math.PI * 2 + lineTime) * 18 +
+              Math.sin(t * Math.PI * 4.5 + lineTime * 0.7) * 8 +
+              Math.sin(t * Math.PI * 1.2 + lineTime * 1.3) * 6,
+          );
+        }
+        return d;
+      }
+
+      function drawLineChart() {
+        lineTime += 0.012;
+        const w = (lineCanvas.width = lineCanvas.offsetWidth * 2);
+        const h = (lineCanvas.height = lineCanvas.offsetHeight * 2);
+        lineCtx.clearRect(0, 0, w, h);
+
+        // Grid
+        lineCtx.strokeStyle = "rgba(45, 49, 64, 0.5)";
+        lineCtx.lineWidth = 1;
+        for (let i = 0; i <= 4; i++) {
+          const y = (h / 4) * i;
+          lineCtx.beginPath();
+          lineCtx.moveTo(0, y);
+          lineCtx.lineTo(w, y);
+          lineCtx.stroke();
+        }
+
+        const data = generateLineData(50);
+        const max = Math.max(...data);
+        const min = Math.min(...data);
+        const range = max - min || 1;
+
+        // Fill
+        lineCtx.beginPath();
+        data.forEach((v, i) => {
+          const x = (i / (data.length - 1)) * w;
+          const y = h - ((v - min) / range) * (h - 20) - 10;
+          i === 0 ? lineCtx.moveTo(x, y) : lineCtx.lineTo(x, y);
+        });
+        lineCtx.lineTo(w, h);
+        lineCtx.lineTo(0, h);
+        lineCtx.closePath();
+        const grad = lineCtx.createLinearGradient(0, 0, 0, h);
+        grad.addColorStop(0, "rgba(99, 102, 241, 0.25)");
+        grad.addColorStop(1, "rgba(99, 102, 241, 0)");
+        lineCtx.fillStyle = grad;
+        lineCtx.fill();
+
+        // Line
+        lineCtx.beginPath();
+        data.forEach((v, i) => {
+          const x = (i / (data.length - 1)) * w;
+          const y = h - ((v - min) / range) * (h - 20) - 10;
+          i === 0 ? lineCtx.moveTo(x, y) : lineCtx.lineTo(x, y);
+        });
+        lineCtx.strokeStyle = "#6366f1";
+        lineCtx.lineWidth = 2.5;
+        lineCtx.stroke();
+
+        requestAnimationFrame(drawLineChart);
+      }
+      drawLineChart();
+
+      /* ─── Donut chart (SVG) ──────────────────────────────────── */
+      const donutData = [42, 28, 18, 12];
+      const donutColors = ["#6366f1", "#22c55e", "#f59e0b", "#06b6d4"];
+      const donutSvg = document.getElementById("donutChart");
+      let offset = 25;
+      donutData.forEach((pct, i) => {
+        const circle = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "circle",
+        );
+        circle.setAttribute("cx", 21);
+        circle.setAttribute("cy", 21);
+        circle.setAttribute("r", 15.9);
+        circle.setAttribute("fill", "none");
+        circle.setAttribute("stroke", donutColors[i]);
+        circle.setAttribute("stroke-width", 4);
+        circle.setAttribute("stroke-dasharray", `${pct} ${100 - pct}`);
+        circle.setAttribute("stroke-dashoffset", `${-offset}`);
+        donutSvg.appendChild(circle);
+        offset += pct;
+      });
+
+      /* ─── Video from canvas stream ──────────────────────────── */
+      const vidCanvas = document.createElement("canvas");
+      vidCanvas.width = 640;
+      vidCanvas.height = 360;
+      const vctx = vidCanvas.getContext("2d");
+      let vidT = 0;
+      let vidPlaying = true;
+
+      function drawVideoFrame() {
+        vidT += 0.02;
+        const w = vidCanvas.width,
+          h = vidCanvas.height;
+        const grad = vctx.createLinearGradient(0, 0, w, h);
+        grad.addColorStop(0, `hsl(${(vidT * 20) % 360}, 60%, 15%)`);
+        grad.addColorStop(1, `hsl(${(vidT * 20 + 120) % 360}, 60%, 20%)`);
+        vctx.fillStyle = grad;
+        vctx.fillRect(0, 0, w, h);
+
+        // Grid
+        vctx.strokeStyle = "rgba(255,255,255,0.04)";
+        vctx.lineWidth = 1;
+        for (let x = 0; x < w; x += 40) {
+          vctx.beginPath();
+          vctx.moveTo(x, 0);
+          vctx.lineTo(x, h);
+          vctx.stroke();
+        }
+        for (let y = 0; y < h; y += 40) {
+          vctx.beginPath();
+          vctx.moveTo(0, y);
+          vctx.lineTo(w, y);
+          vctx.stroke();
+        }
+
+        // Floating orbs
+        for (let i = 0; i < 5; i++) {
+          const cx = w / 2 + Math.sin(vidT * (0.5 + i * 0.2)) * (w * 0.3);
+          const cy = h / 2 + Math.cos(vidT * (0.4 + i * 0.3)) * (h * 0.25);
+          const r = 20 + i * 8;
+          const rg = vctx.createRadialGradient(cx, cy, 0, cx, cy, r);
+          rg.addColorStop(
+            0,
+            `hsla(${(vidT * 30 + i * 72) % 360}, 80%, 60%, 0.4)`,
+          );
+          rg.addColorStop(1, "transparent");
+          vctx.beginPath();
+          vctx.arc(cx, cy, r, 0, Math.PI * 2);
+          vctx.fillStyle = rg;
+          vctx.fill();
+        }
+
+        // Text
+        vctx.fillStyle = "rgba(255,255,255,0.7)";
+        vctx.font = "bold 18px system-ui";
+        vctx.textAlign = "center";
+        vctx.fillText("Live Canvas → Video Stream", w / 2, h / 2 - 5);
+        vctx.font = "13px SF Mono, monospace";
+        vctx.fillText(
+          `frame ${Math.floor(vidT * 33)} · ${new Date().toLocaleTimeString()}`,
+          w / 2,
+          h / 2 + 20,
+        );
+
+        requestAnimationFrame(drawVideoFrame);
+      }
+      drawVideoFrame();
+
+      const previewVideo = document.getElementById("previewVideo");
+      // Defer captureStream to after load so it doesn't block the page load event
+      window.addEventListener("load", () => {
+        try {
+          previewVideo.srcObject = vidCanvas.captureStream(30);
+          previewVideo.play().catch(() => {});
+        } catch (e) {}
+      });
+
+      function toggleVideoPlay() {
+        vidPlaying = !vidPlaying;
+        if (vidPlaying) previewVideo.play().catch(() => {});
+        else previewVideo.pause();
+        document.getElementById("vidPlayBtn").innerHTML = vidPlaying
+          ? '<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>'
+          : '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+      }
+
+      // Fake progress bar
+      let vidProgress = 0;
+      setInterval(() => {
+        vidProgress = (vidProgress + 0.3) % 100;
+        document.getElementById("vidBar").style.width = vidProgress + "%";
+        const s = Math.floor(vidProgress * 1.8);
+        document.getElementById("vidTime").textContent =
+          `0:${String(s).padStart(2, "0")}`;
+      }, 300);
+
+      /* ─── Heatmap (mouse tracker) ───────────────────────────── */
+      const heatArea = document.getElementById("heatmapArea");
+      const heatCoords = document.getElementById("heatCoords");
+      const heatDot = document.getElementById("heatDot");
+      const heatCanvas = document.getElementById("heatmapCanvas");
+      const heatCtx = heatCanvas.getContext("2d");
+      const dots = [];
+
+      function sizeHeatmap() {
+        heatCanvas.width = heatArea.offsetWidth;
+        heatCanvas.height = heatArea.offsetHeight;
+        heatCanvas.style.width = "100%";
+        heatCanvas.style.height = "100%";
+        heatCanvas.style.position = "absolute";
+        heatCanvas.style.top = "0";
+        heatCanvas.style.left = "0";
+      }
+      sizeHeatmap();
+
+      heatArea.addEventListener("mousemove", (e) => {
+        const r = heatArea.getBoundingClientRect();
+        const x = e.clientX - r.left;
+        const y = e.clientY - r.top;
+        heatCoords.textContent = `${Math.round(x)}, ${Math.round(y)}`;
+        heatDot.style.display = "block";
+        heatDot.style.left = x + "px";
+        heatDot.style.top = y + "px";
+        dots.push({
+          x,
+          y,
+          alpha: 0.5,
+        });
+        if (dots.length > 200) dots.shift();
+        drawHeatDots();
+      });
+
+      heatArea.addEventListener("mouseleave", () => {
+        heatCoords.textContent = "—";
+        heatDot.style.display = "none";
+      });
+
+      function drawHeatDots() {
+        heatCtx.clearRect(0, 0, heatCanvas.width, heatCanvas.height);
+        dots.forEach((d) => {
+          const rg = heatCtx.createRadialGradient(d.x, d.y, 0, d.x, d.y, 14);
+          rg.addColorStop(0, `rgba(99, 102, 241, ${d.alpha})`);
+          rg.addColorStop(1, "transparent");
+          heatCtx.beginPath();
+          heatCtx.arc(d.x, d.y, 14, 0, Math.PI * 2);
+          heatCtx.fillStyle = rg;
+          heatCtx.fill();
+          d.alpha *= 0.995;
+        });
+      }
+
+      /* ─── Activity feed (scroll list) ───────────────────────── */
+      const activities = [
+        {
+          name: "Alex Chen",
+          color: "#6366f1",
+          action: "pushed 3 commits to",
+          target: "main",
+          time: "2m ago",
+        },
+        {
+          name: "Sarah Kim",
+          color: "#22c55e",
+          action: "deployed",
+          target: "v2.4.1 to production",
+          time: "15m ago",
+        },
+        {
+          name: "Mike Torres",
+          color: "#f59e0b",
+          action: "opened PR #847:",
+          target: "Fix viewport units",
+          time: "32m ago",
+        },
+        {
+          name: "Emma Davis",
+          color: "#ef4444",
+          action: "reviewed",
+          target: "PR #843",
+          time: "1h ago",
+        },
+        {
+          name: "James Lee",
+          color: "#06b6d4",
+          action: "merged",
+          target: "feature/canvas-stream",
+          time: "2h ago",
+        },
+        {
+          name: "Olivia Patel",
+          color: "#8b5cf6",
+          action: "closed issue #412:",
+          target: "Shadow DOM leak",
+          time: "3h ago",
+        },
+        {
+          name: "Alex Chen",
+          color: "#6366f1",
+          action: "pushed 5 commits to",
+          target: "dev",
+          time: "4h ago",
+        },
+        {
+          name: "Sarah Kim",
+          color: "#22c55e",
+          action: "deployed",
+          target: "v2.4.0 to staging",
+          time: "5h ago",
+        },
+        {
+          name: "Noah Wilson",
+          color: "#ec4899",
+          action: "opened issue #415:",
+          target: "Cross-origin fonts",
+          time: "6h ago",
+        },
+        {
+          name: "Mike Torres",
+          color: "#f59e0b",
+          action: "commented on",
+          target: "PR #845",
+          time: "7h ago",
+        },
+        {
+          name: "Emma Davis",
+          color: "#ef4444",
+          action: "approved",
+          target: "PR #846",
+          time: "8h ago",
+        },
+        {
+          name: "James Lee",
+          color: "#06b6d4",
+          action: "pushed 2 commits to",
+          target: "fix/scroll-sync",
+          time: "9h ago",
+        },
+        {
+          name: "Olivia Patel",
+          color: "#8b5cf6",
+          action: "deployed",
+          target: "v2.3.9 to production",
+          time: "10h ago",
+        },
+        {
+          name: "Alex Chen",
+          color: "#6366f1",
+          action: "merged",
+          target: "feature/focus-events",
+          time: "11h ago",
+        },
+        {
+          name: "Noah Wilson",
+          color: "#ec4899",
+          action: "opened PR #848:",
+          target: "Add picture support",
+          time: "12h ago",
+        },
+      ];
+
+      const scrollList = document.getElementById("scrollList");
+      activities.forEach((a) => {
+        const el = document.createElement("div");
+        el.className = "activity-item";
+        el.innerHTML = `
+          <div class="activity-avatar" style="background:${a.color}">${a.name[0]}</div>
+          <div class="activity-text"><strong>${a.name}</strong> <span>${a.action}</span> <strong>${a.target}</strong></div>
+          <div class="activity-time">${a.time}</div>
+        `;
+        scrollList.appendChild(el);
+      });
+
+      const scrollStatus = document.getElementById("scrollStatus");
+      let scrollTimeout;
+      scrollList.addEventListener("scroll", () => {
+        const { scrollTop, scrollHeight, clientHeight } = scrollList;
+        const remaining = scrollHeight - scrollTop - clientHeight;
+        if (remaining < 5) {
+          scrollStatus.textContent = "You've seen all activity ✓";
+          scrollStatus.className = "scroll-status-bar reached";
+        } else {
+          const pct = Math.round(
+            (scrollTop / (scrollHeight - clientHeight)) * 100,
+          );
+          scrollStatus.textContent = `Scrolled ${pct}%`;
+          scrollStatus.className = "scroll-status-bar";
+        }
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(() => {
+          if (remaining >= 5)
+            scrollStatus.textContent = "Scroll to see all activity";
+        }, 800);
+      });
+
+      /* ─── Tasks DnD ─────────────────────────────────────────── */
+      const tasks = [
+        {
+          title: "Implement cross-origin font loading",
+          tag: "feature",
+          tagClass: "tag-feature",
+        },
+        {
+          title: "Fix scroll sync infinite loop",
+          tag: "bug",
+          tagClass: "tag-bug",
+        },
+        {
+          title: "Optimize mutation batch processing",
+          tag: "perf",
+          tagClass: "tag-perf",
+        },
+        {
+          title: "Write API reference for bridge.js",
+          tag: "docs",
+          tagClass: "tag-docs",
+        },
+      ];
+
+      const colTodo = document.getElementById("colTodo");
+      const colDone = document.getElementById("colDone");
+
+      function updateCounts() {
+        document.getElementById("todoCount").textContent =
+          colTodo.querySelectorAll(".task-card").length;
+        document.getElementById("doneCount").textContent =
+          colDone.querySelectorAll(".task-card").length;
+      }
+
+      function makeTaskCard(task) {
+        const card = document.createElement("div");
+        card.className = "task-card";
+        card.draggable = true;
+        card.innerHTML = `
+          <div class="task-title">${task.title}</div>
+          <div class="task-meta">
+            <span class="task-tag ${task.tagClass}">${task.tag}</span>
+          </div>
+        `;
+        card.addEventListener("dragstart", (e) => {
+          e.dataTransfer.setData("text/plain", "");
+          card.style.opacity = "0.5";
+          setTimeout(() => card.classList.add("dragging"), 0);
+        });
+        card.addEventListener("dragend", () => {
+          card.style.opacity = "";
+          card.classList.remove("dragging");
+          document
+            .querySelectorAll(".task-card.drag-over")
+            .forEach((c) => c.classList.remove("drag-over"));
+        });
+        return card;
+      }
+
+      tasks.forEach((t) => colTodo.appendChild(makeTaskCard(t)));
+
+      [colTodo, colDone].forEach((col) => {
+        col.addEventListener("dragover", (e) => {
+          e.preventDefault();
+          col
+            .querySelectorAll(".task-card")
+            .forEach((c) => c.classList.remove("drag-over"));
+        });
+        col.addEventListener("drop", (e) => {
+          e.preventDefault();
+          const dragging = document.querySelector(".task-card.dragging");
+          if (dragging) {
+            col.appendChild(dragging);
+            updateCounts();
+          }
+        });
+      });
+
+      /* ─── Audio ─────────────────────────────────────────────── */
+      let audioCtx, analyser, gainNode;
+
+      function initAudio() {
+        if (!audioCtx) {
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+          analyser = audioCtx.createAnalyser();
+          analyser.fftSize = 256;
+          gainNode = audioCtx.createGain();
+          gainNode.gain.value = 0.12;
+          gainNode.connect(analyser);
+          analyser.connect(audioCtx.destination);
+          drawAudioVis();
+        }
+      }
+
+      function playTone(type) {
+        initAudio();
+        const osc = audioCtx.createOscillator();
+        osc.type = type;
+        osc.frequency.value = 220 + Math.random() * 220;
+        const g = audioCtx.createGain();
+        g.gain.setValueAtTime(0.12, audioCtx.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.8);
+        osc.connect(g).connect(analyser);
+        analyser.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.8);
+      }
+
+      function playMelody() {
+        initAudio();
+        [523, 587, 659, 698, 784, 698, 659, 587, 523].forEach((freq, i) => {
+          const osc = audioCtx.createOscillator();
+          osc.type = "triangle";
+          osc.frequency.value = freq;
+          const g = audioCtx.createGain();
+          const start = audioCtx.currentTime + i * 0.18;
+          g.gain.setValueAtTime(0.12, start);
+          g.gain.exponentialRampToValueAtTime(0.001, start + 0.16);
+          osc.connect(g).connect(analyser);
+          analyser.connect(audioCtx.destination);
+          osc.start(start);
+          osc.stop(start + 0.18);
+        });
+      }
+
+      function drawAudioVis() {
+        const c = document.getElementById("audioVis");
+        const ctx = c.getContext("2d");
+        const buf = new Uint8Array(analyser.frequencyBinCount);
+        function draw() {
+          requestAnimationFrame(draw);
+          analyser.getByteFrequencyData(buf);
+          const w = (c.width = c.offsetWidth * 2);
+          const h = (c.height = c.offsetHeight * 2);
+          ctx.clearRect(0, 0, w, h);
+          const barW = w / buf.length;
+          for (let i = 0; i < buf.length; i++) {
+            const barH = (buf[i] / 255) * h;
+            const hue = (i / buf.length) * 260 + 230;
+            ctx.fillStyle = `hsl(${hue}, 70%, 55%)`;
+            ctx.fillRect(i * barW, h - barH, barW - 1, barH);
+          }
+        }
+        draw();
+      }
+
+      /* ─── Focus event log ───────────────────────────────────── */
+      const focusLog = document.getElementById("focusLog");
+      let focusStarted = false;
+
+      function logFocus(type, el) {
+        if (!focusStarted) {
+          focusLog.textContent = "";
+          focusStarted = true;
+        }
+        const tag = el.tagName?.toLowerCase() || "?";
+        const id = el.id ? `#${el.id}` : "";
+        const cls =
+          type === "focus" || type === "focusin" ? "ev-focus" : "ev-blur";
+        const line = document.createElement("div");
+        line.className = cls;
+        line.textContent = `${type} → <${tag}${id}>`;
+        focusLog.appendChild(line);
+        focusLog.scrollTop = focusLog.scrollHeight;
+        while (focusLog.children.length > 40)
+          focusLog.removeChild(focusLog.firstChild);
+      }
+
+      document.addEventListener(
+        "focus",
+        (e) => logFocus("focus", e.target),
+        true,
+      );
+      document.addEventListener(
+        "blur",
+        (e) => logFocus("blur", e.target),
+        true,
+      );
+
+      /* ─── Chart tabs ────────────────────────────────────────── */
+      document.querySelector(".chart-tabs").addEventListener("click", (e) => {
+        const btn = e.target.closest("button[data-range]");
+        if (!btn) return;
+        document
+          .querySelectorAll(".chart-tabs button")
+          .forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+      });
+
+      /* ─── Live clock in stat ────────────────────────────────── */
+      setInterval(() => {
+        const now = new Date();
+        document.getElementById("statRevenue").textContent =
+          "$" +
+          (
+            48352 + Math.floor(Math.sin(now.getTime() / 5000) * 200)
+          ).toLocaleString();
+      }, 2000);
+    </script>
+  </body>
+</html>

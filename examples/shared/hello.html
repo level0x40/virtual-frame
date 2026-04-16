@@ -1,0 +1,959 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: linear-gradient(45deg, #f0f0f0, #e0e0e0);
+        padding: 20px;
+        margin: 0;
+      }
+
+      .container {
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        max-width: 500px;
+        margin: 0 auto;
+      }
+
+      h1 {
+        color: #333;
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      .interactive-section {
+        margin: 20px 0;
+      }
+
+      button {
+        background: #007acc;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin: 5px;
+        transition: background 0.3s;
+      }
+
+      button:hover {
+        background: #005a9e;
+      }
+
+      input[type="text"] {
+        padding: 8px 12px;
+        border: 2px solid #ddd;
+        border-radius: 4px;
+        margin: 5px;
+        width: 200px;
+      }
+
+      input[type="text"]:focus {
+        border-color: #007acc;
+        outline: none;
+      }
+
+      .counter {
+        font-size: 24px;
+        font-weight: bold;
+        color: #007acc;
+        text-align: center;
+        margin: 20px 0;
+      }
+
+      .dynamic-content {
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 5px;
+        padding: 15px;
+        margin: 15px 0;
+      }
+
+      .color-box {
+        width: 50px;
+        height: 50px;
+        background: #ff6b6b;
+        border-radius: 5px;
+        margin: 10px;
+        cursor: pointer;
+        transition: transform 0.2s;
+      }
+
+      .color-box:hover {
+        transform: scale(1.1);
+      }
+
+      .mouse-tracker {
+        position: relative;
+        width: 100%;
+        height: 150px;
+        background: linear-gradient(135deg, #e0f7fa, #b2ebf2);
+        border: 2px solid #00acc1;
+        border-radius: 8px;
+        margin: 15px 0;
+        cursor: crosshair;
+        overflow: hidden;
+      }
+
+      .mouse-coords {
+        position: absolute;
+        top: 8px;
+        left: 10px;
+        font-size: 13px;
+        color: #006064;
+        font-family: monospace;
+        pointer-events: none;
+      }
+
+      .mouse-dot {
+        position: absolute;
+        width: 12px;
+        height: 12px;
+        background: #00acc1;
+        border: 2px solid #006064;
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+        transition:
+          left 0.05s,
+          top 0.05s;
+      }
+
+      .scroll-container {
+        max-height: 160px;
+        overflow-y: auto;
+        border: 2px solid #7e57c2;
+        border-radius: 8px;
+        margin: 15px 0;
+        background: #f3e5f5;
+      }
+
+      .scroll-container .scroll-inner {
+        padding: 12px;
+      }
+
+      .scroll-container p {
+        margin: 8px 0;
+        padding: 6px 10px;
+        background: #ede7f6;
+        border-radius: 4px;
+        font-size: 13px;
+        color: #4a148c;
+      }
+
+      .scroll-status {
+        text-align: center;
+        padding: 8px;
+        border-radius: 5px;
+        font-weight: bold;
+        margin: 10px 0;
+        transition:
+          background 0.3s,
+          color 0.3s;
+      }
+
+      .scroll-status.idle {
+        background: #ede7f6;
+        color: #7e57c2;
+      }
+
+      .scroll-status.scrolling {
+        background: #fff3e0;
+        color: #e65100;
+      }
+
+      .scroll-status.reached-end {
+        background: #c8e6c9;
+        color: #2e7d32;
+      }
+
+      .media-section {
+        margin: 15px 0;
+        padding: 12px;
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+      }
+
+      .media-section h3 {
+        margin: 0 0 10px;
+      }
+
+      #demoCanvas {
+        border: 2px solid #6c5ce7;
+        border-radius: 4px;
+        display: block;
+        margin: 0 auto;
+        background: #1a1a2e;
+      }
+
+      #demoVideo {
+        display: block;
+        width: 100%;
+        max-width: 400px;
+        margin: 0 auto;
+        border-radius: 4px;
+        border: 2px solid #00b894;
+      }
+
+      .audio-controls {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .audio-controls button {
+        font-size: 13px;
+        padding: 6px 14px;
+      }
+
+      #audioStatus {
+        font-size: 13px;
+        color: #636e72;
+        font-family: monospace;
+      }
+
+      .dnd-zone {
+        display: flex;
+        gap: 15px;
+        margin: 15px 0;
+      }
+
+      .dnd-pool,
+      .dnd-drop {
+        flex: 1;
+        min-height: 120px;
+        border: 2px dashed #b2bec3;
+        border-radius: 8px;
+        padding: 10px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        align-content: flex-start;
+      }
+
+      .dnd-drop {
+        border-color: #fdcb6e;
+        background: #ffeaa730;
+      }
+
+      .dnd-drop.drag-over {
+        border-color: #e17055;
+        background: #fab1a020;
+      }
+
+      .dnd-item {
+        width: 50px;
+        height: 50px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        cursor: grab;
+        user-select: none;
+        transition:
+          transform 0.15s,
+          box-shadow 0.15s;
+      }
+
+      .dnd-item:active {
+        cursor: grabbing;
+        transform: scale(1.12);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+      }
+
+      .dnd-label {
+        font-size: 11px;
+        color: #636e72;
+        text-align: center;
+        margin-bottom: 4px;
+      }
+
+      #dndStatus {
+        font-size: 13px;
+        text-align: center;
+        color: #636e72;
+        margin-top: 6px;
+        min-height: 18px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1 id="title">Interactive Iframe Content</h1>
+
+      <div class="interactive-section">
+        <button onclick="changeTitle()">Change Title</button>
+        <button onclick="addElement()">Add Element</button>
+        <button onclick="removeElement()">Remove Element</button>
+      </div>
+
+      <div class="interactive-section">
+        <input
+          type="text"
+          id="textInput"
+          placeholder="Type something..."
+          oninput="updateText()"
+        />
+        <div id="textOutput">Your text will appear here...</div>
+      </div>
+
+      <div class="counter" id="counter">0</div>
+      <div class="interactive-section">
+        <button onclick="increment()">+</button>
+        <button onclick="decrement()">-</button>
+        <button onclick="reset()">Reset</button>
+      </div>
+
+      <div class="color-box" onclick="changeColor()" id="colorBox"></div>
+
+      <div id="dynamicContent" class="dynamic-content">
+        <p>Dynamic content area</p>
+      </div>
+
+      <!-- Drag and Drop -->
+      <h3 style="color: #e17055; margin-bottom: 5px">Drag &amp; Drop</h3>
+      <div class="dnd-zone">
+        <div>
+          <div class="dnd-label">Drag from here</div>
+          <div class="dnd-pool" id="dndPool">
+            <div
+              class="dnd-item"
+              draggable="true"
+              data-emoji="🍎"
+              style="background: #ff7675"
+            >
+              🍎
+            </div>
+            <div
+              class="dnd-item"
+              draggable="true"
+              data-emoji="🍋"
+              style="background: #ffeaa7"
+            >
+              🍋
+            </div>
+            <div
+              class="dnd-item"
+              draggable="true"
+              data-emoji="🫐"
+              style="background: #74b9ff"
+            >
+              🫐
+            </div>
+            <div
+              class="dnd-item"
+              draggable="true"
+              data-emoji="🥝"
+              style="background: #55efc4"
+            >
+              🥝
+            </div>
+            <div
+              class="dnd-item"
+              draggable="true"
+              data-emoji="🍇"
+              style="background: #a29bfe"
+            >
+              🍇
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="dnd-label">Drop here</div>
+          <div class="dnd-drop" id="dndDrop"></div>
+        </div>
+      </div>
+      <div id="dndStatus">Drag fruits to the drop zone</div>
+
+      <!-- Mouse tracking -->
+      <h3 style="color: #00acc1; margin-bottom: 5px">Mouse Tracker</h3>
+      <div class="mouse-tracker" id="mouseTracker">
+        <div class="mouse-coords" id="mouseCoords">Move your mouse here</div>
+        <div class="mouse-dot" id="mouseDot" style="display: none"></div>
+      </div>
+
+      <!-- Canvas -->
+      <div class="media-section">
+        <h3 style="color: #6c5ce7">Canvas (animated)</h3>
+        <canvas id="demoCanvas" width="300" height="150"></canvas>
+        <div style="text-align: center; margin-top: 8px">
+          <button onclick="toggleCanvasAnimation()" id="canvasToggle">
+            Pause
+          </button>
+        </div>
+      </div>
+
+      <!-- Video -->
+      <div class="media-section">
+        <h3 style="color: #00b894">Video (captureStream mirror)</h3>
+        <video
+          id="demoVideo"
+          controls
+          muted
+          loop
+          playsinline
+          crossorigin="anonymous"
+        ></video>
+        <p
+          style="
+            font-size: 12px;
+            color: #636e72;
+            text-align: center;
+            margin: 6px 0 0;
+          "
+        >
+          Camera-generated test video via canvas → captureStream
+        </p>
+      </div>
+
+      <!-- Audio -->
+      <div class="media-section">
+        <h3 style="color: #d63031">Audio (Web Audio API)</h3>
+        <div class="audio-controls">
+          <button onclick="playTone()">Play Tone</button>
+          <button onclick="playMelody()">Play Melody</button>
+          <span id="audioStatus">Ready</span>
+        </div>
+        <audio
+          id="demoAudio"
+          controls
+          style="width: 100%; margin-top: 8px"
+        ></audio>
+      </div>
+
+      <!-- Scrollable div with end detection -->
+      <h3 style="color: #7e57c2; margin-bottom: 5px">Scroll to End</h3>
+      <div class="scroll-status idle" id="scrollStatus">
+        Scroll down to see all items
+      </div>
+      <div class="scroll-container" id="scrollContainer">
+        <div class="scroll-inner">
+          <p>Item 1 — Keep scrolling!</p>
+          <p>Item 2 — More content below...</p>
+          <p>Item 3 — You're getting there...</p>
+          <p>Item 4 — Almost halfway!</p>
+          <p>Item 5 — Halfway point</p>
+          <p>Item 6 — Past the middle now</p>
+          <p>Item 7 — Getting closer...</p>
+          <p>Item 8 — Nearly there!</p>
+          <p>Item 9 — So close!</p>
+          <p>Item 10 — Just a bit more...</p>
+          <p>Item 11 — Almost at the end!</p>
+          <p id="lastItem">Item 12 — You made it! 🎉</p>
+        </div>
+      </div>
+
+      <div class="interactive-section">
+        <svg
+          id="svgDemo"
+          width="200"
+          height="200"
+          viewBox="0 0 200 200"
+          xmlns="http://www.w3.org/2000/svg"
+          style="display: block; margin: 10px auto"
+        >
+          <circle
+            id="svgCircle"
+            cx="100"
+            cy="100"
+            r="60"
+            fill="#007acc"
+            stroke="#005a9e"
+            stroke-width="3"
+          />
+          <text
+            x="100"
+            y="108"
+            text-anchor="middle"
+            fill="white"
+            font-size="16"
+            font-family="Arial"
+            id="svgText"
+          >
+            Click me
+          </text>
+          <rect
+            id="svgRect"
+            x="20"
+            y="20"
+            width="30"
+            height="30"
+            rx="4"
+            fill="#ff6b6b"
+            opacity="0.8"
+          />
+          <polygon
+            id="svgStar"
+            points="170,25 176,40 192,40 179,50 183,65 170,56 157,65 161,50 148,40 164,40"
+            fill="#ffeaa7"
+          />
+        </svg>
+        <div style="text-align: center">
+          <button onclick="rotateSvg()">Rotate</button>
+          <button onclick="changeSvgColor()">Change Color</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Debug: Check if script is loading
+      console.log("Script is loading...");
+
+      let counter = 0;
+      let elementCounter = 0;
+
+      function changeTitle() {
+        const titles = [
+          "Interactive Iframe Content",
+          "Updated Title!",
+          "Another Title",
+          "Dynamic Content",
+          "Mirror Test",
+        ];
+        const currentTitle = document.getElementById("title").textContent;
+        const currentIndex = titles.indexOf(currentTitle);
+        const nextIndex = (currentIndex + 1) % titles.length;
+        document.getElementById("title").textContent = titles[nextIndex];
+      }
+
+      function addElement() {
+        const container = document.getElementById("dynamicContent");
+        const newElement = document.createElement("p");
+        newElement.textContent = `Dynamic element #${++elementCounter}`;
+        newElement.style.background = "#e9ecef";
+        newElement.style.padding = "5px";
+        newElement.style.margin = "5px 0";
+        newElement.style.borderRadius = "3px";
+        newElement.onclick = () => {
+          newElement.style.background =
+            newElement.style.background === "rgb(233, 236, 239)"
+              ? "#ffeaa7"
+              : "#e9ecef";
+        };
+        container.appendChild(newElement);
+      }
+
+      function removeElement() {
+        const container = document.getElementById("dynamicContent");
+        const elements = container.querySelectorAll("p:not(:first-child)");
+        if (elements.length > 0) {
+          container.removeChild(elements[elements.length - 1]);
+        }
+      }
+
+      function updateText() {
+        console.log("updateText called");
+        const input = document.getElementById("textInput");
+        const output = document.getElementById("textOutput");
+        output.textContent = input.value || "Your text will appear here...";
+      }
+
+      // Debug: Make sure updateText is global
+      console.log("updateText function:", typeof updateText);
+      window.updateText = updateText;
+
+      function increment() {
+        counter++;
+        document.getElementById("counter").textContent = counter;
+      }
+
+      function decrement() {
+        counter--;
+        document.getElementById("counter").textContent = counter;
+      }
+
+      function reset() {
+        counter = 0;
+        document.getElementById("counter").textContent = counter;
+      }
+
+      function changeColor() {
+        const colors = [
+          "#ff6b6b",
+          "#4ecdc4",
+          "#45b7d1",
+          "#96ceb4",
+          "#ffeaa7",
+          "#dda0dd",
+        ];
+        const colorBox = document.getElementById("colorBox");
+        const currentColor =
+          colorBox.style.backgroundColor || "rgb(255, 107, 107)";
+        const currentIndex = colors.findIndex((color) => {
+          const tempDiv = document.createElement("div");
+          tempDiv.style.color = color;
+          return tempDiv.style.color === currentColor;
+        });
+        const nextIndex = (currentIndex + 1) % colors.length;
+        colorBox.style.backgroundColor = colors[nextIndex];
+      }
+
+      let svgRotation = 0;
+      function rotateSvg() {
+        svgRotation = (svgRotation + 45) % 360;
+        document
+          .getElementById("svgCircle")
+          .setAttribute("transform", `rotate(${svgRotation}, 100, 100)`);
+        document
+          .getElementById("svgRect")
+          .setAttribute("transform", `rotate(${svgRotation}, 35, 35)`);
+        document
+          .getElementById("svgStar")
+          .setAttribute("transform", `rotate(${-svgRotation}, 170, 45)`);
+      }
+
+      const svgColors = [
+        "#007acc",
+        "#4ecdc4",
+        "#ff6b6b",
+        "#96ceb4",
+        "#dda0dd",
+        "#45b7d1",
+      ];
+      let svgColorIndex = 0;
+      function changeSvgColor() {
+        svgColorIndex = (svgColorIndex + 1) % svgColors.length;
+        document
+          .getElementById("svgCircle")
+          .setAttribute("fill", svgColors[svgColorIndex]);
+        document.getElementById("svgText").textContent =
+          svgColors[svgColorIndex];
+      }
+
+      // ===== Drag and Drop =====
+      const dndPool = document.getElementById("dndPool");
+      const dndDrop = document.getElementById("dndDrop");
+      const dndStatus = document.getElementById("dndStatus");
+      let draggedEl = null;
+
+      // Make all .dnd-item elements draggable
+      dndPool.addEventListener("dragstart", (e) => {
+        const item = e.target.closest(".dnd-item");
+        if (!item) return;
+        draggedEl = item;
+        e.dataTransfer.effectAllowed = "move";
+        e.dataTransfer.setData("text/plain", item.dataset.emoji);
+        item.style.opacity = "0.4";
+      });
+
+      dndPool.addEventListener("dragend", (e) => {
+        const item = e.target.closest(".dnd-item");
+        if (item) item.style.opacity = "1";
+        draggedEl = null;
+      });
+
+      dndDrop.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = "move";
+        dndDrop.classList.add("drag-over");
+      });
+
+      dndDrop.addEventListener("dragleave", () => {
+        dndDrop.classList.remove("drag-over");
+      });
+
+      dndDrop.addEventListener("drop", (e) => {
+        e.preventDefault();
+        dndDrop.classList.remove("drag-over");
+        if (draggedEl) {
+          dndDrop.appendChild(draggedEl);
+          draggedEl.style.opacity = "1";
+          const count = dndDrop.querySelectorAll(".dnd-item").length;
+          const total = document.querySelectorAll(".dnd-item").length;
+          if (count === total) {
+            dndStatus.textContent = `All ${total} fruits dropped! 🎉`;
+            dndStatus.style.color = "#00b894";
+          } else {
+            dndStatus.textContent = `Dropped ${count} of ${total} fruits`;
+            dndStatus.style.color = "#e17055";
+          }
+          draggedEl = null;
+        }
+      });
+
+      // Allow dragging back to the pool
+      dndPool.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = "move";
+      });
+
+      dndPool.addEventListener("drop", (e) => {
+        e.preventDefault();
+        if (draggedEl && draggedEl.parentNode !== dndPool) {
+          dndPool.appendChild(draggedEl);
+          draggedEl.style.opacity = "1";
+          const count = dndDrop.querySelectorAll(".dnd-item").length;
+          const total = document.querySelectorAll(".dnd-item").length;
+          dndStatus.textContent =
+            count > 0
+              ? `Dropped ${count} of ${total} fruits`
+              : "Drag fruits to the drop zone";
+          dndStatus.style.color = "#636e72";
+          draggedEl = null;
+        }
+      });
+
+      // Mouse tracker
+      const tracker = document.getElementById("mouseTracker");
+      const coordsDisplay = document.getElementById("mouseCoords");
+      const dot = document.getElementById("mouseDot");
+
+      tracker.addEventListener("mousemove", (e) => {
+        const rect = tracker.getBoundingClientRect();
+        const x = Math.round(e.clientX - rect.left);
+        const y = Math.round(e.clientY - rect.top);
+        coordsDisplay.textContent = `x: ${x}  y: ${y}  (client: ${Math.round(e.clientX)}, ${Math.round(e.clientY)})`;
+        dot.style.left = x + "px";
+        dot.style.top = y + "px";
+        dot.style.display = "block";
+      });
+
+      tracker.addEventListener("mouseleave", () => {
+        coordsDisplay.textContent = "Move your mouse here";
+        dot.style.display = "none";
+      });
+
+      // Scroll-to-end detection
+      const scrollContainer = document.getElementById("scrollContainer");
+      const scrollStatus = document.getElementById("scrollStatus");
+      let scrollTimeout;
+
+      scrollContainer.addEventListener("scroll", () => {
+        const { scrollTop, scrollHeight, clientHeight } = scrollContainer;
+        const distanceFromEnd = scrollHeight - scrollTop - clientHeight;
+
+        // Update status while scrolling
+        scrollStatus.className = "scroll-status scrolling";
+
+        if (distanceFromEnd < 5) {
+          scrollStatus.textContent = "You reached the end! 🎉";
+          scrollStatus.className = "scroll-status reached-end";
+          // Add a fun effect to the last item
+          const lastItem = document.getElementById("lastItem");
+          lastItem.style.background = "#c8e6c9";
+          lastItem.style.fontWeight = "bold";
+        } else {
+          const pct = Math.round(
+            (scrollTop / (scrollHeight - clientHeight)) * 100,
+          );
+          scrollStatus.textContent = `Scrolling... ${pct}% (${Math.round(distanceFromEnd)}px remaining)`;
+        }
+
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(() => {
+          if (distanceFromEnd >= 5) {
+            scrollStatus.className = "scroll-status idle";
+            scrollStatus.textContent = "Scroll down to see all items";
+          }
+        }, 800);
+      });
+
+      // Debug: Make all functions global to ensure they're accessible
+      window.changeTitle = changeTitle;
+      window.addElement = addElement;
+      window.removeElement = removeElement;
+      window.increment = increment;
+      window.decrement = decrement;
+      window.reset = reset;
+      window.changeColor = changeColor;
+      window.rotateSvg = rotateSvg;
+      window.changeSvgColor = changeSvgColor;
+
+      // ===== Canvas animation =====
+      const canvas = document.getElementById("demoCanvas");
+      const ctx = canvas.getContext("2d");
+      let canvasRunning = true;
+      let canvasTime = 0;
+
+      function drawCanvas() {
+        if (!canvasRunning) return;
+        canvasTime += 0.02;
+        const w = canvas.width,
+          h = canvas.height;
+
+        // Background
+        ctx.fillStyle = "#1a1a2e";
+        ctx.fillRect(0, 0, w, h);
+
+        // Bouncing circles
+        for (let i = 0; i < 5; i++) {
+          const x = w / 2 + Math.sin(canvasTime * (1 + i * 0.3)) * (w * 0.35);
+          const y = h / 2 + Math.cos(canvasTime * (0.8 + i * 0.4)) * (h * 0.3);
+          const r = 10 + i * 5;
+          const hue = (canvasTime * 50 + i * 72) % 360;
+          ctx.beginPath();
+          ctx.arc(x, y, r, 0, Math.PI * 2);
+          ctx.fillStyle = `hsl(${hue}, 80%, 60%)`;
+          ctx.fill();
+          ctx.strokeStyle = `hsl(${hue}, 80%, 80%)`;
+          ctx.lineWidth = 2;
+          ctx.stroke();
+        }
+
+        // Sine wave
+        ctx.beginPath();
+        ctx.strokeStyle = "rgba(255,255,255,0.5)";
+        ctx.lineWidth = 1.5;
+        for (let x = 0; x < w; x++) {
+          const y = h / 2 + Math.sin(x * 0.04 + canvasTime * 2) * 20;
+          x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+
+        // FPS-style timestamp
+        ctx.fillStyle = "rgba(255,255,255,0.7)";
+        ctx.font = "11px monospace";
+        ctx.fillText(`t = ${canvasTime.toFixed(1)}`, 8, 14);
+
+        requestAnimationFrame(drawCanvas);
+      }
+      drawCanvas();
+
+      function toggleCanvasAnimation() {
+        canvasRunning = !canvasRunning;
+        document.getElementById("canvasToggle").textContent = canvasRunning
+          ? "Pause"
+          : "Resume";
+        if (canvasRunning) drawCanvas();
+      }
+      window.toggleCanvasAnimation = toggleCanvasAnimation;
+
+      // ===== Video (generated from a canvas stream) =====
+      // We create a small off-screen canvas, animate it, and use captureStream()
+      // to feed a real <video> element — no external file needed.
+      const vidCanvas = document.createElement("canvas");
+      vidCanvas.width = 320;
+      vidCanvas.height = 180;
+      const vctx = vidCanvas.getContext("2d");
+      let vidTime = 0;
+
+      function drawVideoFrame() {
+        vidTime += 0.03;
+        const w = vidCanvas.width,
+          h = vidCanvas.height;
+        // gradient background that shifts
+        const grad = vctx.createLinearGradient(0, 0, w, h);
+        grad.addColorStop(0, `hsl(${(vidTime * 30) % 360}, 70%, 40%)`);
+        grad.addColorStop(1, `hsl(${(vidTime * 30 + 180) % 360}, 70%, 40%)`);
+        vctx.fillStyle = grad;
+        vctx.fillRect(0, 0, w, h);
+
+        // moving text
+        vctx.fillStyle = "white";
+        vctx.font = "bold 20px Arial";
+        vctx.textAlign = "center";
+        vctx.fillText("Live Video Test", w / 2, h / 2 - 10);
+        vctx.font = "14px monospace";
+        vctx.fillText(`frame ${Math.floor(vidTime * 33)}`, w / 2, h / 2 + 20);
+
+        // rotating bar
+        vctx.save();
+        vctx.translate(w / 2, h / 2 + 50);
+        vctx.rotate(vidTime * 2);
+        vctx.fillStyle = "rgba(255,255,255,0.6)";
+        vctx.fillRect(-30, -3, 60, 6);
+        vctx.restore();
+
+        requestAnimationFrame(drawVideoFrame);
+      }
+      drawVideoFrame();
+
+      const videoStream = vidCanvas.captureStream(30);
+      const demoVideo = document.getElementById("demoVideo");
+      demoVideo.srcObject = videoStream;
+      demoVideo.play().catch(() => {}); // autoplay may need user gesture
+
+      // ===== Audio (Web Audio API — generates tones) =====
+      let audioCtx;
+      function getAudioContext() {
+        if (!audioCtx)
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        return audioCtx;
+      }
+
+      function playTone() {
+        const ctx = getAudioContext();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "sine";
+        osc.frequency.value = 440;
+        gain.gain.setValueAtTime(0.3, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.8);
+        osc.connect(gain).connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.8);
+        document.getElementById("audioStatus").textContent =
+          "Playing 440Hz tone...";
+        setTimeout(() => {
+          document.getElementById("audioStatus").textContent = "Ready";
+        }, 900);
+      }
+      window.playTone = playTone;
+
+      function playMelody() {
+        const ctx = getAudioContext();
+        const notes = [523, 587, 659, 698, 784, 698, 659, 587, 523]; // C5 scale up and down
+        const status = document.getElementById("audioStatus");
+        status.textContent = "Playing melody...";
+        notes.forEach((freq, i) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = "triangle";
+          osc.frequency.value = freq;
+          const start = ctx.currentTime + i * 0.2;
+          gain.gain.setValueAtTime(0.25, start);
+          gain.gain.exponentialRampToValueAtTime(0.001, start + 0.18);
+          osc.connect(gain).connect(ctx.destination);
+          osc.start(start);
+          osc.stop(start + 0.2);
+        });
+        setTimeout(
+          () => {
+            status.textContent = "Ready";
+          },
+          notes.length * 200 + 100,
+        );
+      }
+      window.playMelody = playMelody;
+
+      // Pipe audio context to the <audio> element via destination stream
+      // (so the <audio> element has a srcObject the mirror can ignore)
+      try {
+        const actx = getAudioContext();
+        const dest = actx.createMediaStreamDestination();
+        const demoAudio = document.getElementById("demoAudio");
+        demoAudio.srcObject = dest.stream;
+      } catch (e) {
+        /* ok if audio context not ready yet */
+      }
+
+      console.log("All functions loaded and made global");
+
+      // Simulate some dynamic changes
+      setInterval(() => {
+        const now = new Date();
+        const timeString = now.toLocaleTimeString();
+
+        // Create or update time display
+        let timeElement = document.getElementById("timeDisplay");
+        if (!timeElement) {
+          timeElement = document.createElement("div");
+          timeElement.id = "timeDisplay";
+          timeElement.style.textAlign = "center";
+          timeElement.style.fontSize = "14px";
+          timeElement.style.color = "#666";
+          timeElement.style.marginTop = "10px";
+          document.querySelector(".container").appendChild(timeElement);
+        }
+        timeElement.textContent = `Current time: ${timeString}`;
+      }, 1000);
+    </script>
+  </body>
+</html>

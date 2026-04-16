@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="190 11 420 218" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- VF letter gradients (same colors as LVL) -->
+    <linearGradient id="vf-grad-V" x1="97" y1="50" x2="97" y2="115" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#aaffff"/>
+      <stop offset="0.33" stop-color="#aaffff"/>
+      <stop offset="0.5466" stop-color="#6964ff"/>
+      <stop offset="0.9" stop-color="#8010e1"/>
+      <stop offset="1" stop-color="#ff96ff"/>
+    </linearGradient>
+    <linearGradient id="vf-grad-F" x1="165" y1="50" x2="165" y2="115" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#aaffff"/>
+      <stop offset="0.33" stop-color="#aaffff"/>
+      <stop offset="0.5466" stop-color="#6964ff"/>
+      <stop offset="0.9" stop-color="#8010e1"/>
+      <stop offset="1" stop-color="#ff96ff"/>
+    </linearGradient>
+
+    <!-- VF drop shadow filters -->
+    <filter id="shadow-V" style="color-interpolation-filters:sRGB" x="-0.078" y="-0.072" width="1.156" height="1.144">
+      <feFlood result="flood" flood-opacity="1" flood-color="rgb(0,0,0)"/>
+      <feGaussianBlur result="blur" in="SourceGraphic" stdDeviation="1.953"/>
+      <feOffset result="offset" in="blur" dx="0" dy="0"/>
+      <feComposite result="comp1" operator="in" in="flood" in2="offset"/>
+      <feComposite result="comp2" operator="over" in="SourceGraphic" in2="comp1"/>
+    </filter>
+    <filter id="shadow-F" style="color-interpolation-filters:sRGB" x="-0.091" y="-0.064" width="1.183" height="1.127">
+      <feFlood result="flood" flood-opacity="1" flood-color="rgb(0,0,0)"/>
+      <feGaussianBlur result="blur" in="SourceGraphic" stdDeviation="1.724"/>
+      <feOffset result="offset" in="blur" dx="0" dy="0"/>
+      <feComposite result="comp1" operator="in" in="flood" in2="offset"/>
+      <feComposite result="comp2" operator="over" in="SourceGraphic" in2="comp1"/>
+    </filter>
+
+    <!-- CRT scanline pattern -->
+    <pattern id="scanlines" width="800" height="4" patternUnits="userSpaceOnUse">
+      <rect width="800" height="2" y="0" fill="transparent"/>
+      <rect width="800" height="2" y="2" fill="rgba(0,0,0,0.55)"/>
+    </pattern>
+
+    <!-- Clip to letter shapes -->
+    <clipPath id="letters-clip">
+      <path transform="translate(11.11, -136.6667) scale(3.111111)" d="M 60,50 85,115 115,115 134.77,50 H 114.77 L 100,95 80,50 Z"/>
+      <path transform="translate(11.11, -136.6667) scale(3.111111)" d="M 140,50 H 190 L 183,68 H 154.5 L 152,76 H 172 L 166,92 H 147 L 140,115 H 120 Z"/>
+    </clipPath>
+  </defs>
+
+  <!-- ==================== VF GRAPHIC ==================== -->
+  <g transform="translate(11.11, -136.6667) scale(3.111111)">
+    <!-- V letter (identical to LVL V) -->
+    <path
+      style="fill:url(#vf-grad-V);filter:url(#shadow-V)"
+      d="M 60,50 85,115 115,115 134.77,50 H 114.77 L 100,95 80,50 Z"/>
+
+    <!-- F letter (slanted stem matching L2's italic angle) -->
+    <path
+      style="fill:url(#vf-grad-F);filter:url(#shadow-F)"
+      d="M 140,50 H 190 L 183,68 H 154.5 L 152,76 H 172 L 166,92 H 147 L 140,115 H 120 Z"/>
+  </g>
+
+  <!-- ==================== CRT SCANLINES (clipped to letters) ==================== -->
+  <g clip-path="url(#letters-clip)">
+    <rect x="175" y="-5" width="450" height="250" fill="url(#scanlines)" opacity="1.0"/>
+  </g>
+</svg>

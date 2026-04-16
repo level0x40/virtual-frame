@@ -1,0 +1,152 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 440" width="800" height="440" fill="none">
+  <defs>
+    <style>
+      /* ── Light defaults ─────────────────────────────────────── */
+      .b1   { stroke: rgba(20,20,40,0.18); }
+      .b2   { stroke: rgba(20,20,40,0.32); }
+      .fs   { fill: rgba(20,20,40,0.025); }
+      .fm   { fill: rgba(20,20,40,0.05); }
+      .tm   { fill: rgba(20,20,40,0.5); font-family: 'Inter','SF Pro','system-ui',-apple-system,sans-serif; }
+      .te   { fill: rgba(20,20,40,0.6); font-family: 'Inter','SF Pro','system-ui',-apple-system,sans-serif; letter-spacing: 0.12em; font-weight: 600; }
+
+      .host         { stroke: #6964ff; }
+      .host-fill    { fill: rgba(105,100,255,0.06); }
+      .host-text    { fill: #6964ff; font-family: 'Inter','SF Pro','system-ui',-apple-system,sans-serif; }
+      .host-content { fill: rgba(105,100,255,0.20); }
+
+      .remote         { stroke: #2da26f; }
+      .remote-fill    { fill: rgba(45,162,111,0.05); }
+      .remote-content { fill: rgba(45,162,111,0.20); }
+      .remote-dim     { stroke-dasharray: 5 4; opacity: 0.85; }
+
+      .store      { stroke: #b540c0; }
+      .store-fill { fill: rgba(181,64,192,0.07); }
+      .store-text { fill: #b540c0; font-family: 'Inter','SF Pro','system-ui',-apple-system,sans-serif; }
+
+      .arrow-mirror { stroke: #6964ff; fill: none; }
+      .arrow-event  { stroke: rgba(20,20,40,0.5); stroke-dasharray: 5 4; fill: none; }
+      .head-mirror  { fill: #6964ff; }
+      .head-event   { fill: rgba(20,20,40,0.55); }
+      .label-event  { fill: rgba(20,20,40,0.6); font-family: 'Inter','SF Pro','system-ui',-apple-system,sans-serif; }
+
+      /* ── Dark overrides (system preference) ─────────────────── */
+      @media (prefers-color-scheme: dark) {
+        .b1 { stroke: rgba(255,255,255,0.18); }
+        .b2 { stroke: rgba(255,255,255,0.30); }
+        .fs { fill:   rgba(255,255,255,0.04); }
+        .fm { fill:   rgba(255,255,255,0.06); }
+        .tm { fill:   rgba(235,235,250,0.5);  }
+        .te { fill:   rgba(235,235,250,0.65); }
+
+        .host         { stroke: #aaffff; }
+        .host-fill    { fill: rgba(170,255,255,0.06); }
+        .host-text    { fill: #aaffff; }
+        .host-content { fill: rgba(170,255,255,0.24); }
+
+        .remote         { stroke: #6ae8a0; }
+        .remote-fill    { fill: rgba(106,232,160,0.06); }
+        .remote-content { fill: rgba(106,232,160,0.24); }
+
+        .store      { stroke: #ff96ff; }
+        .store-fill { fill: rgba(255,150,255,0.07); }
+        .store-text { fill: #ff96ff; }
+
+        .arrow-mirror { stroke: #aaffff; }
+        .arrow-event  { stroke: rgba(255,255,255,0.45); }
+        .head-mirror  { fill: #aaffff; }
+        .head-event   { fill: rgba(255,255,255,0.5); }
+        .label-event  { fill: rgba(235,235,250,0.7); }
+      }
+    </style>
+  </defs>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       Column eyebrows
+       ═══════════════════════════════════════════════════════════════ -->
+  <text x="190" y="20" text-anchor="middle" font-size="11" class="te">YOUR HOST PAGE</text>
+  <text x="610" y="20" text-anchor="middle" font-size="11" class="te">HIDDEN IFRAME</text>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       LEFT COLUMN — Host page (visible to the user)
+       ═══════════════════════════════════════════════════════════════ -->
+
+  <!-- Browser chrome -->
+  <rect x="20" y="34" width="340" height="320" rx="10" class="b1 fs" stroke-width="1.5"/>
+  <line x1="20" y1="62" x2="360" y2="62" class="b1" stroke-width="1.5"/>
+  <circle cx="34" cy="48" r="3" fill="#ff5f57" opacity="0.8"/>
+  <circle cx="44" cy="48" r="3" fill="#febc2e" opacity="0.8"/>
+  <circle cx="54" cy="48" r="3" fill="#28c840" opacity="0.8"/>
+  <text x="190" y="52" text-anchor="middle" font-size="9" class="tm">your-site.com</text>
+
+  <!-- Native header band (no label — visual is enough) -->
+  <rect x="34" y="74" width="312" height="22" rx="4" class="b1 fm" stroke-width="1"/>
+
+  <!-- &lt;virtual-frame&gt; element -->
+  <rect x="34" y="106" width="312" height="200" rx="6" class="host host-fill" stroke-width="1.5"/>
+  <text x="190" y="124" text-anchor="middle" font-size="11" font-weight="600" class="host-text">&lt;virtual-frame&gt;</text>
+
+  <!-- Shadow DOM inside (dashed inset visually conveys "shadow root") -->
+  <rect x="48" y="134" width="284" height="160" rx="4" class="b2 fs" stroke-width="1" stroke-dasharray="3 2"/>
+
+  <!-- Mirrored content placeholders -->
+  <rect x="60" y="148" width="260" height="14" rx="2" class="host-content"/>
+  <rect x="60" y="168" width="200" height="10" rx="2" class="host-content"/>
+  <rect x="60" y="184" width="260" height="10" rx="2" class="host-content"/>
+  <rect x="60" y="200" width="180" height="10" rx="2" class="host-content"/>
+  <rect x="60" y="222" width="260" height="60" rx="3" class="host-content"/>
+
+  <!-- Native footer band -->
+  <rect x="34" y="316" width="312" height="32" rx="4" class="b1 fm" stroke-width="1"/>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       RIGHT COLUMN — The hidden iframe (= the remote, running)
+       ═══════════════════════════════════════════════════════════════ -->
+
+  <!-- Hidden iframe container (dashed + dim = off-screen) -->
+  <rect x="440" y="34" width="340" height="320" rx="10" class="remote remote-fill remote-dim" stroke-width="1.5"/>
+  <line x1="440" y1="62" x2="780" y2="62" class="remote remote-dim" stroke-width="1.5"/>
+  <circle cx="454" cy="48" r="3" fill="#ff5f57" opacity="0.5"/>
+  <circle cx="464" cy="48" r="3" fill="#febc2e" opacity="0.5"/>
+  <circle cx="474" cy="48" r="3" fill="#28c840" opacity="0.5"/>
+  <text x="610" y="52" text-anchor="middle" font-size="9" class="tm">remote.example.com</text>
+
+  <!-- Remote app's own structure -->
+  <rect x="454" y="74" width="312" height="22" rx="4" class="remote remote-fill" stroke-width="1"/>
+
+  <rect x="454" y="106" width="60" height="200" rx="4" class="remote remote-fill" stroke-width="1"/>
+
+  <rect x="522" y="106" width="244" height="200" rx="4" class="b1 fs" stroke-width="1"/>
+  <rect x="534" y="122" width="220" height="14" rx="2" class="remote-content"/>
+  <rect x="534" y="142" width="160" height="10" rx="2" class="remote-content"/>
+  <rect x="534" y="158" width="220" height="10" rx="2" class="remote-content"/>
+  <rect x="534" y="174" width="180" height="10" rx="2" class="remote-content"/>
+  <rect x="534" y="196" width="220" height="48" rx="3" class="remote-content"/>
+  <rect x="534" y="254" width="160" height="10" rx="2" class="remote-content"/>
+  <rect x="534" y="270" width="220" height="10" rx="2" class="remote-content"/>
+  <rect x="534" y="286" width="100" height="10" rx="2" class="remote-content"/>
+
+  <rect x="454" y="316" width="312" height="32" rx="4" class="remote remote-fill" stroke-width="1"/>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       ARROWS — single-word labels, fit cleanly in the 80px gap
+       ═══════════════════════════════════════════════════════════════ -->
+
+  <!-- mirror: hidden → host (top) -->
+  <line x1="438" y1="195" x2="365" y2="195" class="arrow-mirror" stroke-width="2"/>
+  <polygon points="362,195 372,191 372,199" class="head-mirror"/>
+  <text x="400" y="187" text-anchor="middle" font-size="11" class="host-text" font-weight="600">mirror</text>
+
+  <!-- replay: host → hidden (bottom) -->
+  <line x1="365" y1="245" x2="438" y2="245" class="arrow-event" stroke-width="1.5"/>
+  <polygon points="441,245 431,241 431,249" class="head-event"/>
+  <text x="400" y="262" text-anchor="middle" font-size="11" class="label-event" font-weight="600">replay</text>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       SHARED STORE BAR
+       ═══════════════════════════════════════════════════════════════ -->
+  <line x1="190" y1="358" x2="190" y2="372" class="store" stroke-width="1.5" stroke-dasharray="3 3"/>
+  <line x1="610" y1="358" x2="610" y2="372" class="store" stroke-width="1.5" stroke-dasharray="3 3"/>
+
+  <rect x="20" y="372" width="760" height="38" rx="8" class="store store-fill" stroke-width="1.5" stroke-dasharray="6 4"/>
+  <text x="400" y="396" text-anchor="middle" font-size="11" font-weight="600" class="store-text">Shared Store</text>
+</svg>

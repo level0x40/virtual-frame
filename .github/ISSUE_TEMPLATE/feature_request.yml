@@ -1,0 +1,73 @@
+name: Feature request
+description: Propose a new capability or enhancement to existing behavior.
+title: "[Feature]: "
+labels: ["type:feature", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Have a discussion-shaped idea instead of a concrete proposal? Open a [Discussion](https://github.com/level0x40/virtual-frame/discussions) first — it's a better fit for exploring problem space.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve?
+      description: Describe the user-facing problem, not the proposed solution. What can't you do today, and why does it matter?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: |
+        Sketch the API or behavior you'd like. Code snippets, diagrams, or pseudo-code are welcome.
+      placeholder: |
+        ```ts
+        // Example of how I'd want to use it:
+        ```
+    validations:
+      required: true
+
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Scope
+      description: Which package(s) does this affect?
+      multiple: true
+      options:
+        - virtual-frame (core)
+        - "@virtual-frame/store"
+        - Framework binding (React/Vue/Svelte/Solid/Angular)
+        - Meta-framework integration (Next/Nuxt/SvelteKit/Solid Start/TanStack Start/Analog/React Router/React Server)
+        - Documentation
+        - Tooling / DX
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: What workarounds exist today? What other designs did you consider, and why did you discard them?
+    validations:
+      required: false
+
+  - type: dropdown
+    id: contribution
+    attributes:
+      label: Are you willing to contribute this?
+      options:
+        - "Yes — I'd like to open the PR myself"
+        - "Yes, with guidance"
+        - "No"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Pre-submission checklist
+      options:
+        - label: I searched existing issues and discussions and did not find a duplicate.
+          required: true

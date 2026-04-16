@@ -1,0 +1,88 @@
+{
+  "name": "@virtual-frame/next",
+  "version": "0.1.0",
+  "description": "Next.js integration for Virtual Frame — async Server Component with SSR resume",
+  "homepage": "https://virtual-frame.level0x40.com",
+  "bugs": {
+    "url": "https://github.com/level0x40/virtual-frame/issues"
+  },
+  "license": "LicenseRef-SAL-1.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/level0x40/virtual-frame.git",
+    "directory": "packages/next"
+  },
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "react-server": {
+        "types": "./src/index.server.tsx",
+        "default": "./src/index.server.tsx"
+      },
+      "default": "./src/index.ts"
+    },
+    "./client": {
+      "types": "./src/client.tsx",
+      "default": "./src/client.tsx"
+    },
+    "./store": {
+      "types": "./src/store.ts",
+      "default": "./src/store.ts"
+    }
+  },
+  "publishConfig": {
+    "access": "public",
+    "exports": {
+      ".": {
+        "react-server": {
+          "types": "./dist/index.server.d.mts",
+          "default": "./dist/index.server.mjs"
+        },
+        "types": "./dist/index.d.mts",
+        "default": "./dist/index.mjs"
+      },
+      "./client": {
+        "types": "./dist/client.d.mts",
+        "default": "./dist/client.mjs"
+      },
+      "./store": {
+        "types": "./dist/store.d.mts",
+        "default": "./dist/store.mjs"
+      }
+    },
+    "provenance": true
+  },
+  "scripts": {
+    "prepack": "cp ../../LICENSE LICENSE",
+    "build": "tsdown",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/react": "catalog:",
+    "@virtual-frame/store": "workspace:^",
+    "next": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "tsdown": "catalog:",
+    "typescript": "catalog:",
+    "virtual-frame": "workspace:^"
+  },
+  "peerDependencies": {
+    "@virtual-frame/store": "workspace:^",
+    "next": ">=14.0.0",
+    "react": ">=18.0.0",
+    "virtual-frame": "workspace:^"
+  },
+  "peerDependenciesMeta": {
+    "@virtual-frame/store": {
+      "optional": true
+    }
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

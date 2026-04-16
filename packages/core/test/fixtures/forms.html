@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      body {
+        margin: 0;
+        font-family: sans-serif;
+      }
+      label {
+        display: block;
+        margin: 8px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <form id="test-form">
+      <label>
+        Text: <input type="text" id="text-input" value="initial" />
+      </label>
+      <label> Checkbox: <input type="checkbox" id="checkbox-input" /> </label>
+      <label>
+        Radio A:
+        <input type="radio" name="choice" id="radio-a" value="a" checked />
+      </label>
+      <label>
+        Radio B: <input type="radio" name="choice" id="radio-b" value="b" />
+      </label>
+      <label>
+        Select:
+        <select id="select-input">
+          <option value="one">One</option>
+          <option value="two">Two</option>
+          <option value="three">Three</option>
+        </select>
+      </label>
+      <label> Textarea: <textarea id="textarea-input">hello</textarea></label>
+      <button type="button" id="action-btn">Click me</button>
+    </form>
+  </body>
+</html>

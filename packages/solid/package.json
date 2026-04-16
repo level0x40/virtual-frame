@@ -1,0 +1,63 @@
+{
+  "name": "@virtual-frame/solid",
+  "version": "0.1.0",
+  "description": "Solid component for Virtual Frame",
+  "homepage": "https://virtual-frame.level0x40.com",
+  "bugs": {
+    "url": "https://github.com/level0x40/virtual-frame/issues"
+  },
+  "license": "LicenseRef-SAL-1.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/level0x40/virtual-frame.git",
+    "directory": "packages/solid"
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "solid": "./src/index.tsx",
+      "default": "./dist/index.js"
+    },
+    "./store": {
+      "types": "./dist/store.d.ts",
+      "solid": "./src/store.ts",
+      "default": "./dist/store.js"
+    }
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "scripts": {
+    "prepack": "cp ../../LICENSE LICENSE",
+    "build": "vite build && tsc",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@virtual-frame/store": "workspace:^",
+    "solid-js": "^1.9.0",
+    "typescript": "catalog:",
+    "virtual-frame": "workspace:^",
+    "vite": "catalog:",
+    "vite-plugin-solid": "^2.11.11"
+  },
+  "peerDependencies": {
+    "@virtual-frame/store": "workspace:^",
+    "solid-js": ">=1.8.0",
+    "virtual-frame": "workspace:^"
+  },
+  "peerDependenciesMeta": {
+    "@virtual-frame/store": {
+      "optional": true
+    }
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

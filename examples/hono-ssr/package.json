@@ -1,0 +1,21 @@
+{
+  "name": "example-hono-ssr",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.tsx",
+    "typecheck": "tsc --noEmit",
+    "build": "echo \"hono-ssr runs directly via tsx — no build step needed\"",
+    "start": "tsx src/index.tsx"
+  },
+  "dependencies": {
+    "hono": "catalog:",
+    "@hono/node-server": "catalog:",
+    "virtual-frame": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "tsx": "catalog:",
+    "typescript": "catalog:"
+  }
+}

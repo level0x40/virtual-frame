@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      body {
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Explicit polite live region with role, aria-live, and aria-atomic -->
+    <div
+      id="status"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+    >Initial</div>
+
+    <!-- Implicit assertive live region via role="alert" -->
+    <div id="alert" role="alert">Ready</div>
+
+    <!-- IDREF: aria-labelledby target must resolve within the same shadow -->
+    <section aria-labelledby="widget-heading">
+      <h2 id="widget-heading">Widget</h2>
+      <p>Some description content.</p>
+    </section>
+
+    <!-- <label for="id"> association must survive mirroring -->
+    <form id="signup">
+      <label for="email">Email address</label>
+      <input id="email" name="email" type="email" />
+    </form>
+
+    <script>
+      // Test helpers — mirror the pattern used by mutations.html.
+      window.setStatus = function (text) {
+        document.getElementById("status").textContent = text;
+      };
+      window.setStatusLevel = function (level) {
+        document.getElementById("status").setAttribute("aria-live", level);
+      };
+      window.setAlertText = function (text) {
+        document.getElementById("alert").textContent = text;
+      };
+      window.setLabelText = function (text) {
+        document.getElementById("widget-heading").textContent = text;
+      };
+    </script>
+  </body>
+</html>

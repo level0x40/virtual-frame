@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Virtual Frame Demo</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family:
+          system-ui,
+          -apple-system,
+          sans-serif;
+        margin: 20px;
+        background: #f5f5f5;
+      }
+
+      h1 {
+        text-align: center;
+        color: #333;
+      }
+
+      .demo-container {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 20px;
+        margin: 0 auto;
+      }
+
+      .demo-container.side-by-side {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .section {
+        background: white;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      #iframeSection.offscreen {
+        position: fixed;
+        left: -200vw;
+        top: 0;
+        width: 100vw;
+        height: 100vh;
+        pointer-events: none;
+        opacity: 0;
+      }
+
+      .section h2 {
+        margin-top: 0;
+        color: #333;
+        border-bottom: 2px solid #007acc;
+        padding-bottom: 10px;
+      }
+
+      #src {
+        width: 100%;
+        height: 600px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+      }
+
+      virtual-frame {
+        display: block;
+        border: 2px dashed #007acc;
+        border-radius: 4px;
+        min-height: 400px;
+        overflow: auto;
+        user-select: text;
+        -webkit-user-select: text;
+      }
+
+      .info {
+        background: #e3f2fd;
+        border: 1px solid #bbdefb;
+        border-radius: 4px;
+        padding: 15px;
+        margin-bottom: 20px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .info h3 {
+        margin-top: 0;
+        color: #1976d2;
+      }
+
+      .controls {
+        margin-bottom: 15px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        align-items: center;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .controls button {
+        background: #007acc;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 13px;
+      }
+
+      .controls button:hover {
+        background: #005a9e;
+      }
+
+      .page-tabs {
+        display: flex;
+        gap: 4px;
+        flex-wrap: wrap;
+      }
+
+      .page-tabs button {
+        background: #f0f0f0;
+        color: #333;
+        border: 1px solid #ccc;
+      }
+
+      .page-tabs button:hover {
+        background: #e0e0e0;
+      }
+
+      .page-tabs button.active {
+        background: #007acc;
+        color: white;
+        border-color: #007acc;
+      }
+
+      @media (max-width: 768px) {
+        .demo-container.side-by-side {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1><code>&lt;virtual-frame&gt;</code> Demo</h1>
+
+    <div class="info">
+      <h3>How it works</h3>
+      <ul>
+        <li>
+          <strong>Real-time projection:</strong> Content from the source is
+          projected into the host element with full style preservation
+        </li>
+        <li>
+          <strong>Mutation observation:</strong> Any changes in the source are
+          automatically reflected in the projection
+        </li>
+        <li>
+          <strong>Event proxying:</strong> Interactions on the projected content
+          trigger events in the original source
+        </li>
+        <li>
+          <strong>Canvas &amp; video:</strong> Animated canvas and video
+          elements are streamed in real-time
+        </li>
+      </ul>
+    </div>
+
+    <div class="controls">
+      <div class="page-tabs" id="pageTabs">
+        <button class="active" data-page="showcase">Showcase</button>
+        <button data-page="forms">Forms</button>
+        <button data-page="media">Media</button>
+        <button data-page="svg">SVG</button>
+      </div>
+      <button id="toggleIframe" onclick="toggleIframeVisibility()">
+        Show Source
+      </button>
+      <button onclick="document.querySelector('virtual-frame')?.refresh()">
+        Refresh Projection
+      </button>
+      <button
+        onclick="
+          document.getElementById('src').src =
+            document.getElementById('src').src
+        "
+      >
+        Reload Source
+      </button>
+    </div>
+
+    <div class="demo-container" id="demoContainer">
+      <div class="section offscreen" id="iframeSection">
+        <h2>Original Source</h2>
+        <iframe id="src" src="/showcase.html"></iframe>
+      </div>
+
+      <div class="section">
+        <h2>Projected via &lt;virtual-frame&gt;</h2>
+        <p style="color: #666; font-size: 14px">
+          This projects the source content. Try interacting with elements here
+          &mdash; events are proxied back to the original source.
+        </p>
+        <virtual-frame src="#src" isolate="open"></virtual-frame>
+      </div>
+    </div>
+
+    <script>
+      function toggleIframeVisibility() {
+        const section = document.getElementById("iframeSection");
+        const container = document.getElementById("demoContainer");
+        const btn = document.getElementById("toggleIframe");
+        const hidden = section.classList.contains("offscreen");
+        section.classList.toggle("offscreen", !hidden);
+        container.classList.toggle("side-by-side", hidden);
+        btn.textContent = hidden ? "Hide Source" : "Show Source";
+      }
+
+      const pages = {
+        showcase: "/showcase.html",
+        forms: "/forms.html",
+        media: "/media.html",
+        svg: "/svg.html",
+      };
+
+      const tabs = document.getElementById("pageTabs");
+      tabs.addEventListener("click", (e) => {
+        const btn = e.target.closest("button[data-page]");
+        if (!btn) return;
+        tabs
+          .querySelectorAll("button")
+          .forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        document.getElementById("src").src = pages[btn.dataset.page];
+      });
+    </script>
+    <script type="module">
+      import "virtual-frame/element";
+    </script>
+  </body>
+</html>

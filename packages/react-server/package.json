@@ -1,0 +1,95 @@
+{
+  "name": "@virtual-frame/react-server",
+  "version": "0.1.0",
+  "description": "React Server integration for Virtual Frame — async Server Component with SSR resume for @lazarv/react-server",
+  "homepage": "https://virtual-frame.level0x40.com",
+  "bugs": {
+    "url": "https://github.com/level0x40/virtual-frame/issues"
+  },
+  "license": "LicenseRef-SAL-1.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/level0x40/virtual-frame.git",
+    "directory": "packages/react-server"
+  },
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "react-server": {
+        "types": "./src/index.server.tsx",
+        "default": "./src/index.server.tsx"
+      },
+      "default": "./src/index.ts"
+    },
+    "./cache": {
+      "types": "./src/cache.ts",
+      "default": "./src/cache.ts"
+    },
+    "./client": {
+      "types": "./src/client.tsx",
+      "default": "./src/client.tsx"
+    },
+    "./store": {
+      "types": "./src/store.ts",
+      "default": "./src/store.ts"
+    }
+  },
+  "publishConfig": {
+    "access": "public",
+    "exports": {
+      ".": {
+        "react-server": {
+          "types": "./dist/index.server.d.mts",
+          "default": "./dist/index.server.mjs"
+        },
+        "types": "./dist/index.d.mts",
+        "default": "./dist/index.mjs"
+      },
+      "./cache": {
+        "types": "./dist/cache.d.mts",
+        "default": "./dist/cache.mjs"
+      },
+      "./client": {
+        "types": "./dist/client.d.mts",
+        "default": "./dist/client.mjs"
+      },
+      "./store": {
+        "types": "./dist/store.d.mts",
+        "default": "./dist/store.mjs"
+      }
+    },
+    "provenance": true
+  },
+  "scripts": {
+    "prepack": "cp ../../LICENSE LICENSE",
+    "build": "tsdown",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/react": "catalog:",
+    "@virtual-frame/store": "workspace:^",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "tsdown": "catalog:",
+    "typescript": "catalog:",
+    "virtual-frame": "workspace:^"
+  },
+  "peerDependencies": {
+    "@lazarv/react-server": ">=0.0.0-experimental-a0c7b63-20260415-0532bb4e",
+    "@virtual-frame/store": "workspace:^",
+    "react": ">=18.0.0",
+    "virtual-frame": "workspace:^"
+  },
+  "peerDependenciesMeta": {
+    "@virtual-frame/store": {
+      "optional": true
+    }
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

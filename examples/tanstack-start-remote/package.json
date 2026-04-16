@@ -1,0 +1,29 @@
+{
+  "name": "example-tanstack-start-remote",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite dev",
+    "build": "vite build",
+    "start": "PORT=${PORT:-3005} node .output/server/index.mjs",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@tanstack/react-router": "catalog:",
+    "@tanstack/react-start": "catalog:",
+    "@virtual-frame/store": "workspace:*",
+    "@virtual-frame/tanstack-start": "workspace:*",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "virtual-frame": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "@vitejs/plugin-react": "catalog:",
+    "nitro": "catalog:",
+    "typescript": "catalog:",
+    "vite": "catalog:"
+  }
+}

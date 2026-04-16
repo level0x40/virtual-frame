@@ -1,0 +1,20 @@
+{
+  "name": "virtual-frame-e2e",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "playwright test",
+    "test:dev": "playwright test --grep \"\\(dev\\)\"",
+    "test:prod": "playwright test --grep \"\\(prod\\)\"",
+    "test:ui": "playwright test --ui",
+    "report": "playwright show-report",
+    "cleanup": "bash cleanup.sh",
+    "cleanup:force": "bash cleanup.sh --force"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.59.1",
+    "@types/node": "catalog:",
+    "typescript": "catalog:"
+  }
+}

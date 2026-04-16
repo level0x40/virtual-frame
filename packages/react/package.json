@@ -1,0 +1,62 @@
+{
+  "name": "@virtual-frame/react",
+  "version": "0.1.0",
+  "description": "React component for Virtual Frame",
+  "homepage": "https://virtual-frame.level0x40.com",
+  "bugs": {
+    "url": "https://github.com/level0x40/virtual-frame/issues"
+  },
+  "license": "LicenseRef-SAL-1.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/level0x40/virtual-frame.git",
+    "directory": "packages/react"
+  },
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./store": {
+      "types": "./dist/store.d.ts",
+      "default": "./dist/store.js"
+    }
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "scripts": {
+    "prepack": "cp ../../LICENSE LICENSE",
+    "build": "vite build && tsc",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/react": "catalog:",
+    "@virtual-frame/store": "workspace:^",
+    "@vitejs/plugin-react": "^6.0.0",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "typescript": "catalog:",
+    "virtual-frame": "workspace:^",
+    "vite": "catalog:"
+  },
+  "peerDependencies": {
+    "@virtual-frame/store": "workspace:^",
+    "react": ">=18.0.0",
+    "virtual-frame": "workspace:^"
+  },
+  "peerDependenciesMeta": {
+    "@virtual-frame/store": {
+      "optional": true
+    }
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

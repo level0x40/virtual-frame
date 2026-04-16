@@ -1,0 +1,22 @@
+{
+  "name": "example-react-host",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "start": "vite preview"
+  },
+  "dependencies": {
+    "@virtual-frame/react": "workspace:*",
+    "@virtual-frame/store": "workspace:*",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "virtual-frame": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/react": "catalog:",
+    "@vitejs/plugin-react": "^6.0.0",
+    "vite": "catalog:"
+  }
+}

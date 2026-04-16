@@ -1,0 +1,13 @@
+{
+  "root": "app",
+  "cors": true,
+  "page": {
+    "include": ["**/page.tsx"]
+  },
+  "layout": {
+    "include": ["**/layout.tsx"]
+  },
+  "server": {
+    "hmr": false
+  }
+}

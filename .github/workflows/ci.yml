@@ -1,0 +1,202 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# Cancel superseded runs on the same ref. main always runs to completion
+# because we want every push-to-main commit reflected in the status checks.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+jobs:
+  # ──────────────────────────────────────────────────────────────────────
+  # PR hygiene — title must follow Conventional Commits so that release
+  # notes and downstream tooling stay consistent.
+  # ──────────────────────────────────────────────────────────────────────
+  pr-title:
+    name: PR Title
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    permissions:
+      pull-requests: read
+    steps:
+      - name: Validate Conventional Commits format
+        uses: amannn/action-semantic-pull-request@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          types: |
+            feat
+            fix
+            perf
+            refactor
+            docs
+            test
+            build
+            ci
+            chore
+            revert
+          requireScope: false
+          subjectPattern: ^[A-Za-z0-9].+$
+          subjectPatternError: |
+            The PR title subject must start with an alphanumeric character.
+
+  # ──────────────────────────────────────────────────────────────────────
+  # Static analysis — formatting + lint. Cheap, runs first.
+  # ──────────────────────────────────────────────────────────────────────
+  lint:
+    name: Lint & Format
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+
+      - name: Check formatting
+        run: pnpm format:check
+
+      - name: Lint
+        run: pnpm lint
+
+  # ──────────────────────────────────────────────────────────────────────
+  # Type-check across the workspace. Today this is a real CI gap.
+  # ──────────────────────────────────────────────────────────────────────
+  typecheck:
+    name: Typecheck
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+
+      - name: Typecheck all packages
+        run: pnpm typecheck
+
+  # ──────────────────────────────────────────────────────────────────────
+  # Unit + browser tests via vitest.
+  # ──────────────────────────────────────────────────────────────────────
+  test:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+
+      - name: Install Playwright browsers
+        # vitest browser mode uses Playwright's chromium under the hood.
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Run vitest
+        run: pnpm test:run
+
+      - name: Upload coverage
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: coverage/
+          if-no-files-found: ignore
+          retention-days: 14
+
+  # ──────────────────────────────────────────────────────────────────────
+  # Build all packages. Produces dist/ artifacts that e2e relies on
+  # implicitly (e2e prod-mode builds each example, which transitively
+  # consumes built packages).
+  # ──────────────────────────────────────────────────────────────────────
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+
+      - name: Build all packages
+        run: pnpm build
+
+  # ──────────────────────────────────────────────────────────────────────
+  # End-to-end Playwright suite — boots real example apps in dev and prod
+  # mode against a real browser. This is a required gate.
+  # ──────────────────────────────────────────────────────────────────────
+  e2e:
+    name: E2E (Playwright)
+    needs: [build]
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+
+      - name: Install Playwright browsers
+        working-directory: e2e
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Run E2E suite
+        run: pnpm test:e2e
+
+      - name: Upload Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            e2e/playwright-report/
+            e2e/test-results/
+          if-no-files-found: ignore
+          retention-days: 14
+
+  # ──────────────────────────────────────────────────────────────────────
+  # Changeset gate — ensure version-bumping intent is captured before
+  # merging. Bypass with the `skip-changeset` label on the PR.
+  # ──────────────────────────────────────────────────────────────────────
+  changeset-check:
+    name: Changeset
+    if: |
+      github.event_name == 'pull_request' &&
+      !contains(github.event.pull_request.labels.*.name, 'skip-changeset')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # changeset status needs main as a comparison base.
+          fetch-depth: 0
+      - uses: ./.github/actions/setup
+
+      - name: Verify changeset present
+        run: pnpm changeset status --since=origin/${{ github.base_ref }}
+
+  # ──────────────────────────────────────────────────────────────────────
+  # Aggregate gate — single status for branch protection to require.
+  # ──────────────────────────────────────────────────────────────────────
+  ci-success:
+    name: CI Success
+    if: always()
+    needs: [pr-title, lint, typecheck, test, build, e2e, changeset-check]
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+    steps:
+      - name: Verify all required jobs succeeded
+        env:
+          RESULTS: ${{ toJson(needs) }}
+        run: |
+          echo "$RESULTS"
+          echo "$RESULTS" | python3 -c "
+          import json, sys
+          results = json.load(sys.stdin)
+          failed = [name for name, info in results.items()
+                    if info.get('result') not in ('success', 'skipped')]
+          if failed:
+              print(f'Failed/cancelled jobs: {failed}', file=sys.stderr)
+              sys.exit(1)
+          print('All required jobs passed.')
+          "

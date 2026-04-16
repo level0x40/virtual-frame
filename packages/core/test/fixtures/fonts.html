@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      @font-face {
+        font-family: "TestCustomFont";
+        src: url(data:font/woff2;base64,d09GMgABAAAAAAIQAA0AAAAABKAAAAHAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGhYbEBwaBmAANBEQCoEsgQsBNgIkAxQLDAAEIAWDOAcgGwkEyB2Qe3cPEhpjI0cxREvCxkiC/8sD/D//bX/ue8OAI9ISjSJ2lMSmaadSR7JG00s+kQi0WT+nz9z7/99AObs1pRIpqWJ5P+/1uv3FgAgKEhQYqpCMEGTkFSkmCI1JaTMX9f7D0BAAooSVJQgqEhRYooC)
+          format("woff2");
+        font-weight: normal;
+        font-style: normal;
+      }
+      body {
+        margin: 0;
+        font-family: "TestCustomFont", sans-serif;
+      }
+      .custom-font {
+        font-family: "TestCustomFont";
+        font-size: 24px;
+      }
+      .fallback-font {
+        font-family: sans-serif;
+        font-size: 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <p id="custom-text" class="custom-font">Custom font text</p>
+    <p id="fallback-text" class="fallback-font">Fallback font text</p>
+  </body>
+</html>

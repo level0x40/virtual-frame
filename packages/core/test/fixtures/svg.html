@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      body {
+        margin: 0;
+        font-family: sans-serif;
+      }
+      svg {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <svg
+      id="test-svg"
+      width="200"
+      height="200"
+      viewBox="0 0 200 200"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <defs>
+        <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop
+            offset="0%"
+            style="stop-color: rgb(255, 255, 0); stop-opacity: 1"
+          />
+          <stop
+            offset="100%"
+            style="stop-color: rgb(255, 0, 0); stop-opacity: 1"
+          />
+        </linearGradient>
+        <clipPath id="clip1">
+          <circle cx="100" cy="100" r="80" />
+        </clipPath>
+      </defs>
+      <rect
+        id="svg-rect"
+        x="10"
+        y="10"
+        width="80"
+        height="80"
+        fill="blue"
+        rx="5"
+      />
+      <circle id="svg-circle" cx="150" cy="50" r="40" fill="url(#grad1)" />
+      <ellipse
+        id="svg-ellipse"
+        cx="100"
+        cy="150"
+        rx="60"
+        ry="30"
+        fill="green"
+        opacity="0.7"
+      />
+      <line
+        id="svg-line"
+        x1="0"
+        y1="0"
+        x2="200"
+        y2="200"
+        stroke="red"
+        stroke-width="2"
+      />
+      <polyline
+        id="svg-polyline"
+        points="20,180 60,140 100,180 140,140 180,180"
+        fill="none"
+        stroke="purple"
+        stroke-width="2"
+      />
+      <polygon
+        id="svg-polygon"
+        points="100,10 40,198 190,78 10,78 160,198"
+        fill="none"
+        stroke="orange"
+        stroke-width="1"
+      />
+      <text id="svg-text" x="50" y="120" font-size="14" fill="black">
+        SVG Text
+      </text>
+      <path
+        id="svg-path"
+        d="M10,80 Q52.5,10 95,80 T180,80"
+        fill="none"
+        stroke="darkblue"
+        stroke-width="2"
+      />
+      <g id="svg-group" transform="translate(0,0)">
+        <rect x="170" y="170" width="20" height="20" fill="cyan" />
+      </g>
+      <image
+        id="svg-image"
+        x="0"
+        y="0"
+        width="1"
+        height="1"
+        href="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="
+      />
+      <use id="svg-use" href="#svg-rect" x="50" y="50" opacity="0.3" />
+    </svg>
+    <p id="svg-status">SVG rendered</p>
+  </body>
+</html>

@@ -1,0 +1,70 @@
+{
+  "name": "@virtual-frame/vue",
+  "version": "0.1.0",
+  "description": "Vue component for Virtual Frame",
+  "homepage": "https://virtual-frame.level0x40.com",
+  "bugs": {
+    "url": "https://github.com/level0x40/virtual-frame/issues"
+  },
+  "license": "LicenseRef-SAL-1.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/level0x40/virtual-frame.git",
+    "directory": "packages/vue"
+  },
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    },
+    "./store": {
+      "types": "./src/store.ts",
+      "default": "./src/store.ts"
+    }
+  },
+  "publishConfig": {
+    "access": "public",
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "./store": {
+        "types": "./dist/store.d.ts",
+        "default": "./dist/store.js"
+      }
+    },
+    "provenance": true
+  },
+  "scripts": {
+    "prepack": "cp ../../LICENSE LICENSE",
+    "build": "vite build && vue-tsc",
+    "typecheck": "vue-tsc --noEmit"
+  },
+  "devDependencies": {
+    "@virtual-frame/store": "workspace:^",
+    "@vitejs/plugin-vue": "^6.0.0",
+    "typescript": "catalog:",
+    "virtual-frame": "workspace:^",
+    "vite": "catalog:",
+    "vue": "^3.5.0",
+    "vue-tsc": "^3.2.5"
+  },
+  "peerDependencies": {
+    "@virtual-frame/store": "workspace:^",
+    "virtual-frame": "workspace:^",
+    "vue": ">=3.3.0"
+  },
+  "peerDependenciesMeta": {
+    "@virtual-frame/store": {
+      "optional": true
+    }
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

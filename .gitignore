@@ -1,0 +1,19 @@
+node_modules/
+dist/
+coverage/
+# Per-package LICENSE is copied from the repo root by the `prepack` hook;
+# the root LICENSE is the source of truth. Per-package README.md is tracked.
+packages/*/LICENSE
+**/.vitepress/cache/
+**/.vitepress/dist/
+**/.next
+**/.nuxt
+**/.output
+**/.react-server
+**/.svelte-kit
+**/build
+.viteplus
+*.local
+.DS_Store
+*.tsbuildinfo
+**/__screenshots__

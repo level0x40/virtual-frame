@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      body {
+        margin: 0;
+      }
+      canvas {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="test-canvas" width="200" height="100"></canvas>
+    <script>
+      const canvas = document.getElementById("test-canvas");
+      const ctx = canvas.getContext("2d");
+      // Draw a recognisable pattern: red rect + semi-transparent green overlay
+      ctx.fillStyle = "red";
+      ctx.fillRect(0, 0, 200, 100);
+      ctx.fillStyle = "rgba(0, 255, 0, 0.5)";
+      ctx.fillRect(50, 25, 100, 50);
+    </script>
+  </body>
+</html>

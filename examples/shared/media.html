@@ -1,0 +1,350 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      body {
+        font-family:
+          system-ui,
+          -apple-system,
+          sans-serif;
+        background: #111;
+        color: #eee;
+        padding: 20px;
+        margin: 0;
+      }
+
+      .container {
+        max-width: 500px;
+        margin: 0 auto;
+      }
+
+      h1 {
+        text-align: center;
+        font-size: 1.4em;
+        margin-bottom: 6px;
+      }
+
+      h2 {
+        color: #aaa;
+        font-size: 1em;
+        margin-top: 28px;
+        border-bottom: 1px solid #333;
+        padding-bottom: 6px;
+      }
+
+      .media-section {
+        margin: 16px 0;
+      }
+
+      canvas {
+        display: block;
+        width: 100%;
+        border-radius: 8px;
+        background: #000;
+      }
+
+      video {
+        display: block;
+        width: 100%;
+        border-radius: 8px;
+        background: #000;
+      }
+
+      .controls {
+        display: flex;
+        gap: 8px;
+        margin-top: 8px;
+        flex-wrap: wrap;
+      }
+
+      button {
+        background: #007acc;
+        color: white;
+        border: none;
+        padding: 8px 14px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 13px;
+      }
+
+      button:hover {
+        background: #005a9e;
+      }
+
+      .info {
+        font-size: 0.85em;
+        color: #888;
+        margin-top: 4px;
+      }
+
+      .visualizer {
+        height: 80px;
+        background: #1a1a2e;
+        border-radius: 8px;
+        margin-top: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Media Elements</h1>
+
+      <h2>Animated Canvas</h2>
+      <div class="media-section">
+        <canvas id="animCanvas" width="460" height="260"></canvas>
+        <p class="info">
+          Particles simulation with trails — streamed via
+          <code>captureStream()</code>
+        </p>
+      </div>
+
+      <h2>Canvas → Video</h2>
+      <div class="media-section">
+        <video id="streamVideo" autoplay muted></video>
+        <p class="info">
+          Video element fed by the canvas above via
+          <code>captureStream(30)</code>
+        </p>
+      </div>
+
+      <h2>Web Audio Visualizer</h2>
+      <div class="media-section">
+        <canvas
+          id="visualizer"
+          class="visualizer"
+          width="460"
+          height="80"
+        ></canvas>
+        <div class="controls">
+          <button onclick="playTone('sine')">Sine</button>
+          <button onclick="playTone('square')">Square</button>
+          <button onclick="playTone('sawtooth')">Sawtooth</button>
+          <button onclick="playTone('triangle')">Triangle</button>
+          <button onclick="playMelody()">Melody</button>
+          <button onclick="stopAudio()">Stop</button>
+        </div>
+        <p class="info">Click a waveform type to see the audio visualizer</p>
+      </div>
+
+      <h2>Gradient Generator</h2>
+      <div class="media-section">
+        <canvas id="gradientCanvas" width="460" height="120"></canvas>
+        <div class="controls">
+          <button onclick="randomGradient()">Random Gradient</button>
+          <button onclick="animateGradient()">Animate</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Particle animation
+      const canvas = document.getElementById("animCanvas");
+      const ctx = canvas.getContext("2d");
+      const particles = [];
+
+      class Particle {
+        constructor() {
+          this.reset();
+        }
+        reset() {
+          this.x = Math.random() * canvas.width;
+          this.y = Math.random() * canvas.height;
+          this.vx = (Math.random() - 0.5) * 3;
+          this.vy = (Math.random() - 0.5) * 3;
+          this.radius = Math.random() * 4 + 1;
+          this.hue = Math.random() * 360;
+          this.life = 1;
+          this.decay = Math.random() * 0.005 + 0.002;
+        }
+        update() {
+          this.x += this.vx;
+          this.y += this.vy;
+          this.life -= this.decay;
+          this.hue += 0.5;
+          if (this.life <= 0) this.reset();
+          if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+          if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+        }
+        draw() {
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+          ctx.fillStyle = `hsla(${this.hue}, 80%, 60%, ${this.life})`;
+          ctx.fill();
+        }
+      }
+
+      for (let i = 0; i < 80; i++) {
+        particles.push(new Particle());
+      }
+
+      function animateParticles() {
+        ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        particles.forEach((p) => {
+          p.update();
+          p.draw();
+        });
+        // Draw connections
+        for (let i = 0; i < particles.length; i++) {
+          for (let j = i + 1; j < particles.length; j++) {
+            const dx = particles[i].x - particles[j].x;
+            const dy = particles[i].y - particles[j].y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < 60) {
+              ctx.beginPath();
+              ctx.moveTo(particles[i].x, particles[i].y);
+              ctx.lineTo(particles[j].x, particles[j].y);
+              ctx.strokeStyle = `hsla(${particles[i].hue}, 70%, 50%, ${0.3 * (1 - dist / 60)})`;
+              ctx.lineWidth = 0.5;
+              ctx.stroke();
+            }
+          }
+        }
+        requestAnimationFrame(animateParticles);
+      }
+      animateParticles();
+
+      // Canvas → Video stream
+      const video = document.getElementById("streamVideo");
+      try {
+        const stream = canvas.captureStream(30);
+        video.srcObject = stream;
+      } catch (e) {
+        console.warn("captureStream not supported:", e);
+      }
+
+      // Web Audio
+      let audioCtx = null;
+      let oscillator = null;
+      let analyser = null;
+      let gainNode = null;
+
+      function initAudio() {
+        if (!audioCtx) {
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+          analyser = audioCtx.createAnalyser();
+          analyser.fftSize = 256;
+          gainNode = audioCtx.createGain();
+          gainNode.gain.value = 0.15;
+          gainNode.connect(analyser);
+          analyser.connect(audioCtx.destination);
+          drawVisualizer();
+        }
+      }
+
+      function playTone(type) {
+        initAudio();
+        stopOscillator();
+        oscillator = audioCtx.createOscillator();
+        oscillator.type = type;
+        oscillator.frequency.value = 220 + Math.random() * 220;
+        oscillator.connect(gainNode);
+        oscillator.start();
+      }
+
+      function playMelody() {
+        initAudio();
+        stopOscillator();
+        const notes = [262, 294, 330, 349, 392, 440, 494, 523];
+        let i = 0;
+        function nextNote() {
+          if (i >= notes.length * 2) return;
+          stopOscillator();
+          oscillator = audioCtx.createOscillator();
+          oscillator.type = "triangle";
+          oscillator.frequency.value = notes[i % notes.length];
+          oscillator.connect(gainNode);
+          oscillator.start();
+          i++;
+          setTimeout(nextNote, 250);
+        }
+        nextNote();
+      }
+
+      function stopOscillator() {
+        if (oscillator) {
+          try {
+            oscillator.stop();
+          } catch (e) {}
+          oscillator = null;
+        }
+      }
+
+      function stopAudio() {
+        stopOscillator();
+      }
+
+      function drawVisualizer() {
+        const vCanvas = document.getElementById("visualizer");
+        const vCtx = vCanvas.getContext("2d");
+        const bufferLength = analyser.frequencyBinCount;
+        const dataArray = new Uint8Array(bufferLength);
+
+        function draw() {
+          requestAnimationFrame(draw);
+          analyser.getByteFrequencyData(dataArray);
+          vCtx.fillStyle = "#1a1a2e";
+          vCtx.fillRect(0, 0, vCanvas.width, vCanvas.height);
+          const barWidth = vCanvas.width / bufferLength;
+          for (let i = 0; i < bufferLength; i++) {
+            const barHeight = (dataArray[i] / 255) * vCanvas.height;
+            const hue = (i / bufferLength) * 360;
+            vCtx.fillStyle = `hsl(${hue}, 80%, 55%)`;
+            vCtx.fillRect(
+              i * barWidth,
+              vCanvas.height - barHeight,
+              barWidth - 1,
+              barHeight,
+            );
+          }
+        }
+        draw();
+      }
+
+      // Gradient generator
+      const gCanvas = document.getElementById("gradientCanvas");
+      const gCtx = gCanvas.getContext("2d");
+      let gradAnimId = null;
+
+      function randomGradient() {
+        cancelAnimationFrame(gradAnimId);
+        gradAnimId = null;
+        const grad = gCtx.createLinearGradient(
+          0,
+          0,
+          gCanvas.width,
+          gCanvas.height,
+        );
+        grad.addColorStop(0, `hsl(${Math.random() * 360}, 80%, 60%)`);
+        grad.addColorStop(0.5, `hsl(${Math.random() * 360}, 70%, 50%)`);
+        grad.addColorStop(1, `hsl(${Math.random() * 360}, 80%, 60%)`);
+        gCtx.fillStyle = grad;
+        gCtx.fillRect(0, 0, gCanvas.width, gCanvas.height);
+      }
+
+      function animateGradient() {
+        let t = 0;
+        function step() {
+          t += 0.01;
+          const grad = gCtx.createLinearGradient(
+            Math.sin(t) * gCanvas.width * 0.5 + gCanvas.width * 0.5,
+            0,
+            Math.cos(t) * gCanvas.width * 0.5 + gCanvas.width * 0.5,
+            gCanvas.height,
+          );
+          grad.addColorStop(0, `hsl(${(t * 50) % 360}, 80%, 60%)`);
+          grad.addColorStop(0.5, `hsl(${(t * 50 + 120) % 360}, 70%, 50%)`);
+          grad.addColorStop(1, `hsl(${(t * 50 + 240) % 360}, 80%, 60%)`);
+          gCtx.fillStyle = grad;
+          gCtx.fillRect(0, 0, gCanvas.width, gCanvas.height);
+          gradAnimId = requestAnimationFrame(step);
+        }
+        cancelAnimationFrame(gradAnimId);
+        step();
+      }
+
+      randomGradient();
+    </script>
+  </body>
+</html>

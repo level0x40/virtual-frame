@@ -1,0 +1,78 @@
+{
+  "name": "@virtual-frame/analog",
+  "version": "0.1.0",
+  "description": "Analog.js integration for Virtual Frame — SSR with Nitro server routes and client-side resume",
+  "homepage": "https://virtual-frame.level0x40.com",
+  "bugs": {
+    "url": "https://github.com/level0x40/virtual-frame/issues"
+  },
+  "license": "LicenseRef-SAL-1.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/level0x40/virtual-frame.git",
+    "directory": "packages/analog"
+  },
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/fesm2022/virtual-frame-analog.mjs"
+    },
+    "./client": {
+      "types": "./dist/client/index.d.ts",
+      "default": "./dist/fesm2022/virtual-frame-analog-client.mjs"
+    },
+    "./store": {
+      "types": "./dist/store/index.d.ts",
+      "default": "./dist/fesm2022/virtual-frame-analog-store.mjs"
+    },
+    "./server": {
+      "types": "./dist/server/server.d.ts",
+      "default": "./dist/server/server.js"
+    }
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "scripts": {
+    "prepack": "cp ../../LICENSE LICENSE",
+    "build": "ng-packagr -p ng-package.json && tsc -p tsconfig.server.json && rm -f dist/package.json && find dist -name '*.map' -delete",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "tslib": "^2.8.0"
+  },
+  "devDependencies": {
+    "@angular/common": "^20.2.0",
+    "@angular/compiler": "catalog:",
+    "@angular/compiler-cli": "catalog:",
+    "@angular/core": "^20.2.0",
+    "@angular/platform-browser": "^20.2.0",
+    "@virtual-frame/angular": "workspace:^",
+    "@virtual-frame/store": "workspace:^",
+    "ng-packagr": "catalog:",
+    "tsdown": "catalog:",
+    "typescript": "catalog:",
+    "virtual-frame": "workspace:^"
+  },
+  "peerDependencies": {
+    "@angular/common": ">=17.0.0",
+    "@angular/core": ">=17.0.0",
+    "@angular/platform-browser": ">=17.0.0",
+    "@virtual-frame/angular": "workspace:^",
+    "@virtual-frame/store": "workspace:^",
+    "virtual-frame": "workspace:^"
+  },
+  "peerDependenciesMeta": {
+    "@virtual-frame/store": {
+      "optional": true
+    }
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

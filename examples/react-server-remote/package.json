@@ -1,0 +1,23 @@
+{
+  "name": "example-react-server-remote",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "react-server --port ${PORT:-3003}",
+    "build": "react-server build",
+    "start": "react-server start --port ${PORT:-3003}",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@lazarv/react-server": "catalog:",
+    "@virtual-frame/react-server": "workspace:*",
+    "@virtual-frame/store": "workspace:*",
+    "virtual-frame": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "typescript": "catalog:"
+  }
+}

@@ -1,0 +1,135 @@
+name: Bug report
+description: Something is broken or behaving unexpectedly.
+title: "[Bug]: "
+labels: ["type:bug", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to file a bug report.
+
+        Before submitting, please:
+        1. Search [existing issues](https://github.com/level0x40/virtual-frame/issues?q=is%3Aissue) to avoid duplicates.
+        2. Confirm you're on the latest minor version of the package(s) involved.
+
+        For **security vulnerabilities**, do not open a public issue — see [SECURITY.md](https://github.com/level0x40/virtual-frame/blob/main/SECURITY.md).
+
+  - type: dropdown
+    id: package
+    attributes:
+      label: Affected package
+      description: Which Virtual Frame package(s) reproduce the bug?
+      multiple: true
+      options:
+        - virtual-frame (core)
+        - "@virtual-frame/store"
+        - "@virtual-frame/react"
+        - "@virtual-frame/vue"
+        - "@virtual-frame/svelte"
+        - "@virtual-frame/solid"
+        - "@virtual-frame/angular"
+        - "@virtual-frame/next"
+        - "@virtual-frame/nuxt"
+        - "@virtual-frame/sveltekit"
+        - "@virtual-frame/solid-start"
+        - "@virtual-frame/tanstack-start"
+        - "@virtual-frame/react-router"
+        - "@virtual-frame/react-server"
+        - "@virtual-frame/analog"
+        - Documentation
+        - Other / unsure
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Package version
+      description: Output of `npm ls virtual-frame` (or the affected package). Pin to an exact version, not `latest`.
+      placeholder: "0.1.0"
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: A clear description of the bug. Include any console errors verbatim.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect to happen?
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction
+      description: |
+        Link to a minimal repository (forking one of the [examples/](https://github.com/level0x40/virtual-frame/tree/main/examples) is encouraged) or paste a runnable code snippet. Bug reports without a reproduction are likely to be closed.
+      placeholder: "https://github.com/your-name/repro-virtual-frame"
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Numbered list — be precise about commands and clicks.
+      placeholder: |
+        1. `pnpm install`
+        2. `pnpm dev`
+        3. Open http://localhost:3000
+        4. Click "X"
+        5. See error in console
+    validations:
+      required: true
+
+  - type: input
+    id: browser
+    attributes:
+      label: Browser & version
+      placeholder: "Chrome 134, Safari 17.4, Firefox 125"
+    validations:
+      required: true
+
+  - type: input
+    id: os
+    attributes:
+      label: OS
+      placeholder: "macOS 14.5, Ubuntu 24.04, Windows 11"
+    validations:
+      required: true
+
+  - type: input
+    id: node
+    attributes:
+      label: Node.js version
+      description: Output of `node -v`
+      placeholder: "v22.11.0"
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional context
+      description: Logs, screenshots, recordings, anything else that helps. Optional.
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Pre-submission checklist
+      options:
+        - label: I searched existing issues and did not find a duplicate.
+          required: true
+        - label: I confirmed the bug reproduces against the latest published version.
+          required: true
+        - label: I am not reporting a security vulnerability (those go to hello@level0x40.com).
+          required: true

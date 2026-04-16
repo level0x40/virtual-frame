@@ -1,0 +1,23 @@
+{
+  "name": "example-nextjs-pages-host",
+  "private": true,
+  "scripts": {
+    "dev": "PORT=${PORT:-3016} next dev",
+    "build": "next build",
+    "start": "PORT=${PORT:-3016} next start",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@virtual-frame/next": "workspace:*",
+    "next": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "virtual-frame": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "typescript": "catalog:"
+  }
+}

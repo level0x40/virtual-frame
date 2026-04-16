@@ -1,0 +1,68 @@
+name: Framework integration request
+description: Request a new framework binding or meta-framework integration.
+title: "[Integration]: "
+labels: ["type:integration", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Virtual Frame already ships bindings for React, Vue, Svelte, Solid, Angular, and integrations for Next.js, Nuxt, SvelteKit, Solid Start, TanStack Start, Analog, React Router, and React Server. If your framework isn't on the list, this is the place to request it.
+
+        Before filing, please check whether the existing **vanilla JS** API meets your needs. The core `virtual-frame` package is framework-agnostic by design — many use cases don't require a dedicated binding.
+
+  - type: input
+    id: framework
+    attributes:
+      label: Framework name
+      placeholder: "Qwik, Astro, Marko, Lit, ..."
+    validations:
+      required: true
+
+  - type: input
+    id: framework-version
+    attributes:
+      label: Framework version
+      placeholder: "Qwik 1.5"
+    validations:
+      required: true
+
+  - type: input
+    id: link
+    attributes:
+      label: Framework documentation / homepage
+      placeholder: "https://qwik.dev"
+    validations:
+      required: true
+
+  - type: textarea
+    id: use-case
+    attributes:
+      label: Use case
+      description: What are you trying to build, and why does it need a dedicated integration vs. the framework-agnostic API?
+    validations:
+      required: true
+
+  - type: textarea
+    id: api-sketch
+    attributes:
+      label: Proposed API
+      description: |
+        How would you ideally consume Virtual Frame inside this framework? Mirror the patterns from the [existing bindings](https://github.com/level0x40/virtual-frame/tree/main/packages) where possible.
+      placeholder: |
+        ```ts
+        // Example of how I'd import and use the integration:
+        ```
+    validations:
+      required: false
+
+  - type: dropdown
+    id: contribution
+    attributes:
+      label: Are you willing to contribute the integration?
+      description: New integrations land much faster when proposed by someone fluent in the target framework.
+      options:
+        - "Yes — I'd like to lead it"
+        - "Yes, as a co-author with maintainer guidance"
+        - "No, just requesting"
+    validations:
+      required: true

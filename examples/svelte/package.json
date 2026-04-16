@@ -1,0 +1,19 @@
+{
+  "name": "example-svelte",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "start": "vite preview"
+  },
+  "dependencies": {
+    "@virtual-frame/svelte": "workspace:*",
+    "svelte": "^5.0.0",
+    "virtual-frame": "workspace:*"
+  },
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^7.0.0",
+    "vite": "catalog:"
+  }
+}

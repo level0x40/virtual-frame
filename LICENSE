@@ -1,0 +1,141 @@
+Source Available License
+Version 1.0, 2026
+
+Copyright (c) 2026 Level 0x40 Labs
+
+1. Definitions
+
+"License" means this Source Available License, Version 1.0.
+
+"Licensor" means Level 0x40 Labs (sole proprietorship), the copyright holder
+and maintainer of the Software.
+
+"Software" means the Virtual Frame library and all associated source code,
+documentation, configuration files, and related materials in the official
+repository.
+
+"Official Repository" means the source code repository at
+https://github.com/level0x40/virtual-frame, or any successor repository
+designated by the Licensor.
+
+"Published Package" means the compiled distributable packages published by the
+Licensor to public package registries (such as npm), intended for consumption
+as a dependency.
+
+"You" means the individual or legal entity exercising the rights granted by
+this License.
+
+"Contribution" means any source code, documentation, or other material
+submitted to the Official Repository via pull request or other mechanism
+accepted by the Licensor.
+
+2. Grant of Rights
+
+Subject to the terms of this License, the Licensor grants You a non-exclusive,
+worldwide, royalty-free, non-transferable right to:
+
+(a) Use the Software by importing its Published Packages as a dependency in
+your own applications, products, and services, including for commercial
+purposes, without limitation.
+
+(b) View and study the source code of the Software.
+
+(c) Fork and modify the Software solely for the purpose of contributing
+improvements back to the Official Repository.
+
+3. Restrictions
+
+You may NOT, without prior written approval from the Licensor (which may be
+granted via email):
+
+(a) Copy, extract, or reuse any non-trivial portion of the Software's source
+code in other projects, libraries, frameworks, or software, whether
+open-source or proprietary.
+
+(b) Create derivative works based on the Software, except as expressly
+permitted in Section 2(c).
+
+(c) Distribute or republish the Software's source code, in whole or in part,
+as part of another work. This does not restrict distribution of applications
+that use the Software through its Published Packages as a dependency.
+
+(d) Offer the Software, or substantial portions of its functionality —
+including but not limited to microfrontend projection, DOM mirroring, and
+cross-frame state synchronization — as a managed, hosted, or embedded service
+to third parties. Using the Software as a dependency within a product or
+service you offer is permitted under Section 2(a).
+
+4. Contributions
+
+By submitting a Contribution to the Official Repository, You:
+
+(a) Grant the Licensor a perpetual, irrevocable, worldwide, royalty-free,
+non-exclusive, sublicensable license to use, reproduce, modify, distribute,
+and create derivative works from your Contribution, in any form and for any
+purpose.
+
+(b) Represent that You have the legal right to grant the above license and
+that your Contribution does not infringe any third-party rights.
+
+(c) Agree that your Contribution is provided under the terms of this License.
+
+5. Notices
+
+You must retain all copyright notices, license texts, and attribution notices
+in all copies or substantial portions of the Software.
+
+6. Approval for Code Reuse
+
+To request approval for uses not permitted under Section 3, contact the
+Licensor at:
+
+  hello@level0x40.com
+
+7. Termination
+
+This License is effective until terminated. Your rights under this License
+terminate automatically if You fail to comply with any of its terms and do not
+cure such non-compliance within 30 days of becoming aware of it. Upon
+termination, You must cease all use not otherwise permitted and destroy any
+copies of the source code in your possession.
+
+8. Disclaimer of Warranty
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT.
+
+9. Limitation of Liability
+
+IN NO EVENT SHALL THE LICENSOR BE LIABLE FOR ANY INDIRECT, INCIDENTAL,
+SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, OR ANY LOSS OF PROFITS, DATA,
+OR GOODWILL, WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE, ARISING
+FROM, OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+IN THE SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGES. THE
+LICENSOR'S TOTAL LIABILITY FOR DIRECT DAMAGES SHALL NOT EXCEED THE AMOUNTS
+PAID BY YOU TO THE LICENSOR FOR THE SOFTWARE IN THE TWELVE MONTHS PRECEDING
+THE CLAIM.
+
+10. General
+
+(a) Severability. If any provision of this License is held to be
+unenforceable, the remaining provisions shall remain in full force and effect.
+
+(b) Entire Agreement. This License constitutes the entire agreement between
+You and the Licensor regarding the Software and supersedes all prior
+agreements and understandings, except as supplemented by any contributor
+agreement accepted by You.
+
+(c) License Versions. The Licensor may publish revised versions of this
+License. Each version will be given a distinguishing version number. You may
+use the Software under the version of the License that accompanied it or any
+later version published by the Licensor.
+
+(d) Trademarks. This License does not grant any rights to use the Licensor's
+trade names, trademarks, service marks, or product names, including but not
+limited to "Virtual Frame" and "Level 0x40 Labs", except as required for
+reasonable and customary use in describing the origin of the Software.
+
+(e) Governing Law. This License shall be governed by and construed in
+accordance with the laws of Hungary, without regard to its conflict of laws
+provisions.

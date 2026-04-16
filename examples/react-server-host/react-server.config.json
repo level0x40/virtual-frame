@@ -1,0 +1,12 @@
+{
+  "root": "app",
+  "page": {
+    "include": ["**/page.tsx"]
+  },
+  "layout": {
+    "include": ["**/layout.tsx"]
+  },
+  "server": {
+    "hmr": false
+  }
+}

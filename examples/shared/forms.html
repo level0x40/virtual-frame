@@ -1,0 +1,313 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      body {
+        font-family:
+          system-ui,
+          -apple-system,
+          sans-serif;
+        background: #fafafa;
+        padding: 20px;
+        margin: 0;
+      }
+
+      .container {
+        max-width: 500px;
+        margin: 0 auto;
+      }
+
+      h1 {
+        color: #333;
+        font-size: 1.4em;
+        margin-bottom: 20px;
+      }
+
+      h2 {
+        color: #555;
+        font-size: 1.1em;
+        margin-top: 24px;
+        border-bottom: 1px solid #ddd;
+        padding-bottom: 6px;
+      }
+
+      .form-group {
+        margin-bottom: 14px;
+      }
+
+      label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 4px;
+        color: #444;
+        font-size: 0.9em;
+      }
+
+      input[type="text"],
+      input[type="email"],
+      input[type="password"],
+      input[type="number"],
+      input[type="date"],
+      input[type="range"],
+      input[type="color"],
+      input[type="search"],
+      textarea,
+      select {
+        width: 100%;
+        padding: 8px 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 14px;
+        font-family: inherit;
+        box-sizing: border-box;
+      }
+
+      textarea {
+        resize: vertical;
+        min-height: 80px;
+      }
+
+      .checkbox-group,
+      .radio-group {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .checkbox-group label,
+      .radio-group label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: normal;
+        cursor: pointer;
+      }
+
+      .range-value {
+        display: inline-block;
+        min-width: 30px;
+        text-align: center;
+        font-weight: bold;
+        color: #007acc;
+      }
+
+      button {
+        background: #007acc;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        margin-right: 8px;
+      }
+
+      button:hover {
+        background: #005a9e;
+      }
+
+      button[type="reset"] {
+        background: #666;
+      }
+
+      button[type="reset"]:hover {
+        background: #444;
+      }
+
+      .output {
+        background: #f0f7ff;
+        border: 1px solid #cce0ff;
+        border-radius: 4px;
+        padding: 12px;
+        margin-top: 16px;
+        font-size: 0.9em;
+        white-space: pre-wrap;
+        word-break: break-all;
+        display: none;
+      }
+
+      fieldset {
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 12px;
+        margin: 16px 0;
+      }
+
+      legend {
+        font-weight: 600;
+        color: #333;
+        padding: 0 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Form Elements</h1>
+
+      <form id="demoForm">
+        <h2>Text Inputs</h2>
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" id="name" placeholder="Enter your name" />
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" placeholder="user@example.com" />
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" placeholder="••••••••" />
+        </div>
+        <div class="form-group">
+          <label for="search">Search</label>
+          <input type="search" id="search" placeholder="Search..." />
+        </div>
+
+        <h2>Textarea</h2>
+        <div class="form-group">
+          <label for="bio">Biography</label>
+          <textarea id="bio" placeholder="Tell us about yourself..."></textarea>
+        </div>
+
+        <h2>Select &amp; Datalist</h2>
+        <div class="form-group">
+          <label for="framework">Favorite Framework</label>
+          <select id="framework">
+            <option value="">Choose one...</option>
+            <option value="react">React</option>
+            <option value="vue">Vue</option>
+            <option value="svelte">Svelte</option>
+            <option value="solid">Solid</option>
+            <option value="angular">Angular</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="browser">Browser (datalist)</label>
+          <input list="browsers" id="browser" placeholder="Type to search..." />
+          <datalist id="browsers">
+            <option value="Chrome"></option>
+            <option value="Firefox"></option>
+            <option value="Safari"></option>
+            <option value="Edge"></option>
+            <option value="Opera"></option>
+          </datalist>
+        </div>
+
+        <h2>Checkboxes &amp; Radios</h2>
+        <fieldset>
+          <legend>Features (checkboxes)</legend>
+          <div class="checkbox-group">
+            <label
+              ><input type="checkbox" name="features" value="canvas" /> Canvas
+              streaming</label
+            >
+            <label
+              ><input type="checkbox" name="features" value="video" /> Video
+              mirroring</label
+            >
+            <label
+              ><input type="checkbox" name="features" value="css" /> CSS
+              isolation</label
+            >
+            <label
+              ><input type="checkbox" name="features" value="events" /> Event
+              proxying</label
+            >
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Difficulty (radios)</legend>
+          <div class="radio-group">
+            <label
+              ><input type="radio" name="difficulty" value="easy" /> Easy</label
+            >
+            <label
+              ><input type="radio" name="difficulty" value="medium" />
+              Medium</label
+            >
+            <label
+              ><input type="radio" name="difficulty" value="hard" /> Hard</label
+            >
+          </div>
+        </fieldset>
+
+        <h2>Range &amp; Color</h2>
+        <div class="form-group">
+          <label for="opacity"
+            >Opacity:
+            <span class="range-value" id="opacityVal">50</span>%</label
+          >
+          <input
+            type="range"
+            id="opacity"
+            min="0"
+            max="100"
+            value="50"
+            oninput="
+              document.getElementById('opacityVal').textContent = this.value
+            "
+          />
+        </div>
+        <div class="form-group">
+          <label for="color">Accent Color</label>
+          <input type="color" id="color" value="#007acc" />
+        </div>
+
+        <h2>Number &amp; Date</h2>
+        <div class="form-group">
+          <label for="quantity">Quantity</label>
+          <input type="number" id="quantity" min="0" max="100" value="1" />
+        </div>
+        <div class="form-group">
+          <label for="date">Date</label>
+          <input type="date" id="date" />
+        </div>
+
+        <div style="margin-top: 20px">
+          <button type="button" onclick="showFormData()">Submit</button>
+          <button type="reset">Reset</button>
+        </div>
+      </form>
+
+      <div class="output" id="output"></div>
+    </div>
+
+    <script>
+      function showFormData() {
+        const form = document.getElementById("demoForm");
+        const data = new FormData(form);
+        const entries = {};
+        for (const [key, value] of data.entries()) {
+          if (entries[key]) {
+            entries[key] = [].concat(entries[key], value);
+          } else {
+            entries[key] = value;
+          }
+        }
+        // Also grab inputs by id
+        const fields = [
+          "name",
+          "email",
+          "password",
+          "search",
+          "bio",
+          "framework",
+          "browser",
+          "opacity",
+          "color",
+          "quantity",
+          "date",
+        ];
+        fields.forEach((f) => {
+          const el = document.getElementById(f);
+          if (el && el.value) entries[f] = el.value;
+        });
+
+        const output = document.getElementById("output");
+        output.style.display = "block";
+        output.textContent = JSON.stringify(entries, null, 2);
+      }
+    </script>
+  </body>
+</html>

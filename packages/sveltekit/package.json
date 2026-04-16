@@ -1,0 +1,73 @@
+{
+  "name": "@virtual-frame/sveltekit",
+  "version": "0.1.0",
+  "description": "SvelteKit integration for Virtual Frame — SSR via load functions with client-side resume",
+  "homepage": "https://virtual-frame.level0x40.com",
+  "bugs": {
+    "url": "https://github.com/level0x40/virtual-frame/issues"
+  },
+  "license": "LicenseRef-SAL-1.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/level0x40/virtual-frame.git",
+    "directory": "packages/sveltekit"
+  },
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "svelte": "./dist/index.js",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "svelte": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./client": {
+      "types": "./dist/client.d.ts",
+      "svelte": "./dist/client.js",
+      "default": "./dist/client.js"
+    },
+    "./store": {
+      "types": "./dist/store.d.ts",
+      "default": "./dist/store.js"
+    },
+    "./server": {
+      "types": "./dist/server.d.ts",
+      "default": "./dist/server.js"
+    }
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "scripts": {
+    "prepack": "cp ../../LICENSE LICENSE",
+    "build": "vite build && tsc",
+    "typecheck": "svelte-check --tsconfig ./tsconfig.json"
+  },
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^7.0.0",
+    "@virtual-frame/store": "workspace:^",
+    "@virtual-frame/svelte": "workspace:^",
+    "svelte": "^5.0.0",
+    "svelte-check": "^4.4.5",
+    "typescript": "catalog:",
+    "virtual-frame": "workspace:^",
+    "vite": "catalog:"
+  },
+  "peerDependencies": {
+    "@virtual-frame/store": "workspace:^",
+    "@virtual-frame/svelte": "workspace:^",
+    "svelte": ">=5.0.0",
+    "virtual-frame": "workspace:^"
+  },
+  "peerDependenciesMeta": {
+    "@virtual-frame/store": {
+      "optional": true
+    }
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

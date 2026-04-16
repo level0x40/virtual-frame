@@ -1,0 +1,31 @@
+{
+  "name": "example-react-router-host",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "react-router dev",
+    "build": "react-router build",
+    "start": "PORT=${PORT:-3006} react-router-serve ./build/server/index.js",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@virtual-frame/react": "workspace:*",
+    "@virtual-frame/react-router": "workspace:*",
+    "@virtual-frame/store": "workspace:*",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "@react-router/node": "^7.0.0",
+    "react-router": "^7.0.0",
+    "virtual-frame": "workspace:*",
+    "isbot": "^5"
+  },
+  "devDependencies": {
+    "@react-router/dev": "^7.0.0",
+    "@react-router/serve": "^7.0.0",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "typescript": "catalog:",
+    "vite": "catalog:"
+  }
+}

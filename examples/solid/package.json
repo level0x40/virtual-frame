@@ -1,0 +1,19 @@
+{
+  "name": "example-solid",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "start": "vite preview"
+  },
+  "dependencies": {
+    "@virtual-frame/solid": "workspace:*",
+    "solid-js": "^1.9.0",
+    "virtual-frame": "workspace:*"
+  },
+  "devDependencies": {
+    "vite": "catalog:",
+    "vite-plugin-solid": "^2.11.11"
+  }
+}

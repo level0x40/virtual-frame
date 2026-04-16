@@ -1,0 +1,118 @@
+name: Release
+
+# Triggered by every push to main. Behavior:
+#
+#   • If pending .changeset/*.md files exist, opens (or updates) a
+#     "Version Packages" PR. That PR bumps versions, regenerates
+#     CHANGELOG.md entries, and removes the consumed changesets.
+#
+#   • If the previous push merged a "Version Packages" PR (no pending
+#     changesets remain, but versions were just bumped), the action
+#     publishes every changed package to npm with provenance, pushes
+#     git tags, and creates a GitHub Release per tag containing the
+#     CHANGELOG body.
+#
+# Pre-flight (lint/typecheck/test/build) gates the release job — we
+# never publish from a red main.
+
+on:
+  push:
+    branches: [main]
+
+# Releases must run to completion serially; never cancel an in-flight
+# publish.
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    name: Lint & Format
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - run: pnpm format:check
+      - run: pnpm lint
+
+  typecheck:
+    name: Typecheck
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - run: pnpm typecheck
+
+  test:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm test:run
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - run: pnpm build
+
+  release:
+    name: Release
+    needs: [lint, typecheck, test, build]
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      # Open/update the Version Packages PR, push tags, create releases.
+      contents: write
+      pull-requests: write
+      # npm provenance attestation (sigstore via OIDC).
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Changesets needs full history to compute version bumps and
+          # generate accurate changelog entries.
+          fetch-depth: 0
+          # Use a token that lets the bot's PR trigger downstream workflows
+          # if/when one is added; falls back to GITHUB_TOKEN.
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: ./.github/actions/setup
+
+      - name: Build packages
+        # Build before publish so dist/ exists for npm pack.
+        run: pnpm build
+
+      - name: Create Release PR or publish
+        id: changesets
+        uses: changesets/action@v1
+        with:
+          version: pnpm run version
+          publish: pnpm run release
+          commit: "chore(release): version packages"
+          title: "chore(release): version packages"
+          createGithubReleases: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          # npm provenance: requires id-token: write (above) and that
+          # `publish` runs on a public GitHub-hosted runner. Both npm and
+          # pnpm honor this env var.
+          NPM_CONFIG_PROVENANCE: "true"
+          # `pnpm publish` defaults to refusing publish on a non-default
+          # branch / dirty tree. The Version Packages merge has just
+          # occurred on main; disable the extra guard so the publish step
+          # can proceed.
+          NPM_CONFIG_GIT_CHECKS: "false"
