@@ -41,14 +41,10 @@ for (const mode of ["dev", "prod"] as const) {
       await expect(
         page.getByRole("heading", { name: /Virtual Frame.*React Store/i }),
       ).toBeVisible();
-      await expect(
-        page.getByRole("heading", { name: "Host Counter" }),
-      ).toBeVisible();
+      await expect(page.getByRole("heading", { name: "Host Counter" })).toBeVisible();
     });
 
-    test("remote counter is projected into the host via shared frame", async ({
-      page,
-    }) => {
+    test("remote counter is projected into the host via shared frame", async ({ page }) => {
       await page.goto(hostUrl);
       // The remote's #counter-card has an "<h2>Remote Counter</h2>", which
       // should appear inside the projected shadow DOM (Playwright pierces
@@ -56,23 +52,24 @@ for (const mode of ["dev", "prod"] as const) {
       // In dev mode the iframe is same-origin (via proxy); in prod mode
       // it's cross-origin — the bridge script in the remote handles
       // DOM mirroring via postMessage.
-      await expect(
-        page.getByRole("heading", { name: "Remote Counter" }).first(),
-      ).toBeVisible({ timeout: 30_000 });
+      await expect(page.getByRole("heading", { name: "Remote Counter" }).first()).toBeVisible({
+        timeout: 30_000,
+      });
     });
 
-    test("clicking host Increment updates the projected remote counter", async ({
-      page,
-    }) => {
+    test("clicking host Increment updates the projected remote counter", async ({ page }) => {
       await page.goto(hostUrl);
 
       // Wait for projection to settle.
-      await expect(
-        page.getByRole("heading", { name: "Remote Counter" }).first(),
-      ).toBeVisible({ timeout: 30_000 });
+      await expect(page.getByRole("heading", { name: "Remote Counter" }).first()).toBeVisible({
+        timeout: 30_000,
+      });
 
       // Host counter starts at 0 (store initial value).
-      await page.getByRole("button", { name: /\+ Increment/ }).first().click();
+      await page
+        .getByRole("button", { name: /\+ Increment/ })
+        .first()
+        .click();
 
       // Both host and projected remote should now show "1". Asserting on
       // the host side is enough — the store is shared, so a stale projection

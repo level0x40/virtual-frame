@@ -16,9 +16,7 @@ export default defineConfig({
     emptyOutDir: true,
     rollupOptions: {
       external: (id) =>
-        id === "virtual-frame" ||
-        id === "@virtual-frame/store" ||
-        /^svelte(\/|$)/.test(id),
+        id === "virtual-frame" || id === "@virtual-frame/store" || /^svelte(\/|$)/.test(id),
     },
   },
 });

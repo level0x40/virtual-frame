@@ -104,9 +104,8 @@ app.get("/remote", (c) => {
         <div class="card" id="info-card">
           <h1>🚀 Remote App</h1>
           <p>
-            This page is fetched during SSR and rendered instantly. The iframe
-            is initialised with <code>srcdoc</code> from the already-fetched
-            HTML — no extra network request!
+            This page is fetched during SSR and rendered instantly. The iframe is initialised with{" "}
+            <code>srcdoc</code> from the already-fetched HTML — no extra network request!
           </p>
           <p class="timestamp" id="ts">
             Server-rendered at: {new Date().toISOString()}
@@ -244,20 +243,18 @@ app.get("/", async (c) => {
       <body>
         <h1>Virtual Frame — SSR Example</h1>
         <p class="subtitle">
-          Remote content fetched on the server, pre-rendered via declarative
-          shadow DOM, then resumed on the client.
+          Remote content fetched on the server, pre-rendered via declarative shadow DOM, then
+          resumed on the client.
         </p>
 
         <div class="layout">
           <div class="panel info">
-            <strong>How it works:</strong> The server fetches the remote page
-            once and renders two <code>&lt;virtual-frame&gt;</code> elements —
-            one showing the full page, one showing only{" "}
-            <code>#counter-card</code> (via <code>frame.render()</code> with a
-            selector). On the client, both elements{" "}
-            <strong>share a single hidden iframe</strong> (ref-counted). The
-            diff-based resume delta reconstructs the full page from the shadow
-            DOM content — zero extra network requests, zero iframe duplication.
+            <strong>How it works:</strong> The server fetches the remote page once and renders two{" "}
+            <code>&lt;virtual-frame&gt;</code> elements — one showing the full page, one showing
+            only <code>#counter-card</code> (via <code>frame.render()</code> with a selector). On
+            the client, both elements <strong>share a single hidden iframe</strong> (ref-counted).
+            The diff-based resume delta reconstructs the full page from the shadow DOM content —
+            zero extra network requests, zero iframe duplication.
           </div>
 
           <div class="panel">

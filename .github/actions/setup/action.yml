@@ -1,5 +1,5 @@
 name: Setup
-description: Install pnpm, set up Node.js with pnpm cache, and install dependencies (frozen lockfile).
+description: Install Vite+ (vp), set up Node.js with dependency caching, and install dependencies (frozen lockfile).
 
 inputs:
   node-version:
@@ -10,15 +10,12 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Setup pnpm
-      uses: pnpm/action-setup@v4
-
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
+    - name: Setup Vite+
+      uses: voidzero-dev/setup-vp@v1
       with:
         node-version: ${{ inputs.node-version }}
-        cache: pnpm
+        cache: true
 
     - name: Install dependencies
       shell: bash
-      run: pnpm install --frozen-lockfile
+      run: vp install --frozen-lockfile

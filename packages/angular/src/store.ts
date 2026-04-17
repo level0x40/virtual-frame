@@ -1,10 +1,4 @@
-import {
-  afterNextRender,
-  inject,
-  DestroyRef,
-  signal,
-  type Signal,
-} from "@angular/core";
+import { afterNextRender, inject, DestroyRef, signal, type Signal } from "@angular/core";
 import {
   createStore,
   connectPort,

@@ -36,10 +36,7 @@ export interface PrepareVirtualFramePropsOptions {
 /**
  * Build the SSR HTML string from a `VirtualFrameResult`.
  */
-export function buildSsrHtml(
-  result: VirtualFrameResult,
-  isolate?: "open" | "closed",
-): string {
+export function buildSsrHtml(result: VirtualFrameResult, isolate?: "open" | "closed"): string {
   const deltaJson = JSON.stringify(result.resumeDelta).replace(/<\//g, "<\\/");
   const resumeScript = `<script type="text/vf-resume">${deltaJson}</script>`;
 

@@ -60,11 +60,7 @@ function Counter() {
   const store = useStore();
   const count = useStoreValue(store, ["count"]);
 
-  return (
-    <button onClick={() => store.count++}>
-      Count: {count}
-    </button>
-  );
+  return <button onClick={() => store.count++}>Count: {count}</button>;
 }
 ```
 
@@ -77,10 +73,10 @@ See the [framework-specific guides](#framework-integration) below for Vue, Svelt
 You never call special mutation methods — just write to the object:
 
 ```js
-store.user = { name: "Alice", age: 30 };  // set
-store.user.name = "Bob";                   // nested set
-delete store.user.age;                     // delete
-store.items.push("new");                   // array mutation
+store.user = { name: "Alice", age: 30 }; // set
+store.user.name = "Bob"; // nested set
+delete store.user.age; // delete
+store.items.push("new"); // array mutation
 ```
 
 Arrays, Maps, and Sets are all supported with their full native APIs.
@@ -129,19 +125,19 @@ const handle = getStore(store);
 
 The handle exposes:
 
-| Property / Method                  | Description                                   |
-| ---------------------------------- | --------------------------------------------- |
-| `handle.proxy`                     | The root store proxy                          |
-| `handle.sourceId`                  | This runtime's unique ID                      |
-| `handle.log`                       | The operation log (read-only array)           |
-| `handle.apply(op)`                 | Apply a single remote [`Operation`](#the-operation-type) |
-| `handle.applyBatch(ops)`           | Apply a batch of remote operations            |
-| `handle.snapshot()`                | Deep clone of the current materialized state  |
-| `handle.readPath(path)`            | Read the raw value at a path (no proxy wrapping) — use for `useSyncExternalStore`-style snapshot comparisons where stable object identity would defeat change detection |
-| `handle.subscribe(cb)`             | Subscribe to any change (root). Returns an unsubscribe function |
-| `handle.subscribe(path, cb)`       | Subscribe to changes that touch `path` (e.g., `["user", "name"]`) |
-| `handle.onOperation(cb)`           | Listen to every local write — the hook for building custom transports |
-| `handle.destroy()`                 | Tear down the store and release resources     |
+| Property / Method            | Description                                                                                                                                                             |
+| ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `handle.proxy`               | The root store proxy                                                                                                                                                    |
+| `handle.sourceId`            | This runtime's unique ID                                                                                                                                                |
+| `handle.log`                 | The operation log (read-only array)                                                                                                                                     |
+| `handle.apply(op)`           | Apply a single remote [`Operation`](#the-operation-type)                                                                                                                |
+| `handle.applyBatch(ops)`     | Apply a batch of remote operations                                                                                                                                      |
+| `handle.snapshot()`          | Deep clone of the current materialized state                                                                                                                            |
+| `handle.readPath(path)`      | Read the raw value at a path (no proxy wrapping) — use for `useSyncExternalStore`-style snapshot comparisons where stable object identity would defeat change detection |
+| `handle.subscribe(cb)`       | Subscribe to any change (root). Returns an unsubscribe function                                                                                                         |
+| `handle.subscribe(path, cb)` | Subscribe to changes that touch `path` (e.g., `["user", "name"]`)                                                                                                       |
+| `handle.onOperation(cb)`     | Listen to every local write — the hook for building custom transports                                                                                                   |
+| `handle.destroy()`           | Tear down the store and release resources                                                                                                                               |
 
 ### `connectPort(store, port)`
 
@@ -164,8 +160,8 @@ Returns `true` if the value is a store proxy.
 ```js
 import { isStoreProxy } from "@virtual-frame/store";
 
-isStoreProxy(store);       // true
-isStoreProxy({});          // false
+isStoreProxy(store); // true
+isStoreProxy({}); // false
 isStoreProxy(store.child); // true
 ```
 
@@ -175,27 +171,27 @@ Most users never see this — the framework integrations take care of transporti
 
 ```ts
 type OperationType =
-  | "set"         // assign a value at path
-  | "delete"      // delete the property at path
-  | "splice"      // array splice
-  | "map-set"     // Map.set
-  | "map-delete"  // Map.delete
-  | "map-clear"   // Map.clear
-  | "set-add"     // Set.add
-  | "set-delete"  // Set.delete
-  | "set-clear"   // Set.clear
+  | "set" // assign a value at path
+  | "delete" // delete the property at path
+  | "splice" // array splice
+  | "map-set" // Map.set
+  | "map-delete" // Map.delete
+  | "map-clear" // Map.clear
+  | "set-add" // Set.add
+  | "set-delete" // Set.delete
+  | "set-clear"; // Set.clear
 
 type Operation = {
-  ts: number;              // performance.now() at creation
-  source: string;          // originating runtime's sourceId
-  seq: number;             // per-source monotonic counter
+  ts: number; // performance.now() at creation
+  source: string; // originating runtime's sourceId
+  seq: number; // per-source monotonic counter
   type: OperationType;
-  path: PropertyKey[];     // e.g. ["user", "name"]
-  value?: unknown;         // for set, map-set, set-add
-  deleteCount?: number;    // for splice
-  items?: unknown[];       // for splice
-  index?: number;          // for splice
-  key?: unknown;           // for map-set, map-delete
+  path: PropertyKey[]; // e.g. ["user", "name"]
+  value?: unknown; // for set, map-set, set-add
+  deleteCount?: number; // for splice
+  items?: unknown[]; // for splice
+  index?: number; // for splice
+  key?: unknown; // for map-set, map-delete
 };
 ```
 
@@ -251,16 +247,16 @@ The Virtual Frame shared store takes a fundamentally different approach. Underst
 
 ### How They Differ
 
-|                        | Module Federation                          | Virtual Frame Shared Store                  |
-| ---------------------- | ------------------------------------------ | ------------------------------------------- |
-| **Isolation model**    | Same JavaScript context (shared `window`)  | Separate contexts with full isolation       |
-| **What's shared**      | Arbitrary JS — functions, classes, stores   | Serializable data (no functions)            |
-| **Build coupling**     | Shared dependencies must be version-aligned | None — host and remote are fully independent builds |
-| **Framework coupling** | Shared singletons must use same framework   | Framework agnostic — React host, Vue remote works |
-| **Consistency**        | Immediate (same memory)                     | Eventual (< 1ms latency)                   |
-| **Failure isolation**  | A crash in one microfrontend can take down the host | Crash is contained — host survives        |
-| **CSS isolation**      | Requires conventions or tooling             | Built-in via Shadow DOM                     |
-| **Security boundary**  | None — shared `window` means full access    | Strong — separate origins, CSP, sandboxing  |
+|                        | Module Federation                                   | Virtual Frame Shared Store                          |
+| ---------------------- | --------------------------------------------------- | --------------------------------------------------- |
+| **Isolation model**    | Same JavaScript context (shared `window`)           | Separate contexts with full isolation               |
+| **What's shared**      | Arbitrary JS — functions, classes, stores           | Serializable data (no functions)                    |
+| **Build coupling**     | Shared dependencies must be version-aligned         | None — host and remote are fully independent builds |
+| **Framework coupling** | Shared singletons must use same framework           | Framework agnostic — React host, Vue remote works   |
+| **Consistency**        | Immediate (same memory)                             | Eventual (< 1ms latency)                            |
+| **Failure isolation**  | A crash in one microfrontend can take down the host | Crash is contained — host survives                  |
+| **CSS isolation**      | Requires conventions or tooling                     | Built-in via Shadow DOM                             |
+| **Security boundary**  | None — shared `window` means full access            | Strong — separate origins, CSP, sandboxing          |
 
 ### When to Use Module Federation
 

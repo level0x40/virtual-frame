@@ -64,11 +64,7 @@ const _urlAttrs = new Set([
 ]);
 
 function _resolveUrl(value: string, baseUrl: string): string {
-  if (
-    !value ||
-    /^(data:|blob:|javascript:|#|mailto:|tel:|https?:\/\/)/i.test(value)
-  )
-    return value;
+  if (!value || /^(data:|blob:|javascript:|#|mailto:|tel:|https?:\/\/)/i.test(value)) return value;
   try {
     return new URL(value, baseUrl).href;
   } catch {
@@ -91,11 +87,7 @@ function _resolveSrcset(value: string, baseUrl: string): string {
  * Rewrite a single attribute value to absolute URL if it's a URL
  * attribute. Returns the original value if no rewriting is needed.
  */
-function _rewriteAttrUrl(
-  attrName: string,
-  value: string,
-  baseUrl: string | null,
-): string {
+function _rewriteAttrUrl(attrName: string, value: string, baseUrl: string | null): string {
   if (!baseUrl) return value;
   if (attrName === "srcset") return _resolveSrcset(value, baseUrl);
   if (_urlAttrs.has(attrName)) return _resolveUrl(value, baseUrl);
@@ -118,21 +110,12 @@ export function _rewriteBodySelectors(css: string): string {
   return css.replace(/([^{}]*?)\{/g, (match: string, selectorPart: string) => {
     let rewritten = selectorPart;
     // Replace `body` used as a tag selector
-    rewritten = rewritten.replace(
-      /(^|[,\s>+~])body(?=[\s,.:#>[+~{\])]|$)/g,
-      "$1[data-vf-body]",
-    );
+    rewritten = rewritten.replace(/(^|[,\s>+~])body(?=[\s,.:#>[+~{\])]|$)/g, "$1[data-vf-body]");
     // Replace `html` and `:root` used as selectors — in shadow DOM :root
     // still targets the host document, so remap to :host so that e.g.
     // CSS custom-property definitions are available inside the shadow tree.
-    rewritten = rewritten.replace(
-      /(^|[,\s>+~])html(?=[\s,.:#>[+~{\])]|$)/g,
-      "$1:host",
-    );
-    rewritten = rewritten.replace(
-      /(^|[,\s>+~]):root(?=[\s,.:#>[+~{\])]|$)/g,
-      "$1:host",
-    );
+    rewritten = rewritten.replace(/(^|[,\s>+~])html(?=[\s,.:#>[+~{\])]|$)/g, "$1:host");
+    rewritten = rewritten.replace(/(^|[,\s>+~]):root(?=[\s,.:#>[+~{\])]|$)/g, "$1:host");
     return rewritten + "{";
   });
 }
@@ -150,12 +133,9 @@ export function _rewriteBodySelectors(css: string): string {
  * virtual-frame's `overflow: auto` handles any overflow.
  */
 export function _rewriteViewportUnits(css: string): string {
-  return css.replace(
-    /(\d+\.?\d*|\d*\.\d+)\s*(d|s|l)?vw\b/gi,
-    (match: string, num: string) => {
-      return num + "cqw";
-    },
-  );
+  return css.replace(/(\d+\.?\d*|\d*\.\d+)\s*(d|s|l)?vw\b/gi, (match: string, num: string) => {
+    return num + "cqw";
+  });
 }
 
 /**
@@ -171,22 +151,18 @@ export function _rewriteCSS(css: string): string {
 function _isDebugEnabled() {
   try {
     return (
-      (typeof localStorage !== "undefined" &&
-        localStorage.getItem("VF_DEBUG") === "1") ||
-      (typeof sessionStorage !== "undefined" &&
-        sessionStorage.getItem("VF_DEBUG") === "1")
+      (typeof localStorage !== "undefined" && localStorage.getItem("VF_DEBUG") === "1") ||
+      (typeof sessionStorage !== "undefined" && sessionStorage.getItem("VF_DEBUG") === "1")
     );
   } catch {
     return false;
   }
 }
 function _vflog(...args: unknown[]) {
-  if (_isDebugEnabled())
-    console.log("%c[VF]", "color:#0af;font-weight:bold", ...args);
+  if (_isDebugEnabled()) console.log("%c[VF]", "color:#0af;font-weight:bold", ...args);
 }
 function _vfwarn(...args: unknown[]) {
-  if (_isDebugEnabled())
-    console.warn("%c[VF]", "color:#fa0;font-weight:bold", ...args);
+  if (_isDebugEnabled()) console.warn("%c[VF]", "color:#fa0;font-weight:bold", ...args);
 }
 
 // ── Selector matching on serialised descriptors ─────────────
@@ -195,10 +171,7 @@ function _vfwarn(...args: unknown[]) {
 // on element maps, no DOM construction.  Used by _handleRemoteMutations
 // to detect when a selector target reappears after client-side navigation.
 
-function _descriptorMatchesSelector(
-  descs: any[],
-  selector: string,
-): boolean {
+function _descriptorMatchesSelector(descs: any[], selector: string): boolean {
   try {
     for (const desc of descs) {
       if (!desc || desc.type === "text" || desc.type === "comment") continue;
@@ -264,20 +237,13 @@ export interface EnvShimOptions {
   proxyBase?: string;
 }
 
-export function _buildEnvShim(
-  baseUrl: string,
-  options?: EnvShimOptions,
-): string {
-  const safeBase = JSON.stringify(
-    baseUrl.endsWith("/") ? baseUrl : baseUrl + "/",
-  );
+export function _buildEnvShim(baseUrl: string, options?: EnvShimOptions): string {
+  const safeBase = JSON.stringify(baseUrl.endsWith("/") ? baseUrl : baseUrl + "/");
   // Proxy base: normalise to no trailing slash so the shim can
   // simply concatenate  proxyBase + pathname.
   const proxyBase = options?.proxyBase
     ? JSON.stringify(
-        options.proxyBase.endsWith("/")
-          ? options.proxyBase.slice(0, -1)
-          : options.proxyBase,
+        options.proxyBase.endsWith("/") ? options.proxyBase.slice(0, -1) : options.proxyBase,
       )
     : "null";
   return (
@@ -329,38 +295,38 @@ export function _buildEnvShim(
     // bypassing both the <base> tag and the URL constructor shim.
     "var oF=window.fetch.bind(window);" +
     "function __vfRewriteUrl(u){" +
-      "if(hO!==bOr&&typeof u==='string'){" +
-        "if(u===hO||u.lastIndexOf(hOP,0)===0){" +
-          // When a proxy base is configured, rewrite to same-origin
-          // proxy path instead of cross-origin remote URL.
-          // e.g. http://host:3000/about → http://host:3000/__vf/about
-          "var r=pB!==null" +
-            "?hO+pB+u.substring(hO.length)" +
-            ":bOr+u.substring(hO.length);" +
-          "return r" +
-        "}" +
-      "}" +
-      "return u" +
+    "if(hO!==bOr&&typeof u==='string'){" +
+    "if(u===hO||u.lastIndexOf(hOP,0)===0){" +
+    // When a proxy base is configured, rewrite to same-origin
+    // proxy path instead of cross-origin remote URL.
+    // e.g. http://host:3000/about → http://host:3000/__vf/about
+    "var r=pB!==null" +
+    "?hO+pB+u.substring(hO.length)" +
+    ":bOr+u.substring(hO.length);" +
+    "return r" +
+    "}" +
+    "}" +
+    "return u" +
     "}" +
     "window.fetch=function(u,o){" +
-      // Handle URL objects (Next.js passes URL objects to fetch)
-      "if(typeof u==='object'&&u!==null&&typeof u.href==='string'&&!(u instanceof Request)){" +
-        "u=__vfRewriteUrl(u.href)" +
-      "}else if(typeof u==='string')u=__vfRewriteUrl(u);" +
-      "else if(u instanceof Request){" +
-        "var ru=__vfRewriteUrl(u.url);" +
-        "if(ru!==u.url)u=new Request(ru,u)" +
-      "}" +
-      "return oF(u,o)" +
+    // Handle URL objects (Next.js passes URL objects to fetch)
+    "if(typeof u==='object'&&u!==null&&typeof u.href==='string'&&!(u instanceof Request)){" +
+    "u=__vfRewriteUrl(u.href)" +
+    "}else if(typeof u==='string')u=__vfRewriteUrl(u);" +
+    "else if(u instanceof Request){" +
+    "var ru=__vfRewriteUrl(u.url);" +
+    "if(ru!==u.url)u=new Request(ru,u)" +
+    "}" +
+    "return oF(u,o)" +
     "};" +
     // ── XMLHttpRequest shim ──
     // Same host→remote rewrite for XHR (some frameworks/polyfills
     // use XHR instead of fetch).
     "var xO=XMLHttpRequest.prototype.open;" +
     "XMLHttpRequest.prototype.open=function(m,u){" +
-      "var r=__vfRewriteUrl(u);" +
-      "arguments[1]=r;" +
-      "return xO.apply(this,arguments)" +
+    "var r=__vfRewriteUrl(u);" +
+    "arguments[1]=r;" +
+    "return xO.apply(this,arguments)" +
     "};" +
     // ── History shim ──
     // The <base> tag resolves relative URLs against the remote origin,
@@ -372,23 +338,23 @@ export function _buildEnvShim(
     "var HP=History.prototype;" +
     "var oR=HP.replaceState,oP=HP.pushState;" +
     "function __vfFixHistUrl(u){" +
-      "if(u==null)return u;" +
-      "try{" +
-        "var resolved=new O(String(u),b);" +
-        "if(resolved.origin!==hO){" +
-          "var fixed=hO+resolved.pathname+resolved.search+resolved.hash;" +
-          "return fixed" +
-        "}" +
-      "}catch(e){}" +
-      "return u" +
+    "if(u==null)return u;" +
+    "try{" +
+    "var resolved=new O(String(u),b);" +
+    "if(resolved.origin!==hO){" +
+    "var fixed=hO+resolved.pathname+resolved.search+resolved.hash;" +
+    "return fixed" +
+    "}" +
+    "}catch(e){}" +
+    "return u" +
     "}" +
     "HP.replaceState=function(s,t,u){" +
-      "var fu=__vfFixHistUrl(u);" +
-      "try{return oR.call(this,s,t,fu)}catch(e){}" +
+    "var fu=__vfFixHistUrl(u);" +
+    "try{return oR.call(this,s,t,fu)}catch(e){}" +
     "};" +
     "HP.pushState=function(s,t,u){" +
-      "var fu=__vfFixHistUrl(u);" +
-      "try{return oP.call(this,s,t,fu)}catch(e){}" +
+    "var fu=__vfFixHistUrl(u);" +
+    "try{return oP.call(this,s,t,fu)}catch(e){}" +
     "};" +
     // ── Location fix ──
     // Set the iframe's pathname to match the remote page so that
@@ -396,13 +362,13 @@ export function _buildEnvShim(
     // hydration.  Uses the original replaceState directly with an
     // absolute same-origin URL.
     "(function(){" +
-      "var bU=new O(b);" +
-      "var target=hO+bU.pathname+bU.search+bU.hash;" +
-      "try{oR.call(H,{},'',target)}catch(e){}" +
+    "var bU=new O(b);" +
+    "var target=hO+bU.pathname+bU.search+bU.hash;" +
+    "try{oR.call(H,{},'',target)}catch(e){}" +
     "})();" +
     // ── Navigation guard ──
     "function __vfNav(u){" +
-      "window.parent.postMessage({type:'__vf:navigate',url:String(u)},'*')" +
+    "window.parent.postMessage({type:'__vf:navigate',url:String(u)},'*')" +
     "}" +
     "var L=location;" +
     // ── location.href setter interception ──
@@ -410,58 +376,59 @@ export function _buildEnvShim(
     // via <base>), the browser does a hard navigation.  We intercept
     // the href setter to rewrite cross-origin URLs to same-origin.
     "try{" +
-      "var hrefDesc=Object.getOwnPropertyDescriptor(Location.prototype,'href');" +
-      "if(hrefDesc&&hrefDesc.set){" +
-        "var origHrefSet=hrefDesc.set;" +
-        "Object.defineProperty(Location.prototype,'href',{" +
-          "get:hrefDesc.get," +
-          "set:function(v){" +
-            "var fixed=__vfFixHistUrl(v);" +
-            "origHrefSet.call(this,fixed)" +
-          "}," +
-          "configurable:true,enumerable:true" +
-        "});" +
-      "}" +
+    "var hrefDesc=Object.getOwnPropertyDescriptor(Location.prototype,'href');" +
+    "if(hrefDesc&&hrefDesc.set){" +
+    "var origHrefSet=hrefDesc.set;" +
+    "Object.defineProperty(Location.prototype,'href',{" +
+    "get:hrefDesc.get," +
+    "set:function(v){" +
+    "var fixed=__vfFixHistUrl(v);" +
+    "origHrefSet.call(this,fixed)" +
+    "}," +
+    "configurable:true,enumerable:true" +
+    "});" +
+    "}" +
     "}catch(e){}" +
     // location.assign/replace/reload
     "try{" +
-      "Object.defineProperty(Location.prototype,'assign',{configurable:true,value:function(u){" +
-        "var fixed=__vfFixHistUrl(u);" +
-        "origHrefSet.call(this,fixed)" +
-      "}});" +
-      "Object.defineProperty(Location.prototype,'replace',{configurable:true,value:function(u){" +
-        "var fixed=__vfFixHistUrl(u);" +
-        "origHrefSet.call(this,fixed)" +
-      "}});" +
-      "Object.defineProperty(Location.prototype,'reload',{configurable:true,value:function(){" +
-        "origHrefSet.call(this,L.href)" +
-      "}});" +
+    "Object.defineProperty(Location.prototype,'assign',{configurable:true,value:function(u){" +
+    "var fixed=__vfFixHistUrl(u);" +
+    "origHrefSet.call(this,fixed)" +
+    "}});" +
+    "Object.defineProperty(Location.prototype,'replace',{configurable:true,value:function(u){" +
+    "var fixed=__vfFixHistUrl(u);" +
+    "origHrefSet.call(this,fixed)" +
+    "}});" +
+    "Object.defineProperty(Location.prototype,'reload',{configurable:true,value:function(){" +
+    "origHrefSet.call(this,L.href)" +
+    "}});" +
     "}catch(e){}" +
     // ── Navigation API: patch navigate() to rewrite URLs ──
     // navigation.navigate('/about') resolves against <base> to
     // http://remote:3001/about (cross-origin) → SecurityError.
     // Rewrite to same-origin before calling the real navigate().
     "if(typeof navigation!=='undefined'){" +
-      "try{" +
-        "var oNav=navigation.navigate.bind(navigation);" +
-        "navigation.navigate=function(u,opts){" +
-          "var fixed=__vfFixHistUrl(u);" +
-          "return oNav(fixed,opts)" +
-        "};" +
-      "}catch(x){}" +
-      // Event listener as a safety net for any remaining navigations
-      "try{navigation.addEventListener('navigate',function(e){" +
-        "try{" +
-          "var dest=e.destination.url;" +
-          "var destOrigin=new O(dest).origin;" +
-          "if(e.hashChange||e.destination.sameDocument)return;" +
-          "if(!e.canIntercept&&destOrigin!==hO){" +
-            "e.preventDefault()" +
-          "}" +
-        "}catch(x){}" +
-      "})}catch(x){}" +
+    "try{" +
+    "var oNav=navigation.navigate.bind(navigation);" +
+    "navigation.navigate=function(u,opts){" +
+    "var fixed=__vfFixHistUrl(u);" +
+    "return oNav(fixed,opts)" +
+    "};" +
+    "}catch(x){}" +
+    // Event listener as a safety net for any remaining navigations
+    "try{navigation.addEventListener('navigate',function(e){" +
+    "try{" +
+    "var dest=e.destination.url;" +
+    "var destOrigin=new O(dest).origin;" +
+    "if(e.hashChange||e.destination.sameDocument)return;" +
+    "if(!e.canIntercept&&destOrigin!==hO){" +
+    "e.preventDefault()" +
     "}" +
-    "})()</" + "script>"
+    "}catch(x){}" +
+    "})}catch(x){}" +
+    "}" +
+    "})()</" +
+    "script>"
   );
 }
 
@@ -699,8 +666,7 @@ export class VirtualFrame {
     // DEBUG: listen for beforeunload inside the iframe to catch
     // the exact moment something triggers a full navigation.
     try {
-      this.iframe.contentWindow!.addEventListener("beforeunload", () => {
-      });
+      this.iframe.contentWindow!.addEventListener("beforeunload", () => {});
     } catch {}
 
     // Listen for navigation requests from the iframe's env shim.
@@ -712,10 +678,7 @@ export class VirtualFrame {
     // document.write.
     if (!this._onNavigateMessage) {
       this._onNavigateMessage = (e: MessageEvent) => {
-        if (
-          e.source === this.iframe.contentWindow &&
-          e.data?.type === "__vf:navigate"
-        ) {
+        if (e.source === this.iframe.contentWindow && e.data?.type === "__vf:navigate") {
           this._navigateIframe(e.data.url);
         }
       };
@@ -821,9 +784,7 @@ export class VirtualFrame {
             break;
           case "vf:canvasFrame": {
             // Update <img> mirror for canvas/video frames
-            const img = this._remoteIdToNode.get(d.targetId) as
-              | HTMLElement
-              | undefined;
+            const img = this._remoteIdToNode.get(d.targetId) as HTMLElement | undefined;
             if (img && img.tagName === "IMG") {
               (img as HTMLImageElement).src = d.dataURL;
             }
@@ -831,9 +792,7 @@ export class VirtualFrame {
           }
           case "vf:formUpdate": {
             // Bridge form element value changed — update mirrored element
-            const el = this._remoteIdToNode.get(d.targetId) as
-              | HTMLInputElement
-              | undefined;
+            const el = this._remoteIdToNode.get(d.targetId) as HTMLInputElement | undefined;
             if (el) {
               if (d.value !== undefined) el.value = d.value;
               if (d.checked !== undefined) el.checked = d.checked;
@@ -842,9 +801,7 @@ export class VirtualFrame {
           }
           case "vf:scrollUpdate": {
             // Bridge element scrolled — update mirrored element
-            const el = this._remoteIdToNode.get(d.targetId) as
-              | HTMLElement
-              | undefined;
+            const el = this._remoteIdToNode.get(d.targetId) as HTMLElement | undefined;
             if (el) {
               (el as any)._vfScrollFromBridge = true;
               const maxY = el.scrollHeight - el.clientHeight;
@@ -878,8 +835,7 @@ export class VirtualFrame {
           return (
             this.iframe.contentDocument &&
             this.iframe.contentDocument.documentElement &&
-            this.iframe.contentDocument.documentElement.nodeType ===
-              Node.ELEMENT_NODE &&
+            this.iframe.contentDocument.documentElement.nodeType === Node.ELEMENT_NODE &&
             this.iframe.contentDocument.body &&
             this.iframe.contentDocument.body.children.length > 0
           );
@@ -905,16 +861,11 @@ export class VirtualFrame {
               if (isContentReady()) {
                 resolve();
               } else {
-                console.error(
-                  "VirtualFrame: Document still not ready after load",
-                );
+                console.error("VirtualFrame: Document still not ready after load");
                 reject(new Error("Iframe document not ready after load event"));
               }
             } catch (e) {
-              console.error(
-                "VirtualFrame: Error accessing document after load:",
-                e,
-              );
+              console.error("VirtualFrame: Error accessing document after load:", e);
               reject(e);
             }
           }, 10);
@@ -966,9 +917,7 @@ export class VirtualFrame {
       // Copy all CSS from iframe (this can work even without body)
       // Await ensures styles are injected before content renders (prevents FOUC)
       await this.copyIframeCSS();
-      _vflog(
-        `mirrorContent() CSS copied  gen=${gen}  current=${this._mirrorGen}`,
-      );
+      _vflog(`mirrorContent() CSS copied  gen=${gen}  current=${this._mirrorGen}`);
 
       // Stale? A newer mirrorContent superseded us (e.g. iframe reloaded).
       if (gen !== this._mirrorGen) {
@@ -990,9 +939,7 @@ export class VirtualFrame {
       if (this.selector) {
         const sourceMatch = iframeBody.querySelector(this.selector);
         if (!sourceMatch) {
-          console.warn(
-            `VirtualFrame: selector "${this.selector}" matched nothing in iframe`,
-          );
+          console.warn(`VirtualFrame: selector "${this.selector}" matched nothing in iframe`);
           return;
         }
       }
@@ -1078,9 +1025,7 @@ export class VirtualFrame {
 
       // Clean up any inline event handlers that might have been copied
       this.cleanupInlineEventHandlers();
-      _vflog(
-        `mirrorContent() cleanupInlineEventHandlers done, hasFonts=${hasFonts}`,
-      );
+      _vflog(`mirrorContent() cleanupInlineEventHandlers done, hasFonts=${hasFonts}`);
 
       // Reveal content once fonts have loaded (or after a timeout)
       if (hasFonts) {
@@ -1091,10 +1036,7 @@ export class VirtualFrame {
         // Wait for font loads triggered by the newly-injected content
         _vflog(`mirrorContent() awaiting document.fonts.ready...`);
         try {
-          await Promise.race([
-            document.fonts.ready,
-            new Promise((r) => setTimeout(r, 3000)),
-          ]);
+          await Promise.race([document.fonts.ready, new Promise((r) => setTimeout(r, 3000))]);
         } catch {}
         _vflog(`mirrorContent() fonts ready (or timed out)`);
         // Stale? Don't reveal if a newer mirror has taken over.
@@ -1196,26 +1138,24 @@ export class VirtualFrame {
     if (!iframeDoc) return;
 
     // Remove previously mirrored head styles to avoid stale duplicates
-    this.renderRoot!
-      .querySelectorAll("link[data-vf-head-link], style[data-vf-head-style]")
-      .forEach((el) => el.remove());
+    this.renderRoot!.querySelectorAll("link[data-vf-head-link], style[data-vf-head-style]").forEach(
+      (el) => el.remove(),
+    );
 
     // Clone <link rel="stylesheet"> elements
-    iframeDoc
-      .querySelectorAll('link[rel="stylesheet"]')
-      .forEach((link, i) => {
-        const clone = link.cloneNode(true) as HTMLLinkElement;
-        // Resolve href to absolute URL using the iframe's base URI
-        // (the <base> tag points to the remote origin).
-        const rawHref = link.getAttribute("href");
-        if (rawHref) {
-          try {
-            clone.href = new URL(rawHref, iframeDoc.baseURI).href;
-          } catch {}
-        }
-        clone.setAttribute("data-vf-head-link", String(i));
-        this.renderRoot!.appendChild(clone);
-      });
+    iframeDoc.querySelectorAll('link[rel="stylesheet"]').forEach((link, i) => {
+      const clone = link.cloneNode(true) as HTMLLinkElement;
+      // Resolve href to absolute URL using the iframe's base URI
+      // (the <base> tag points to the remote origin).
+      const rawHref = link.getAttribute("href");
+      if (rawHref) {
+        try {
+          clone.href = new URL(rawHref, iframeDoc.baseURI).href;
+        } catch {}
+      }
+      clone.setAttribute("data-vf-head-link", String(i));
+      this.renderRoot!.appendChild(clone);
+    });
 
     // Clone <style> elements
     iframeDoc.querySelectorAll("style").forEach((styleEl, i) => {
@@ -1227,46 +1167,40 @@ export class VirtualFrame {
   }
 
   _copyIframeCSSNormal(iframeDoc: Document) {
-    Array.from(iframeDoc.styleSheets).forEach(
-      (styleSheet: CSSStyleSheet, index: number) => {
-        try {
-          const styleElement = document.createElement("style");
-          styleElement.type = "text/css";
-          styleElement.setAttribute("data-iframe-stylesheet", String(index));
-          let cssText = "";
+    Array.from(iframeDoc.styleSheets).forEach((styleSheet: CSSStyleSheet, index: number) => {
+      try {
+        const styleElement = document.createElement("style");
+        styleElement.type = "text/css";
+        styleElement.setAttribute("data-iframe-stylesheet", String(index));
+        let cssText = "";
 
-          Array.from(styleSheet.cssRules || (styleSheet as any).rules).forEach(
-            (rule: CSSRule) => {
-              cssText += rule.cssText + "\n";
-            },
-          );
+        Array.from(styleSheet.cssRules || (styleSheet as any).rules).forEach((rule: CSSRule) => {
+          cssText += rule.cssText + "\n";
+        });
 
-          styleElement.textContent = _rewriteCSS(cssText);
-          this.renderRoot!.appendChild(styleElement);
-        } catch (e) {
-          console.warn("Cannot access stylesheet:", e);
+        styleElement.textContent = _rewriteCSS(cssText);
+        this.renderRoot!.appendChild(styleElement);
+      } catch (e) {
+        console.warn("Cannot access stylesheet:", e);
 
-          if (styleSheet.href) {
-            const linkElement = document.createElement("link");
-            linkElement.rel = "stylesheet";
-            linkElement.type = "text/css";
-            linkElement.href = styleSheet.href;
-            linkElement.setAttribute("data-iframe-stylesheet", String(index));
-            this.renderRoot!.appendChild(linkElement);
-          }
+        if (styleSheet.href) {
+          const linkElement = document.createElement("link");
+          linkElement.rel = "stylesheet";
+          linkElement.type = "text/css";
+          linkElement.href = styleSheet.href;
+          linkElement.setAttribute("data-iframe-stylesheet", String(index));
+          this.renderRoot!.appendChild(linkElement);
         }
-      },
-    );
+      }
+    });
 
-    Array.from(iframeDoc.querySelectorAll("style")).forEach(
-      (styleEl, index) => {
-        const clonedStyle = document.createElement("style");
-        clonedStyle.type = "text/css";
-        clonedStyle.textContent = _rewriteCSS(styleEl.textContent ?? "");
-        clonedStyle.setAttribute("data-iframe-inline-style", String(index));
-        this.renderRoot!.appendChild(clonedStyle);
-      },
-    );
+    Array.from(iframeDoc.querySelectorAll("style")).forEach((styleEl, index) => {
+      const clonedStyle = document.createElement("style");
+      clonedStyle.type = "text/css";
+      clonedStyle.textContent = _rewriteCSS(styleEl.textContent ?? "");
+      clonedStyle.setAttribute("data-iframe-inline-style", String(index));
+      this.renderRoot!.appendChild(clonedStyle);
+    });
   }
 
   async _copyIframeCSSIsolated(iframeDoc: Document) {
@@ -1286,52 +1220,44 @@ export class VirtualFrame {
     }> = [];
     const fetchPromises: Promise<void>[] = [];
 
-    Array.from(iframeDoc.styleSheets).forEach(
-      (styleSheet: CSSStyleSheet, index: number) => {
-        try {
-          let cssText = "";
-          Array.from(styleSheet.cssRules || (styleSheet as any).rules).forEach(
-            (rule: CSSRule) => {
-              cssText += rule.cssText + "\n";
-            },
-          );
-          cssEntries.push({
-            cssText,
-            attr: "data-iframe-stylesheet",
-            index,
-          });
-        } catch {
-          if (styleSheet.href) {
-            fetchPromises.push(
-              fetch(styleSheet.href, {
-                headers: { Accept: "text/css" },
-              })
-                .then((r) => r.text())
-                .then((cssText) => {
-                  cssEntries.push({
-                    cssText,
-                    attr: "data-iframe-stylesheet",
-                    index: `ext-${index}`,
-                  });
-                })
-                .catch((err) =>
-                  console.warn("VirtualFrame: Cannot fetch stylesheet:", err),
-                ),
-            );
-          }
-        }
-      },
-    );
-
-    Array.from(iframeDoc.querySelectorAll("style")).forEach(
-      (styleEl, index) => {
+    Array.from(iframeDoc.styleSheets).forEach((styleSheet: CSSStyleSheet, index: number) => {
+      try {
+        let cssText = "";
+        Array.from(styleSheet.cssRules || (styleSheet as any).rules).forEach((rule: CSSRule) => {
+          cssText += rule.cssText + "\n";
+        });
         cssEntries.push({
-          cssText: styleEl.textContent,
-          attr: "data-iframe-inline-style",
+          cssText,
+          attr: "data-iframe-stylesheet",
           index,
         });
-      },
-    );
+      } catch {
+        if (styleSheet.href) {
+          fetchPromises.push(
+            fetch(styleSheet.href, {
+              headers: { Accept: "text/css" },
+            })
+              .then((r) => r.text())
+              .then((cssText) => {
+                cssEntries.push({
+                  cssText,
+                  attr: "data-iframe-stylesheet",
+                  index: `ext-${index}`,
+                });
+              })
+              .catch((err) => console.warn("VirtualFrame: Cannot fetch stylesheet:", err)),
+          );
+        }
+      }
+    });
+
+    Array.from(iframeDoc.querySelectorAll("style")).forEach((styleEl, index) => {
+      cssEntries.push({
+        cssText: styleEl.textContent,
+        attr: "data-iframe-inline-style",
+        index,
+      });
+    });
 
     // Wait for all external stylesheet fetches
     await Promise.all(fetchPromises);
@@ -1352,9 +1278,7 @@ export class VirtualFrame {
     const jsFontNames = this._addJSFontFaces(iframeDoc, fontNames);
 
     // Only namespace CSS-declared font names, not JS font names
-    const namespaceable = new Set(
-      [...fontNames].filter((n) => !jsFontNames.has(n)),
-    );
+    const namespaceable = new Set([...fontNames].filter((n) => !jsFontNames.has(n)));
 
     // Compute a content-based prefix from the @font-face CSS
     const fontPrefix = this._computeFontPrefix(cssEntries);
@@ -1423,9 +1347,7 @@ export class VirtualFrame {
     let match;
     while ((match = fontFaceRegex.exec(cssText)) !== null) {
       const block = match[1];
-      const familyMatch = block.match(
-        /font-family\s*:\s*(['"]?)([^'";\n}]+)\1/i,
-      );
+      const familyMatch = block.match(/font-family\s*:\s*(['"]?)([^'";\n}]+)\1/i);
       if (familyMatch) {
         names.add(familyMatch[2].trim());
       }
@@ -1456,11 +1378,7 @@ export class VirtualFrame {
     return `__vf_${h.toString(16)}_`;
   }
 
-  _namespaceFontReferences(
-    cssText: string,
-    fontNames: Set<string>,
-    prefix: string,
-  ) {
+  _namespaceFontReferences(cssText: string, fontNames: Set<string>, prefix: string) {
     let css = cssText;
     for (const name of fontNames) {
       const escaped = name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -1470,10 +1388,7 @@ export class VirtualFrame {
       css = css.replaceAll(`'${name}'`, `'${prefix}${name}'`);
       // Replace unquoted occurrences in font / font-family declarations
       css = css.replace(
-        new RegExp(
-          `(font(?:-family)?\\s*:[^;{}]*?)\\b${escaped}\\b(?![\\w-])`,
-          "gi",
-        ),
+        new RegExp(`(font(?:-family)?\\s*:[^;{}]*?)\\b${escaped}\\b(?![\\w-])`, "gi"),
         `$1"${prefix}${name}"`,
       );
     }
@@ -1491,10 +1406,7 @@ export class VirtualFrame {
       // Copy attributes
       for (const attr of element.attributes) {
         if (attr.name.startsWith("on")) continue;
-        div.setAttribute(
-          attr.name,
-          _rewriteAttrUrl(attr.name, attr.value, this._baseUrl),
-        );
+        div.setAttribute(attr.name, _rewriteAttrUrl(attr.name, attr.value, this._baseUrl));
       }
       this.elementMap.set(element, div);
       this.reverseElementMap.set(div, element);
@@ -1563,10 +1475,7 @@ export class VirtualFrame {
       if (attr.name.startsWith("on")) {
         return;
       }
-      clone.setAttribute(
-        attr.name,
-        _rewriteAttrUrl(attr.name, attr.value, this._baseUrl),
-      );
+      clone.setAttribute(attr.name, _rewriteAttrUrl(attr.name, attr.value, this._baseUrl));
     });
 
     this.elementMap.set(element, clone);
@@ -1684,9 +1593,7 @@ export class VirtualFrame {
           const t = setTimeout(tryAttach, 250);
           this.activeStreams.push({ timeout: t });
         } else {
-          _vfwarn(
-            `_deferCanvasMirror(${canvasId}) gave up after ${maxAttempts} attempts`,
-          );
+          _vfwarn(`_deferCanvasMirror(${canvasId}) gave up after ${maxAttempts} attempts`);
         }
         return;
       }
@@ -1754,9 +1661,7 @@ export class VirtualFrame {
     const inlineStyle = originalElement.getAttribute("style");
     if (inlineStyle) video.setAttribute("style", inlineStyle);
     const w =
-      originalElement.getAttribute("width") ||
-      originalElement.width ||
-      originalElement.offsetWidth;
+      originalElement.getAttribute("width") || originalElement.width || originalElement.offsetWidth;
     const h =
       originalElement.getAttribute("height") ||
       originalElement.height ||
@@ -1770,9 +1675,7 @@ export class VirtualFrame {
         // If the original already plays a MediaStream, reuse it
         // (avoids expensive chained captureStream calls).
         // Use duck-typing — instanceof fails across iframe realms.
-        let stream = _isMediaStream(originalElement.srcObject)
-          ? originalElement.srcObject
-          : null;
+        let stream = _isMediaStream(originalElement.srcObject) ? originalElement.srcObject : null;
 
         if (stream) {
           _vflog(
@@ -1801,10 +1704,7 @@ export class VirtualFrame {
         this._afterDocumentLoad(() => {
           video.srcObject = stream;
           video.play().catch((e) => {
-            _vfwarn(
-              `createStreamMirror(<video id=${elId}>) play() rejected:`,
-              e,
-            );
+            _vfwarn(`createStreamMirror(<video id=${elId}>) play() rejected:`, e);
           });
           _vflog(
             `createStreamMirror(<video id=${elId}>) ✓ attached  tracks=${stream.getTracks().length}`,
@@ -1818,9 +1718,7 @@ export class VirtualFrame {
     // If it already has a live MediaStream, attach now.
     // Otherwise wait for data to load.
     if (_isMediaStream(originalElement.srcObject)) {
-      _vflog(
-        `createStreamMirror(<video id=${elId}>) has MediaStream → attach now`,
-      );
+      _vflog(`createStreamMirror(<video id=${elId}>) has MediaStream → attach now`);
       attach();
     } else if (originalElement.readyState >= 2) {
       _vflog(
@@ -1828,9 +1726,7 @@ export class VirtualFrame {
       );
       attach();
     } else {
-      _vflog(
-        `createStreamMirror(<video id=${elId}>) waiting for loadeddata event`,
-      );
+      _vflog(`createStreamMirror(<video id=${elId}>) waiting for loadeddata event`);
       originalElement.addEventListener("loadeddata", attach, { once: true });
     }
 
@@ -1890,9 +1786,7 @@ export class VirtualFrame {
       const observeTarget = iframeDoc.documentElement;
 
       if (!observeTarget || observeTarget.nodeType !== Node.ELEMENT_NODE) {
-        throw new Error(
-          "DocumentElement is not ready despite waiting - this should not happen",
-        );
+        throw new Error("DocumentElement is not ready despite waiting - this should not happen");
       }
 
       this.observer.observe(observeTarget, {
@@ -1938,8 +1832,7 @@ export class VirtualFrame {
     };
 
     // Patch CSSStyleSheet.prototype methods on the iframe's window
-    const CSSProto =
-      iframeWin.CSSStyleSheet.prototype as CSSStyleSheet;
+    const CSSProto = iframeWin.CSSStyleSheet.prototype as CSSStyleSheet;
     const origInsertRule = CSSProto.insertRule;
     const origDeleteRule = CSSProto.deleteRule;
 
@@ -2008,8 +1901,7 @@ export class VirtualFrame {
           mutation.addedNodes.forEach((node) => {
             if (
               node.nodeType === Node.ELEMENT_NODE &&
-              ((node as Element).tagName === "STYLE" ||
-                (node as Element).tagName === "LINK")
+              ((node as Element).tagName === "STYLE" || (node as Element).tagName === "LINK")
             ) {
               shouldRecopyCSS = true;
             }
@@ -2017,8 +1909,7 @@ export class VirtualFrame {
           mutation.removedNodes.forEach((node) => {
             if (
               node.nodeType === Node.ELEMENT_NODE &&
-              ((node as Element).tagName === "STYLE" ||
-                (node as Element).tagName === "LINK")
+              ((node as Element).tagName === "STYLE" || (node as Element).tagName === "LINK")
             ) {
               shouldRecopyCSS = true;
             }
@@ -2111,18 +2002,12 @@ export class VirtualFrame {
       // DO watch for the selector reappearing (e.g. the iframe
       // navigates back to a page containing the projected element)
       // and thaw by scheduling a re-mirror.
-      if (
-        this.selector &&
-        mutation.type === "childList" &&
-        mutation.addedNodes.length > 0
-      ) {
+      if (this.selector && mutation.type === "childList" && mutation.addedNodes.length > 0) {
         for (const node of mutation.addedNodes) {
           if (node.nodeType !== Node.ELEMENT_NODE) continue;
           const el = node as Element;
           if (el.matches(this.selector) || el.querySelector(this.selector)) {
-            _vflog(
-              `handleMutation: selector "${this.selector}" reappeared — thawing`,
-            );
+            _vflog(`handleMutation: selector "${this.selector}" reappeared — thawing`);
             this._scheduleRemirror();
             return;
           }
@@ -2146,10 +2031,7 @@ export class VirtualFrame {
     }
   }
 
-  handleChildListMutation(
-    mutation: MutationRecord,
-    mirroredParent: Node | undefined,
-  ) {
+  handleChildListMutation(mutation: MutationRecord, mirroredParent: Node | undefined) {
     // Selector projection: if any removed node is on the source ancestor
     // path (body → matched element), a SPA navigation is tearing down
     // our projected subtree.  Freeze the mirror — preserve the existing
@@ -2161,9 +2043,7 @@ export class VirtualFrame {
       //     is being torn down.
       for (const removedNode of mutation.removedNodes) {
         if (this._selectorSourcePathNodes.has(removedNode)) {
-          _vflog(
-            `handleChildListMutation: ancestor path node removed — freezing selector mirror`,
-          );
+          _vflog(`handleChildListMutation: ancestor path node removed — freezing selector mirror`);
           this._freezeSelectorMirror();
           return;
         }
@@ -2254,11 +2134,9 @@ export class VirtualFrame {
 
         if (clonedNode.nodeType === Node.ELEMENT_NODE) {
           this.setupEventProxyingForElement(clonedNode as Element);
-          (clonedNode as Element)
-            .querySelectorAll("*")
-            .forEach((childElement: Element) => {
-              this.setupEventProxyingForElement(childElement);
-            });
+          (clonedNode as Element).querySelectorAll("*").forEach((childElement: Element) => {
+            this.setupEventProxyingForElement(childElement);
+          });
         }
       } else if (addedNode.nodeType === Node.TEXT_NODE) {
         const clonedTextNode = addedNode.cloneNode(true);
@@ -2267,10 +2145,7 @@ export class VirtualFrame {
         const nextSibling = addedNode.nextSibling;
         if (nextSibling && this.elementMap.has(nextSibling)) {
           const mirroredNextSibling = this.elementMap.get(nextSibling);
-          mirroredParent.insertBefore(
-            clonedTextNode,
-            mirroredNextSibling ?? null,
-          );
+          mirroredParent.insertBefore(clonedTextNode, mirroredNextSibling ?? null);
         } else {
           mirroredParent.appendChild(clonedTextNode);
         }
@@ -2278,10 +2153,7 @@ export class VirtualFrame {
     });
   }
 
-  handleAttributeMutation(
-    mutation: MutationRecord,
-    mirroredElement: Node | undefined,
-  ) {
+  handleAttributeMutation(mutation: MutationRecord, mirroredElement: Node | undefined) {
     if (!mirroredElement) return;
 
     const attributeName = mutation.attributeName;
@@ -2297,10 +2169,7 @@ export class VirtualFrame {
     // Skip width/height mutations on canvas elements — these change
     // rapidly (every animation frame) and the mirror uses a <video> or
     // <div> placeholder, not a real canvas.
-    if (
-      target.tagName === "CANVAS" &&
-      (attributeName === "width" || attributeName === "height")
-    ) {
+    if (target.tagName === "CANVAS" && (attributeName === "width" || attributeName === "height")) {
       return;
     }
 
@@ -2312,19 +2181,13 @@ export class VirtualFrame {
     }
 
     if (newValue !== null) {
-      mirrorEl.setAttribute(
-        attributeName,
-        _rewriteAttrUrl(attributeName, newValue, this._baseUrl),
-      );
+      mirrorEl.setAttribute(attributeName, _rewriteAttrUrl(attributeName, newValue, this._baseUrl));
     } else {
       mirrorEl.removeAttribute(attributeName);
     }
   }
 
-  handleCharacterDataMutation(
-    mutation: MutationRecord,
-    _mirroredElement: Node | undefined,
-  ) {
+  handleCharacterDataMutation(mutation: MutationRecord, _mirroredElement: Node | undefined) {
     const originalTextNode = mutation.target;
     const mirroredTextNode = this.elementMap.get(originalTextNode);
 
@@ -2337,22 +2200,13 @@ export class VirtualFrame {
       if (mirroredParent) {
         const originalChildNodes = Array.from(parentElement.childNodes);
         const mirroredChildNodes = Array.from(mirroredParent.childNodes);
-        const textNodeIndex = originalChildNodes.indexOf(
-          originalTextNode as ChildNode,
-        );
+        const textNodeIndex = originalChildNodes.indexOf(originalTextNode as ChildNode);
         if (textNodeIndex >= 0 && textNodeIndex < mirroredChildNodes.length) {
           const correspondingMirroredNode = mirroredChildNodes[textNodeIndex];
-          if (
-            correspondingMirroredNode &&
-            correspondingMirroredNode.nodeType === Node.TEXT_NODE
-          ) {
-            correspondingMirroredNode.textContent =
-              originalTextNode.textContent;
+          if (correspondingMirroredNode && correspondingMirroredNode.nodeType === Node.TEXT_NODE) {
+            correspondingMirroredNode.textContent = originalTextNode.textContent;
             this.elementMap.set(originalTextNode, correspondingMirroredNode);
-            this.reverseElementMap.set(
-              correspondingMirroredNode,
-              originalTextNode,
-            );
+            this.reverseElementMap.set(correspondingMirroredNode, originalTextNode);
           }
         }
       }
@@ -2435,10 +2289,7 @@ export class VirtualFrame {
         // per-element listeners don't fire reliably in shadow DOM.
         if (this.isFormElement(mappedMirror)) {
           const inputType = (mappedMirror as HTMLInputElement).type;
-          if (
-            eventType === "click" &&
-            (inputType === "checkbox" || inputType === "radio")
-          ) {
+          if (eventType === "click" && (inputType === "checkbox" || inputType === "radio")) {
             // Prevent the browser from toggling the MIRROR checkbox —
             // we'll sync it from the original after React processes.
             event.preventDefault();
@@ -2457,12 +2308,7 @@ export class VirtualFrame {
         if (this.isTextSelectionEvent(event, mappedMirror)) return;
         if (!this.shouldProxyEvent(event, mappedMirror, eventType)) return;
 
-        this._handleDelegatedEvent(
-          event,
-          eventType,
-          mappedMirror,
-          originalElement,
-        );
+        this._handleDelegatedEvent(event, eventType, mappedMirror, originalElement);
       });
     }
 
@@ -2504,12 +2350,7 @@ export class VirtualFrame {
 
           if (this.isFormElement(mappedMirror)) return;
 
-          this._handleDelegatedEvent(
-            event,
-            eventType,
-            mappedMirror,
-            originalElement,
-          );
+          this._handleDelegatedEvent(event, eventType, mappedMirror, originalElement);
         },
         true, // capture phase for non-bubbling events
       );
@@ -2542,18 +2383,12 @@ export class VirtualFrame {
         return;
       }
       originalElement._vfScrollFromMirror = true;
-      const maxScrollTop =
-        mirroredElement.scrollHeight - mirroredElement.clientHeight;
-      const maxScrollLeft =
-        mirroredElement.scrollWidth - mirroredElement.clientWidth;
-      const pctY =
-        maxScrollTop > 0 ? mirroredElement.scrollTop / maxScrollTop : 0;
-      const pctX =
-        maxScrollLeft > 0 ? mirroredElement.scrollLeft / maxScrollLeft : 0;
-      const origMaxY =
-        originalElement.scrollHeight - originalElement.clientHeight;
-      const origMaxX =
-        originalElement.scrollWidth - originalElement.clientWidth;
+      const maxScrollTop = mirroredElement.scrollHeight - mirroredElement.clientHeight;
+      const maxScrollLeft = mirroredElement.scrollWidth - mirroredElement.clientWidth;
+      const pctY = maxScrollTop > 0 ? mirroredElement.scrollTop / maxScrollTop : 0;
+      const pctX = maxScrollLeft > 0 ? mirroredElement.scrollLeft / maxScrollLeft : 0;
+      const origMaxY = originalElement.scrollHeight - originalElement.clientHeight;
+      const origMaxX = originalElement.scrollWidth - originalElement.clientWidth;
       originalElement.scrollTop = pctY * origMaxY;
       originalElement.scrollLeft = pctX * origMaxX;
     }
@@ -2610,27 +2445,17 @@ export class VirtualFrame {
     }
 
     // Snapshot the iframe URL BEFORE dispatch for anchor clicks
-    const isAnchorClick =
-      eventType === "click" && originalElement.matches?.("a[href]");
-    const urlBeforeDispatch = isAnchorClick
-      ? this.iframe.contentWindow?.location.href
-      : undefined;
+    const isAnchorClick = eventType === "click" && originalElement.matches?.("a[href]");
+    const urlBeforeDispatch = isAnchorClick ? this.iframe.contentWindow?.location.href : undefined;
 
-    const newEvent = this.cloneEvent(
-      event,
-      eventType,
-      mirroredElement,
-      originalElement,
-    );
+    const newEvent = this.cloneEvent(event, eventType, mirroredElement, originalElement);
     const notPrevented = originalElement.dispatchEvent(newEvent);
 
     // Anchor click navigation
     if (isAnchorClick && originalElement.href) {
       const href = originalElement.href;
       const win = this.iframe.contentWindow!;
-      const urlChanged =
-        urlBeforeDispatch !== undefined &&
-        win.location.href !== urlBeforeDispatch;
+      const urlChanged = urlBeforeDispatch !== undefined && win.location.href !== urlBeforeDispatch;
 
       if (!notPrevented || urlChanged) {
         // framework handled
@@ -2638,8 +2463,7 @@ export class VirtualFrame {
         Promise.resolve().then(() => {
           try {
             const urlMicro = win.location.href;
-            const changedMicro =
-              urlBeforeDispatch !== undefined && urlMicro !== urlBeforeDispatch;
+            const changedMicro = urlBeforeDispatch !== undefined && urlMicro !== urlBeforeDispatch;
             if (changedMicro) return;
             win.location.assign(href);
           } catch (e) {
@@ -2685,10 +2509,8 @@ export class VirtualFrame {
       const maxX = originalElement.scrollWidth - originalElement.clientWidth;
       const pctY = maxY > 0 ? originalElement.scrollTop / maxY : 0;
       const pctX = maxX > 0 ? originalElement.scrollLeft / maxX : 0;
-      const mirrorMaxY =
-        mirroredElement.scrollHeight - mirroredElement.clientHeight;
-      const mirrorMaxX =
-        mirroredElement.scrollWidth - mirroredElement.clientWidth;
+      const mirrorMaxY = mirroredElement.scrollHeight - mirroredElement.clientHeight;
+      const mirrorMaxX = mirroredElement.scrollWidth - mirroredElement.clientWidth;
       mirroredElement.scrollTop = pctY * mirrorMaxY;
       mirroredElement.scrollLeft = pctX * mirrorMaxX;
     });
@@ -2700,21 +2522,14 @@ export class VirtualFrame {
     // Proxy focus/blur via synthetic FocusEvent so iframe handlers fire,
     // without calling .focus()/.blur() which would steal real focus.
     // Use iframe's FocusEvent constructor to stay in the same JS realm.
-    const formIframeWin: any =
-      originalElement.ownerDocument?.defaultView || window;
+    const formIframeWin: any = originalElement.ownerDocument?.defaultView || window;
     const FocusCtor = formIframeWin.FocusEvent || FocusEvent;
     mirroredElement.addEventListener("focus", () => {
-      originalElement.dispatchEvent(
-        new FocusCtor("focus", { bubbles: false, cancelable: false }),
-      );
-      originalElement.dispatchEvent(
-        new FocusCtor("focusin", { bubbles: true, cancelable: false }),
-      );
+      originalElement.dispatchEvent(new FocusCtor("focus", { bubbles: false, cancelable: false }));
+      originalElement.dispatchEvent(new FocusCtor("focusin", { bubbles: true, cancelable: false }));
     });
     mirroredElement.addEventListener("blur", () => {
-      originalElement.dispatchEvent(
-        new FocusCtor("blur", { bubbles: false, cancelable: false }),
-      );
+      originalElement.dispatchEvent(new FocusCtor("blur", { bubbles: false, cancelable: false }));
       originalElement.dispatchEvent(
         new FocusCtor("focusout", { bubbles: true, cancelable: false }),
       );
@@ -2724,8 +2539,7 @@ export class VirtualFrame {
       mirroredElement.value = originalElement.value;
       if (
         tagName === "input" &&
-        (originalElement.type === "checkbox" ||
-          originalElement.type === "radio")
+        (originalElement.type === "checkbox" || originalElement.type === "radio")
       ) {
         mirroredElement.checked = originalElement.checked;
       }
@@ -2748,16 +2562,12 @@ export class VirtualFrame {
       const nativeValueSetter =
         protoName &&
         iframeWin[protoName] &&
-        Object.getOwnPropertyDescriptor(iframeWin[protoName].prototype, "value")
-          ?.set;
+        Object.getOwnPropertyDescriptor(iframeWin[protoName].prototype, "value")?.set;
 
       const nativeCheckedSetter =
         tagName === "input" &&
         iframeWin.HTMLInputElement &&
-        Object.getOwnPropertyDescriptor(
-          iframeWin.HTMLInputElement.prototype,
-          "checked",
-        )?.set;
+        Object.getOwnPropertyDescriptor(iframeWin.HTMLInputElement.prototype, "checked")?.set;
 
       function setOriginalValue(val: any) {
         if (nativeValueSetter) {
@@ -2782,27 +2592,19 @@ export class VirtualFrame {
       // realm as React's listener (avoids cross-realm instanceof
       // mismatches in React 19's production build).
 
-      if (
-        mirroredElement.type === "checkbox" ||
-        mirroredElement.type === "radio"
-      ) {
+      if (mirroredElement.type === "checkbox" || mirroredElement.type === "radio") {
         mirroredElement.addEventListener("click", () => {
           userModified = true;
           setOriginalChecked(mirroredElement.checked);
           const Ctor = iframeWin.MouseEvent || MouseEvent;
-          originalElement.dispatchEvent(
-            new Ctor("click", { bubbles: true, cancelable: true }),
-          );
+          originalElement.dispatchEvent(new Ctor("click", { bubbles: true, cancelable: true }));
         });
       }
 
       mirroredElement.addEventListener("input", () => {
         userModified = true;
         setOriginalValue(mirroredElement.value);
-        if (
-          mirroredElement.type === "checkbox" ||
-          mirroredElement.type === "radio"
-        ) {
+        if (mirroredElement.type === "checkbox" || mirroredElement.type === "radio") {
           setOriginalChecked(mirroredElement.checked);
         }
         const EvtCtor = iframeWin.Event || Event;
@@ -2812,10 +2614,7 @@ export class VirtualFrame {
       mirroredElement.addEventListener("change", () => {
         userModified = true;
         setOriginalValue(mirroredElement.value);
-        if (
-          mirroredElement.type === "checkbox" ||
-          mirroredElement.type === "radio"
-        ) {
+        if (mirroredElement.type === "checkbox" || mirroredElement.type === "radio") {
           setOriginalChecked(mirroredElement.checked);
         }
         const EvtCtor = iframeWin.Event || Event;
@@ -2855,10 +2654,7 @@ export class VirtualFrame {
       const interactiveTags = ["button", "input", "select", "textarea", "a"];
       if (!interactiveTags.includes(tagName)) {
         if (event.type === "mousedown" || event.type === "pointerdown") {
-          element.setAttribute(
-            "data-selection-start",
-            `${event.clientX},${event.clientY}`,
-          );
+          element.setAttribute("data-selection-start", `${event.clientX},${event.clientY}`);
         } else if (
           (event.type === "mousemove" || event.type === "pointermove") &&
           event.buttons === 1
@@ -2867,8 +2663,7 @@ export class VirtualFrame {
           if (startPos) {
             const [startX, startY] = startPos.split(",").map(Number);
             const distance = Math.sqrt(
-              Math.pow(event.clientX - startX, 2) +
-                Math.pow(event.clientY - startY, 2),
+              Math.pow(event.clientX - startX, 2) + Math.pow(event.clientY - startY, 2),
             );
             if (distance > 5) return true;
           }
@@ -2903,11 +2698,7 @@ export class VirtualFrame {
   }
 
   // Same logic as shouldProxyEvent but for cross-origin mirrored elements
-  _shouldProxyCrossOriginEvent(
-    event: Event,
-    element: Element,
-    eventType: string,
-  ) {
+  _shouldProxyCrossOriginEvent(event: Event, element: Element, eventType: string) {
     const tagName = element.tagName?.toLowerCase();
     const alwaysProxyEvents = ["click", "dblclick", "submit", "reset"];
 
@@ -2939,11 +2730,7 @@ export class VirtualFrame {
     // Translate coordinates for mouse-like events (mouse, click, drag)
     let clientX = originalEvent.clientX;
     let clientY = originalEvent.clientY;
-    if (
-      mirroredElement &&
-      originalElement &&
-      originalEvent.clientX !== undefined
-    ) {
+    if (mirroredElement && originalElement && originalEvent.clientX !== undefined) {
       const mirroredRect = mirroredElement.getBoundingClientRect();
       const relX = originalEvent.clientX - mirroredRect.left;
       const relY = originalEvent.clientY - mirroredRect.top;
@@ -3084,9 +2871,7 @@ export class VirtualFrame {
       this._nodeToRemoteId = new WeakMap();
 
       const probeBody = this._buildNode(data.body);
-      const match = probeBody
-        ? (probeBody as Element).querySelector(this.selector)
-        : null;
+      const match = probeBody ? (probeBody as Element).querySelector(this.selector) : null;
 
       // Restore original maps — the real build happens below
       this._remoteIdToNode = prevIdToNode;
@@ -3156,10 +2941,8 @@ export class VirtualFrame {
       for (const [id, saved] of savedFormValues) {
         const node = this._remoteIdToNode.get(id);
         if (!node) continue;
-        if (saved.checked !== undefined)
-          (node as HTMLInputElement).checked = saved.checked;
-        if (saved.value !== undefined)
-          (node as HTMLInputElement).value = saved.value;
+        if (saved.checked !== undefined) (node as HTMLInputElement).checked = saved.checked;
+        if (saved.value !== undefined) (node as HTMLInputElement).value = saved.value;
       }
 
       // If a CSS selector is set, prune the tree so only the ancestor
@@ -3280,8 +3063,7 @@ export class VirtualFrame {
 
     // Replace <body>/<html> with <div data-vf-body> so host body styles
     // don't bleed in; rewritten CSS targets [data-vf-body] instead.
-    const actualTag =
-      desc.tag === "body" || desc.tag === "html" ? "div" : desc.tag;
+    const actualTag = desc.tag === "body" || desc.tag === "html" ? "div" : desc.tag;
     const isBodyReplacement = desc.tag === "body" || desc.tag === "html";
 
     const isSVG = _svgTags.has(actualTag);
@@ -3303,8 +3085,7 @@ export class VirtualFrame {
     // for full quality + audio.
     if (desc.tag === "canvas" || desc.tag === "video") {
       const src = desc.attrs?.src;
-      const useNativeVideo =
-        desc.tag === "video" && src && !src.startsWith("blob:");
+      const useNativeVideo = desc.tag === "video" && src && !src.startsWith("blob:");
 
       if (useNativeVideo) {
         const video = document.createElement("video");
@@ -3464,11 +3245,9 @@ export class VirtualFrame {
             // Set up event proxying for new elements
             if (node.nodeType === Node.ELEMENT_NODE) {
               this._setupCrossOriginEventProxyingForElement(node as Element);
-              (node as Element)
-                .querySelectorAll?.("*")
-                .forEach((child: Element) => {
-                  this._setupCrossOriginEventProxyingForElement(child);
-                });
+              (node as Element).querySelectorAll?.("*").forEach((child: Element) => {
+                this._setupCrossOriginEventProxyingForElement(child);
+              });
             }
           }
           break;
@@ -3529,9 +3308,7 @@ export class VirtualFrame {
         }
       }
 
-      const fontPrefix = this._computeFontPrefix(
-        cssEntries.filter((e) => e.cssText),
-      );
+      const fontPrefix = this._computeFontPrefix(cssEntries.filter((e) => e.cssText));
 
       for (const entry of cssEntries) {
         if (!entry.cssText) continue;
@@ -3543,10 +3320,7 @@ export class VirtualFrame {
         const styleEl = document.createElement("style");
         styleEl.type = "text/css";
         styleEl.textContent = css;
-        styleEl.setAttribute(
-          entry.attr || "data-iframe-stylesheet",
-          entry.index ?? "",
-        );
+        styleEl.setAttribute(entry.attr || "data-iframe-stylesheet", entry.index ?? "");
         this.renderRoot!.appendChild(styleEl);
       }
     } else {
@@ -3555,10 +3329,7 @@ export class VirtualFrame {
         const styleEl = document.createElement("style");
         styleEl.type = "text/css";
         styleEl.textContent = _rewriteCSS(entry.cssText);
-        styleEl.setAttribute(
-          entry.attr || "data-iframe-stylesheet",
-          entry.index ?? "",
-        );
+        styleEl.setAttribute(entry.attr || "data-iframe-stylesheet", entry.index ?? "");
         this.renderRoot!.appendChild(styleEl);
       }
     }
@@ -3637,10 +3408,7 @@ export class VirtualFrame {
       mirroredElement.addEventListener(eventType, (event: any) => {
         // Don't interfere with text selection
         if (this.isTextSelectionEvent(event, mirroredElement)) return;
-        if (
-          !this._shouldProxyCrossOriginEvent(event, mirroredElement, eventType)
-        )
-          return;
+        if (!this._shouldProxyCrossOriginEvent(event, mirroredElement, eventType)) return;
 
         if (eventType === "scroll") {
           // Guard: don't echo back scroll that came from bridge
@@ -3649,10 +3417,8 @@ export class VirtualFrame {
             return;
           }
           // Send scroll sync
-          const maxY =
-            mirroredElement.scrollHeight - mirroredElement.clientHeight;
-          const maxX =
-            mirroredElement.scrollWidth - mirroredElement.clientWidth;
+          const maxY = mirroredElement.scrollHeight - mirroredElement.clientHeight;
+          const maxX = mirroredElement.scrollWidth - mirroredElement.clientWidth;
           this._sendToBridge("vf:scroll", {
             targetId: remoteId,
             pctY: maxY > 0 ? mirroredElement.scrollTop / maxY : 0,
@@ -3687,11 +3453,7 @@ export class VirtualFrame {
 
         // Use the mirrored element itself as drag image (cross-origin — no
         // access to the original iframe element)
-        if (
-          eventType === "dragstart" &&
-          event.target === mirroredElement &&
-          event.dataTransfer
-        ) {
+        if (eventType === "dragstart" && event.target === mirroredElement && event.dataTransfer) {
           try {
             const rect = mirroredElement.getBoundingClientRect();
             const offsetX = event.clientX - rect.left;
@@ -3702,8 +3464,7 @@ export class VirtualFrame {
 
         // Compute relative coordinates
         const rect = mirroredElement.getBoundingClientRect();
-        const relX =
-          event.clientX !== undefined ? event.clientX - rect.left : 0;
+        const relX = event.clientX !== undefined ? event.clientX - rect.left : 0;
         const relY = event.clientY !== undefined ? event.clientY - rect.top : 0;
 
         this._sendToBridge("vf:event", {
@@ -3755,7 +3516,7 @@ export class VirtualFrame {
     const label = el.closest("label");
     if (label) {
       const input = label.querySelector(
-        'input[type="checkbox"], input[type="radio"]'
+        'input[type="checkbox"], input[type="radio"]',
       ) as HTMLInputElement | null;
       if (input) return input;
     }
@@ -3834,9 +3595,7 @@ export class VirtualFrame {
       const bodyAttrs = bodyMatch ? bodyMatch[1] || "" : "";
       const bodyContent = bodyMatch ? bodyMatch[2] : rawHtml;
       const htmlAttrsMatch = rawHtml.match(/<html([^>]*)>/i);
-      const htmlAttrs = htmlAttrsMatch
-        ? (htmlAttrsMatch[1] || "").trim()
-        : "";
+      const htmlAttrs = htmlAttrsMatch ? (htmlAttrsMatch[1] || "").trim() : "";
 
       // Use the resolved URL as the new base
       const baseUrl = resolvedUrl;
@@ -3869,9 +3628,7 @@ export class VirtualFrame {
   }
 
   async _reinitOnNavigation() {
-    _vflog(
-      `_reinitOnNavigation() called  _reiniting=${!!this._reiniting}  gen=${this._mirrorGen}`,
-    );
+    _vflog(`_reinitOnNavigation() called  _reiniting=${!!this._reiniting}  gen=${this._mirrorGen}`);
     // Prevent concurrent re-initialization
     if (this._reiniting) {
       _vfwarn("_reinitOnNavigation() SKIPPED — already reiniting");
@@ -3887,9 +3644,7 @@ export class VirtualFrame {
       }
 
       // Stop captured streams and pending canvas timers
-      _vflog(
-        `_reinitOnNavigation() cleaning ${this.activeStreams?.length || 0} active streams`,
-      );
+      _vflog(`_reinitOnNavigation() cleaning ${this.activeStreams?.length || 0} active streams`);
       if (this.activeStreams) {
         for (const entry of this.activeStreams) {
           if (entry.poll) {

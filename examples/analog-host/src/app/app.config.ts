@@ -7,8 +7,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter([
       {
         path: "",
-        loadComponent: () =>
-          import("./pages/index.page").then((m) => m.default),
+        loadComponent: () => import("./pages/index.page").then((m) => m.default),
       },
     ]),
     provideClientHydration(),

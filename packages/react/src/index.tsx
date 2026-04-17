@@ -6,15 +6,8 @@ import {
   useSyncExternalStore,
   type Ref,
 } from "react";
-import {
-  VirtualFrame as VirtualFrameCore,
-  type VirtualFrameOptions,
-} from "virtual-frame";
-import {
-  type StoreProxy,
-  getStore as _getStore,
-  connectPort,
-} from "@virtual-frame/store";
+import { VirtualFrame as VirtualFrameCore, type VirtualFrameOptions } from "virtual-frame";
+import { type StoreProxy, getStore as _getStore, connectPort } from "@virtual-frame/store";
 
 // ── useStore ────────────────────────────────────────────────
 // Subscribes to a store path and returns the current value,
@@ -44,10 +37,7 @@ import {
  * @returns The current value at the path, or the full proxy when no
  *          selector is given.
  */
-export function useStore<T = unknown>(
-  store: StoreProxy,
-  selector?: PropertyKey[],
-): T {
+export function useStore<T = unknown>(store: StoreProxy, selector?: PropertyKey[]): T {
   const handle = useMemo(() => _getStore(store), [store]);
 
   const selectorKey = selector ? JSON.stringify(selector) : "";
@@ -67,9 +57,7 @@ export function useStore<T = unknown>(
         versionRef.current++;
         cb();
       };
-      return selector
-        ? handle.subscribe(selector, notify)
-        : handle.subscribe(notify);
+      return selector ? handle.subscribe(selector, notify) : handle.subscribe(notify);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [handle, selectorKey]);
@@ -131,10 +119,7 @@ export interface UseVirtualFrameOptions {
  * <VirtualFrame frame={frame} selector="#counter" />
  * ```
  */
-export function useVirtualFrame(
-  src: string,
-  options?: UseVirtualFrameOptions,
-): VirtualFrameRef {
+export function useVirtualFrame(src: string, options?: UseVirtualFrameOptions): VirtualFrameRef {
   const frameRef = useRef<VirtualFrameRef | null>(null);
 
   // Create source synchronously (stable across renders) so the
@@ -166,19 +151,12 @@ export function useVirtualFrame(
         if (portCleanup) return;
         if (!frame._iframe.contentWindow) return;
         const channel = new MessageChannel();
-        frame._iframe.contentWindow.postMessage(
-          { type: "vf-store:connect" },
-          "*",
-          [channel.port2],
-        );
+        frame._iframe.contentWindow.postMessage({ type: "vf-store:connect" }, "*", [channel.port2]);
         portCleanup = connectPort(store, channel.port1);
       };
 
       const onMessage = (e: MessageEvent) => {
-        if (
-          e.source === frame._iframe.contentWindow &&
-          e.data?.type === "vf-store:ready"
-        ) {
+        if (e.source === frame._iframe.contentWindow && e.data?.type === "vf-store:ready") {
           connect();
         }
       };
@@ -214,9 +192,7 @@ export interface VirtualFrameHandle {
 }
 
 export interface VirtualFrameProps
-  extends
-    VirtualFrameOptions,
-    Omit<React.HTMLAttributes<HTMLDivElement>, "ref"> {
+  extends VirtualFrameOptions, Omit<React.HTMLAttributes<HTMLDivElement>, "ref"> {
   /** URL to load and project. */
   src?: string;
   /**
@@ -320,19 +296,14 @@ export function VirtualFrame({
           if (portCleanup) return;
           if (!capturedIframe.contentWindow) return;
           const channel = new MessageChannel();
-          capturedIframe.contentWindow.postMessage(
-            { type: "vf-store:connect" },
-            "*",
-            [channel.port2],
-          );
+          capturedIframe.contentWindow.postMessage({ type: "vf-store:connect" }, "*", [
+            channel.port2,
+          ]);
           portCleanup = connectPort(store, channel.port1);
         };
 
         const onMessage = (e: MessageEvent) => {
-          if (
-            e.source === capturedIframe.contentWindow &&
-            e.data?.type === "vf-store:ready"
-          ) {
+          if (e.source === capturedIframe.contentWindow && e.data?.type === "vf-store:ready") {
             connect();
           }
         };

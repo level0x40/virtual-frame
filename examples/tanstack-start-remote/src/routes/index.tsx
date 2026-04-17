@@ -14,9 +14,9 @@ function RemotePage() {
       <div className="card" id="info-card">
         <h1>🚀 Remote TanStack Start App</h1>
         <p>
-          This page is a standalone TanStack Start application. During SSR, the
-          host app fetches this page and renders it instantly inside a virtual
-          frame — no extra client-side network request needed!
+          This page is a standalone TanStack Start application. During SSR, the host app fetches
+          this page and renders it instantly inside a virtual frame — no extra client-side network
+          request needed!
         </p>
         <Timestamp />
       </div>

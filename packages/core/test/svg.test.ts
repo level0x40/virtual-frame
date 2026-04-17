@@ -189,8 +189,7 @@ describe("VirtualFrame — SVG cloning", () => {
     expect(useEl).toBeTruthy();
     // href or xlink:href depending on clone method
     const href =
-      useEl.getAttribute("href") ||
-      useEl.getAttributeNS("http://www.w3.org/1999/xlink", "href");
+      useEl.getAttribute("href") || useEl.getAttributeNS("http://www.w3.org/1999/xlink", "href");
     expect(href).toBe("#svg-rect");
   });
 
@@ -204,8 +203,7 @@ describe("VirtualFrame — SVG cloning", () => {
     const img = shadow.querySelector("#svg-image");
     expect(img).toBeTruthy();
     expect(
-      img.getAttribute("href") ||
-        img.getAttributeNS("http://www.w3.org/1999/xlink", "href"),
+      img.getAttribute("href") || img.getAttributeNS("http://www.w3.org/1999/xlink", "href"),
     ).toBeTruthy();
   });
 
@@ -219,9 +217,7 @@ describe("VirtualFrame — SVG cloning", () => {
     // Both SVG and regular HTML should be present
     expect(shadow.querySelector("svg")).toBeTruthy();
     expect(shadow.querySelector("#svg-status")).toBeTruthy();
-    expect(shadow.querySelector("#svg-status").textContent).toBe(
-      "SVG rendered",
-    );
+    expect(shadow.querySelector("#svg-status").textContent).toBe("SVG rendered");
   });
 
   it("SVG viewBox attribute is preserved", async () => {

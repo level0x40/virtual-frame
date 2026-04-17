@@ -37,14 +37,14 @@ When the component is destroyed, the iframe is torn down, mutation observers and
 
 ## Props
 
-| Prop           | Type                               | Description                                                                                             |
-| -------------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------- |
-| `src`          | `string`                           | URL to load and project. Mutually exclusive with `frame`.                                               |
-| `frame`        | `VirtualFrameRef`                  | Shared source from [`createVirtualFrame()`](#sharing-one-source-across-components). Mutually exclusive with `src`. |
-| `isolate`      | `"open" \| "closed"`               | Shadow DOM mode for CSS isolation. Omit to render into the host `<div>` directly. See [Shadow DOM](/guide/shadow-dom). |
-| `selector`     | `string`                           | CSS selector — only project a matching subtree. See [Selector Projection](/guide/selector).             |
+| Prop           | Type                               | Description                                                                                                                                                                                           |
+| -------------- | ---------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `src`          | `string`                           | URL to load and project. Mutually exclusive with `frame`.                                                                                                                                             |
+| `frame`        | `VirtualFrameRef`                  | Shared source from [`createVirtualFrame()`](#sharing-one-source-across-components). Mutually exclusive with `src`.                                                                                    |
+| `isolate`      | `"open" \| "closed"`               | Shadow DOM mode for CSS isolation. Omit to render into the host `<div>` directly. See [Shadow DOM](/guide/shadow-dom).                                                                                |
+| `selector`     | `string`                           | CSS selector — only project a matching subtree. See [Selector Projection](/guide/selector).                                                                                                           |
 | `streamingFps` | `number \| Record<string, number>` | FPS for `<canvas>` / `<video>` capture. Omit for smooth per-frame rAF same-origin (cross-origin falls back to ~5 FPS — set an explicit number for higher). See [Streaming FPS](/guide/streaming-fps). |
-| `store`        | `StoreProxy`                       | Shared store from `@virtual-frame/store`. When provided, state syncs between host and remote. See [Shared Store](#shared-store). |
+| `store`        | `StoreProxy`                       | Shared store from `@virtual-frame/store`. When provided, state syncs between host and remote. See [Shared Store](#shared-store).                                                                      |
 
 All other props — `class`, `style`, `id`, `data-*`, `aria-*`, event handlers — are spread onto the host `<div>`. Size the `<div>` with CSS; the projection fills it.
 
@@ -100,11 +100,11 @@ One hidden iframe loads, both components project different subtrees from it, and
 
 ### `createVirtualFrame(src, options?)`
 
-| Parameter       | Type              | Description                          |
-| --------------- | ----------------- | ------------------------------------ |
-| `src`           | `string`          | URL to load                          |
-| `options.store` | `StoreProxy`      | Optional store for shared state      |
-| **Returns**     | `VirtualFrameRef` | Opaque handle — pass via `frame`     |
+| Parameter       | Type              | Description                      |
+| --------------- | ----------------- | -------------------------------- |
+| `src`           | `string`          | URL to load                      |
+| `options.store` | `StoreProxy`      | Optional store for shared state  |
+| **Returns**     | `VirtualFrameRef` | Opaque handle — pass via `frame` |
 
 Must be called during component initialisation. The source is ref-counted: the iframe is created on first use and torn down when the last consuming component is destroyed.
 
@@ -189,11 +189,11 @@ const name = useStore<string>(store, ["user", "name"]);
 const snapshot = useStore(store);
 ```
 
-| Parameter   | Type            | Description                                 |
-| ----------- | --------------- | ------------------------------------------- |
+| Parameter   | Type            | Description                                                      |
+| ----------- | --------------- | ---------------------------------------------------------------- |
 | `store`     | `StoreProxy`    | Store proxy from `createStore()` or the remote-side `useStore()` |
-| `selector`  | `PropertyKey[]` | Path to subscribe to (omit for root)        |
-| **Returns** | `Readable<T>`   | Svelte readable — access with `$` in markup |
+| `selector`  | `PropertyKey[]` | Path to subscribe to (omit for root)                             |
+| **Returns** | `Readable<T>`   | Svelte readable — access with `$` in markup                      |
 
 The readable auto-unsubscribes when the last subscriber is removed.
 

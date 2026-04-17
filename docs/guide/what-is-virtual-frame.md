@@ -17,13 +17,13 @@ Virtual Frame is aimed at the case where teams ship fully independent web applic
 
 ## The idea, in one paragraph
 
-An iframe renders a remote document in its own browsing context. Virtual Frame still loads the remote document in a (hidden) iframe — so the remote's scripts, router, SSR, and state all work *normally* — but it then **mirrors the remote's live DOM into a host element on your page**. A [MutationObserver](https://developer.mozilla.org/docs/Web/API/MutationObserver) keeps the mirror in sync; user events on the mirror replay on the original; stylesheets are rewritten so `body` / viewport units / `@font-face` make sense inside your layout. For cross-origin sources, a small bridge script running in the remote serializes the document back over `postMessage` and the host rebuilds it locally. The projected content is real DOM in your tree — so your layout, your theme, your tests, your a11y tooling all see it and can interact with it.
+An iframe renders a remote document in its own browsing context. Virtual Frame still loads the remote document in a (hidden) iframe — so the remote's scripts, router, SSR, and state all work _normally_ — but it then **mirrors the remote's live DOM into a host element on your page**. A [MutationObserver](https://developer.mozilla.org/docs/Web/API/MutationObserver) keeps the mirror in sync; user events on the mirror replay on the original; stylesheets are rewritten so `body` / viewport units / `@font-face` make sense inside your layout. For cross-origin sources, a small bridge script running in the remote serializes the document back over `postMessage` and the host rebuilds it locally. The projected content is real DOM in your tree — so your layout, your theme, your tests, your a11y tooling all see it and can interact with it.
 
 ## How projection works
 
 Three primitives make it go:
 
-1. **A source iframe.** Hidden off-screen at `left: -9999px`, pointed at the remote URL. The remote runs as a complete standalone application — its framework, its router, its effects, its fonts. This is crucial: *Virtual Frame doesn't re-execute your app, it observes it.*
+1. **A source iframe.** Hidden off-screen at `left: -9999px`, pointed at the remote URL. The remote runs as a complete standalone application — its framework, its router, its effects, its fonts. This is crucial: _Virtual Frame doesn't re-execute your app, it observes it._
 2. **A host element.** Any element on your page — a `<div>`, a `<section>`, a component root. Virtual Frame attaches an optional [Shadow DOM](/guide/shadow-dom) to it and mirrors the remote's `<body>` subtree into the shadow.
 3. **A sync layer.** Same-origin: a MutationObserver on the source, plus CSS rewriting and event re-dispatch. Cross-origin: the [bridge script](/guide/cross-origin) serializes DOM + events over `postMessage`, and the host reconstructs.
 
@@ -42,8 +42,8 @@ Everything else — [selector projection](/guide/selector), [streaming FPS](/gui
 
 A few framings to keep clean, because they come up in design reviews:
 
-- **Not an iframe replacement.** Virtual Frame still uses an iframe under the hood — that's how the remote's runtime gets its own browsing context. What Virtual Frame does differently is *project the iframe's DOM into your host*, so visually and compositionally it isn't an iframe anymore.
-- **Not a trust boundary from the host's side.** The iframe does sandbox the remote's *script execution* — the remote's JS runs in its own global, behind the same-origin policy, and cannot reach host DOM or variables directly. What's *not* isolated is the projected output: once the remote's DOM is mirrored into your host, host code can read and manipulate the mirrored tree. `isolate: "closed"` is a signal, not a wall. If you need the remote's rendered content to stay hidden from the host page (untrusted remote, confidential DOM), keep the iframe visible and don't project.
+- **Not an iframe replacement.** Virtual Frame still uses an iframe under the hood — that's how the remote's runtime gets its own browsing context. What Virtual Frame does differently is _project the iframe's DOM into your host_, so visually and compositionally it isn't an iframe anymore.
+- **Not a trust boundary from the host's side.** The iframe does sandbox the remote's _script execution_ — the remote's JS runs in its own global, behind the same-origin policy, and cannot reach host DOM or variables directly. What's _not_ isolated is the projected output: once the remote's DOM is mirrored into your host, host code can read and manipulate the mirrored tree. `isolate: "closed"` is a signal, not a wall. If you need the remote's rendered content to stay hidden from the host page (untrusted remote, confidential DOM), keep the iframe visible and don't project.
 - **Not module federation.** Nothing is shared at build time. No shared React instance, no shared bundle graph. If you need shared runtime state, use the [shared store](/guide/store) — a typed message channel over which both sides read and write — not a hidden bundle hand-off.
 - **Not a hydration framework.** The remote hydrates normally inside its own iframe; Virtual Frame observes the result. You don't need to rewrite your remote app to be "projectable."
 

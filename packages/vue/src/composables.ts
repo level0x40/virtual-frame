@@ -27,10 +27,7 @@ import { getStore as _getStore, type StoreProxy } from "@virtual-frame/store";
  *                  omitted the ref updates on any mutation.
  * @returns A Vue `Ref` with the current value at the path.
  */
-export function useStore<T = unknown>(
-  store: StoreProxy,
-  selector?: PropertyKey[],
-): Ref<T> {
+export function useStore<T = unknown>(store: StoreProxy, selector?: PropertyKey[]): Ref<T> {
   const handle = _getStore(store);
 
   function getSnapshot(): T {
@@ -88,10 +85,7 @@ export interface UseVirtualFrameOptions {
  * </template>
  * ```
  */
-export function useVirtualFrame(
-  src: string,
-  options?: UseVirtualFrameOptions,
-): VirtualFrameRef {
+export function useVirtualFrame(src: string, options?: UseVirtualFrameOptions): VirtualFrameRef {
   const iframe = document.createElement("iframe");
   iframe.src = src;
   iframe.style.cssText =
@@ -116,19 +110,12 @@ export function useVirtualFrame(
           if (portCleanup) return;
           if (!iframe.contentWindow) return;
           const channel = new MessageChannel();
-          iframe.contentWindow.postMessage(
-            { type: "vf-store:connect" },
-            "*",
-            [channel.port2],
-          );
+          iframe.contentWindow.postMessage({ type: "vf-store:connect" }, "*", [channel.port2]);
           portCleanup = connectPort(store, channel.port1);
         };
 
         const onMessage = (e: MessageEvent) => {
-          if (
-            e.source === iframe.contentWindow &&
-            e.data?.type === "vf-store:ready"
-          ) {
+          if (e.source === iframe.contentWindow && e.data?.type === "vf-store:ready") {
             connect();
           }
         };

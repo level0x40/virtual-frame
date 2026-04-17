@@ -18,10 +18,7 @@ export function compareOperations(a: Operation, b: Operation): number {
  * This is the core replay function — given a state root object and an
  * operation, it navigates to the target path and applies the mutation.
  */
-export function applyOperation(
-  state: Record<string, unknown>,
-  op: Operation,
-): void {
+export function applyOperation(state: Record<string, unknown>, op: Operation): void {
   const { type, path } = op;
 
   // Navigate to parent
@@ -166,9 +163,7 @@ export function deepClone<T>(value: T): T {
   }
   if (ArrayBuffer.isView(value)) {
     const ctor = value.constructor as new (buffer: ArrayBuffer) => typeof value;
-    return new ctor(
-      (value as unknown as { buffer: ArrayBuffer }).buffer.slice(0),
-    ) as T;
+    return new ctor((value as unknown as { buffer: ArrayBuffer }).buffer.slice(0)) as T;
   }
   if (value instanceof ArrayBuffer) {
     return value.slice(0) as T;

@@ -1,12 +1,6 @@
 import { describe, it, expect, afterEach } from "vitest";
 import { VirtualFrame } from "../src/core.js";
-import {
-  createIframe,
-  createHost,
-  waitForInit,
-  delay,
-  cleanup,
-} from "./helpers.js";
+import { createIframe, createHost, waitForInit, delay, cleanup } from "./helpers.js";
 
 describe("VirtualFrame — font injection (shadow DOM isolation)", () => {
   let iframe;
@@ -166,10 +160,7 @@ describe("VirtualFrame — _extractFontFaceNames", () => {
   });
 
   it("extracts font-family from @font-face blocks", () => {
-    vf = new VirtualFrame(
-      document.createElement("iframe"),
-      document.createElement("div"),
-    );
+    vf = new VirtualFrame(document.createElement("iframe"), document.createElement("div"));
     // Stub init
     const origInit = VirtualFrame.prototype.init;
     VirtualFrame.prototype.init = function () {};
@@ -222,9 +213,7 @@ describe("VirtualFrame — _computeFontPrefix", () => {
     );
     VirtualFrame.prototype.init = origInit;
 
-    const prefix = testVf._computeFontPrefix([
-      { cssText: "body { margin: 0; }" },
-    ]);
+    const prefix = testVf._computeFontPrefix([{ cssText: "body { margin: 0; }" }]);
     expect(prefix).toBe("__vf_");
     testVf.destroy();
   });

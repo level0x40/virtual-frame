@@ -1,12 +1,6 @@
 import { describe, it, expect, afterEach } from "vitest";
 import { VirtualFrame } from "../src/core.js";
-import {
-  createIframe,
-  createHost,
-  waitForInit,
-  delay,
-  cleanup,
-} from "./helpers.js";
+import { createIframe, createHost, waitForInit, delay, cleanup } from "./helpers.js";
 
 describe("VirtualFrame — form element sync & event proxying", () => {
   let iframe;
@@ -77,11 +71,9 @@ describe("VirtualFrame — form element sync & event proxying", () => {
 
     // Set up a click listener on the original button
     let clicked = false;
-    iframe.contentDocument
-      .getElementById("action-btn")
-      .addEventListener("click", () => {
-        clicked = true;
-      });
+    iframe.contentDocument.getElementById("action-btn").addEventListener("click", () => {
+      clicked = true;
+    });
 
     // Click the projected button
     const shadow = host.shadowRoot;
@@ -119,8 +111,7 @@ describe("VirtualFrame — form element sync & event proxying", () => {
 
     const shadow = host.shadowRoot;
     const projectedSelect = shadow.querySelector("#select-input");
-    const originalSelect =
-      iframe.contentDocument.getElementById("select-input");
+    const originalSelect = iframe.contentDocument.getElementById("select-input");
 
     // Initial value should match
     expect(projectedSelect.value).toBe("one");
@@ -143,8 +134,7 @@ describe("VirtualFrame — form element sync & event proxying", () => {
 
     const shadow = host.shadowRoot;
     const projectedSelect = shadow.querySelector("#select-input");
-    const originalSelect =
-      iframe.contentDocument.getElementById("select-input");
+    const originalSelect = iframe.contentDocument.getElementById("select-input");
 
     // Change the original select and dispatch change event
     originalSelect.value = "three";
@@ -161,8 +151,7 @@ describe("VirtualFrame — form element sync & event proxying", () => {
     vf = new VirtualFrame(iframe, host, { isolate: "open" });
     await waitForInit(vf);
 
-    const originalCheckbox =
-      iframe.contentDocument.getElementById("checkbox-input");
+    const originalCheckbox = iframe.contentDocument.getElementById("checkbox-input");
     expect(originalCheckbox.checked).toBe(false);
 
     // Click the projected checkbox — the event proxy should forward the click

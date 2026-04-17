@@ -64,9 +64,7 @@ function useRemoteStoreSetup(store: StoreProxy): void {
  */
 export function useStore(): StoreProxy;
 export function useStore<T = unknown>(selector: PropertyKey[]): T;
-export function useStore<T = unknown>(
-  selector?: PropertyKey[],
-): StoreProxy | T {
+export function useStore<T = unknown>(selector?: PropertyKey[]): StoreProxy | T {
   const store = ensureRemoteStore();
   useRemoteStoreSetup(store);
 
@@ -85,9 +83,7 @@ export function useStore<T = unknown>(
         versionRef.current++;
         cb();
       };
-      return selector
-        ? handle.subscribe(selector, notify)
-        : handle.subscribe(notify);
+      return selector ? handle.subscribe(selector, notify) : handle.subscribe(notify);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [handle, selectorKey]);

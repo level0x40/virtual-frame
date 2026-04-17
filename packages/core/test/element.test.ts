@@ -107,8 +107,7 @@ describe("<virtual-frame> custom element", () => {
 
   it("re-sets up when src attribute changes", async () => {
     const fixtureUrl1 = new URL("./fixtures/basic.html", import.meta.url).href;
-    const fixtureUrl2 = new URL("./fixtures/selector.html", import.meta.url)
-      .href;
+    const fixtureUrl2 = new URL("./fixtures/selector.html", import.meta.url).href;
 
     const el = document.createElement("virtual-frame");
     el.setAttribute("src", fixtureUrl1);

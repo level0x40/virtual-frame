@@ -41,10 +41,7 @@ import { VirtualFrameComponent } from "../src/client";
  * Use "browser" for the client path and "server" to exercise the SSR
  * innerHTML handoff branch.
  */
-function createComponent(
-  host: HTMLElement,
-  platformId: "browser" | "server" = "browser",
-) {
+function createComponent(host: HTMLElement, platformId: "browser" | "server" = "browser") {
   mockState.elementRef = { nativeElement: host };
   mockState.platformId = platformId;
   return new VirtualFrameComponent();
@@ -179,9 +176,7 @@ describe("VirtualFrameComponent (Analog)", () => {
     expect(iframeA).toBe(iframeB);
 
     // Only one iframe in the DOM for this src.
-    const iframes = Array.from(
-      parent.querySelectorAll("iframe"),
-    ) as HTMLIFrameElement[];
+    const iframes = Array.from(parent.querySelectorAll("iframe")) as HTMLIFrameElement[];
     expect(iframes.length).toBe(1);
 
     // First teardown keeps the shared iframe alive.
@@ -197,8 +192,7 @@ describe("VirtualFrameComponent (Analog)", () => {
     it("renders vfHtml as innerHTML and skips VirtualFrame instantiation", () => {
       const comp = createComponent(container, "server");
       comp.src = "/test.html";
-      comp.vfHtml =
-        '<template shadowrootmode="open"><span>ssr</span></template>';
+      comp.vfHtml = '<template shadowrootmode="open"><span>ssr</span></template>';
       comp.ngOnInit();
 
       expect(MockVF).not.toHaveBeenCalled();
@@ -207,7 +201,6 @@ describe("VirtualFrameComponent (Analog)", () => {
       // No iframe inserted on the server path.
       expect(container.previousElementSibling).toBeNull();
     });
-
 
     it("does nothing on server when no vfHtml is provided", () => {
       const comp = createComponent(container, "server");

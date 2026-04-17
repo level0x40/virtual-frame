@@ -14,10 +14,7 @@ Use a route `loader` to fetch the remote page during SSR. The loader runs on the
 
 ```tsx
 // app/routes/home.tsx
-import {
-  fetchVirtualFrame,
-  prepareVirtualFrameProps,
-} from "@virtual-frame/react-router/server";
+import { fetchVirtualFrame, prepareVirtualFrameProps } from "@virtual-frame/react-router/server";
 import { VirtualFrame } from "@virtual-frame/react-router";
 import type { Route } from "./+types/home";
 
@@ -109,10 +106,7 @@ Fetch the frame props in a loader and hand them to a client component that owns 
 
 ```tsx
 // app/routes/home.tsx
-import {
-  fetchVirtualFrame,
-  prepareVirtualFrameProps,
-} from "@virtual-frame/react-router/server";
+import { fetchVirtualFrame, prepareVirtualFrameProps } from "@virtual-frame/react-router/server";
 import { HostFrames } from "../components/HostFrames";
 import type { Route } from "./+types/home";
 
@@ -147,9 +141,7 @@ export function HostFrames({ frameProps, counterProps }) {
   return (
     <>
       <p>Host count: {count ?? 0}</p>
-      <button onClick={() => (store.count = (count ?? 0) + 1)}>
-        Increment from host
-      </button>
+      <button onClick={() => (store.count = (count ?? 0) + 1)}>Increment from host</button>
       <button onClick={() => (store.count = 0)}>Reset</button>
 
       {/* Any VirtualFrame that receives store= joins the same sync bridge. */}
@@ -161,7 +153,7 @@ export function HostFrames({ frameProps, counterProps }) {
 ```
 
 - **Host reads/writes are direct**: `store.count` operates on the host's in-memory object — no serialisation, no round-trip.
-- **Passing `store={store}` wires up the bridge**: when the hidden iframe loads and the remote signals `vf-store:ready`, the component opens a `MessageChannel`, transfers one port to the iframe, and calls `connectPort()` on the host side. Multiple `<VirtualFrame>` instances sharing the same `src` share one iframe *and* one port — the store is bridged exactly once.
+- **Passing `store={store}` wires up the bridge**: when the hidden iframe loads and the remote signals `vf-store:ready`, the component opens a `MessageChannel`, transfers one port to the iframe, and calls `connectPort()` on the host side. Multiple `<VirtualFrame>` instances sharing the same `src` share one iframe _and_ one port — the store is bridged exactly once.
 
 ### 3. Consume the store on the remote
 
@@ -171,14 +163,10 @@ On the remote, use `useStore` from `@virtual-frame/react-router`. It's a two-mod
 import { useStore } from "@virtual-frame/react-router";
 
 function Counter() {
-  const store = useStore();                    // StoreProxy singleton
-  const count = useStore<number>(["count"]);   // reactive value at path
+  const store = useStore(); // StoreProxy singleton
+  const count = useStore<number>(["count"]); // reactive value at path
 
-  return (
-    <button onClick={() => (store.count = (count ?? 0) + 1)}>
-      Count: {count ?? 0}
-    </button>
-  );
+  return <button onClick={() => (store.count = (count ?? 0) + 1)}>Count: {count ?? 0}</button>;
 }
 ```
 
@@ -330,15 +318,15 @@ The proxy prefix (`/__vf`) is a convention — you can use any path that doesn't
 
 Client component that displays server-fetched content and resumes live mirroring.
 
-| Prop           | Type                               | Default  | Description                             |
-| -------------- | ---------------------------------- | -------- | --------------------------------------- |
-| `src`          | `string`                           | —        | Remote URL to fetch and project         |
-| `selector`     | `string`                           | —        | CSS selector for partial projection     |
-| `isolate`      | `"open" \| "closed"`               | `"open"` | Shadow DOM mode                         |
-| `streamingFps` | `number \| Record<string, number>` | —        | Canvas/video streaming FPS              |
-| `store`        | `StoreProxy`                       | —        | Shared store for cross-frame state sync |
+| Prop           | Type                               | Default  | Description                                         |
+| -------------- | ---------------------------------- | -------- | --------------------------------------------------- |
+| `src`          | `string`                           | —        | Remote URL to fetch and project                     |
+| `selector`     | `string`                           | —        | CSS selector for partial projection                 |
+| `isolate`      | `"open" \| "closed"`               | `"open"` | Shadow DOM mode                                     |
+| `streamingFps` | `number \| Record<string, number>` | —        | Canvas/video streaming FPS                          |
+| `store`        | `StoreProxy`                       | —        | Shared store for cross-frame state sync             |
 | `proxy`        | `string`                           | —        | Same-origin proxy prefix for client-side navigation |
-| `ref`          | `React.Ref`                        | —        | Exposes `{ refresh() }`                 |
+| `ref`          | `React.Ref`                        | —        | Exposes `{ refresh() }`                             |
 
 ### `useStore(selector?)`
 
@@ -357,10 +345,10 @@ Server-only. Fetches a remote page and produces a server render result. Import f
 
 Server-only. Converts a server render result into serialisable props for `<VirtualFrame>`. Returns a **`Promise`** — always `await` it.
 
-| Option     | Type                 | Default  | Description                          |
-| ---------- | -------------------- | -------- | ------------------------------------ |
-| `selector` | `string`             | —        | CSS selector for partial projection  |
-| `isolate`  | `"open" \| "closed"` | `"open"` | Shadow DOM mode                      |
+| Option     | Type                 | Default  | Description                                         |
+| ---------- | -------------------- | -------- | --------------------------------------------------- |
+| `selector` | `string`             | —        | CSS selector for partial projection                 |
+| `isolate`  | `"open" \| "closed"` | `"open"` | Shadow DOM mode                                     |
 | `proxy`    | `string`             | —        | Same-origin proxy prefix for client-side navigation |
 
 ## Examples

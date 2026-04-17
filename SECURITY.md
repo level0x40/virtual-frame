@@ -6,10 +6,10 @@ We take the security of Virtual Frame seriously. This document explains how to r
 
 Security fixes land on the latest minor release line of each package. We do not back-port to older minors.
 
-| Package family               | Supported                          |
-| ---------------------------- | ---------------------------------- |
-| `virtual-frame` (core)       | Latest minor                       |
-| `@virtual-frame/*` bindings  | Latest minor                       |
+| Package family                                             | Supported    |
+| ---------------------------------------------------------- | ------------ |
+| `virtual-frame` (core)                                     | Latest minor |
+| `@virtual-frame/*` bindings                                | Latest minor |
 | `@virtual-frame/*` integrations (Next/Nuxt/SvelteKit/etc.) | Latest minor |
 
 While the project remains pre-1.0 (`0.x`), every `0.x` minor bump may include breaking changes; security fixes target the most recent published minor only.
@@ -39,11 +39,11 @@ If you'd like to encrypt your report, request our PGP key in the first message.
 
 ### What to expect
 
-| Timeframe          | What we do                                                                 |
-| ------------------ | -------------------------------------------------------------------------- |
+| Timeframe               | What we do                                                                 |
+| ----------------------- | -------------------------------------------------------------------------- |
 | Within 3 business days  | Initial acknowledgement — we've received your report and are assessing it. |
 | Within 10 business days | Triage outcome — confirmed, declined, or duplicate, with reasoning.        |
-| Within 90 days     | Fix released, advisory published, and credit assigned (if accepted).       |
+| Within 90 days          | Fix released, advisory published, and credit assigned (if accepted).       |
 
 For critical issues actively exploited in the wild, we'll work with you on an accelerated disclosure timeline.
 

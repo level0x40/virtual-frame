@@ -1,16 +1,6 @@
-import {
-  onMount,
-  onCleanup,
-  createEffect,
-  createSignal,
-  mergeProps,
-  type JSX,
-} from "solid-js";
+import { onMount, onCleanup, createEffect, createSignal, mergeProps, type JSX } from "solid-js";
 import { isServer } from "solid-js/web";
-import type {
-  VirtualFrame as VirtualFrameCore,
-  VirtualFrameOptions,
-} from "virtual-frame";
+import type { VirtualFrame as VirtualFrameCore, VirtualFrameOptions } from "virtual-frame";
 import type { StoreProxy } from "@virtual-frame/store";
 
 // ── Shared iframe registry (module-scoped) ─────────────────────────
@@ -72,9 +62,7 @@ export function VirtualFrame(rawProps: VirtualFrameSSRProps) {
   async function setup() {
     teardown();
     if (!hostEl || !props.src) return;
-    const { VirtualFrame: VirtualFrameCoreCtor } = await import(
-      "virtual-frame"
-    );
+    const { VirtualFrame: VirtualFrameCoreCtor } = await import("virtual-frame");
 
     // On client-side navigation, the browser's HTML parser doesn't
     // process <template shadowrootmode> in innerHTML. Use
@@ -127,19 +115,12 @@ export function VirtualFrame(rawProps: VirtualFrameSSRProps) {
           if (portCleanup) return;
           if (!s.iframe.contentWindow) return;
           const channel = new MessageChannel();
-          s.iframe.contentWindow.postMessage(
-            { type: "vf-store:connect" },
-            "*",
-            [channel.port2],
-          );
+          s.iframe.contentWindow.postMessage({ type: "vf-store:connect" }, "*", [channel.port2]);
           portCleanup = connectPort(capturedStore, channel.port1);
         };
 
         const onMessage = (e: MessageEvent) => {
-          if (
-            e.source === s.iframe.contentWindow &&
-            e.data?.type === "vf-store:ready"
-          ) {
+          if (e.source === s.iframe.contentWindow && e.data?.type === "vf-store:ready") {
             connect();
           }
         };
@@ -188,13 +169,7 @@ export function VirtualFrame(rawProps: VirtualFrameSSRProps) {
 
     // Re-run setup when reactive props change.
     createEffect(() => {
-      const _deps = [
-        props.src,
-        props.isolate,
-        props.selector,
-        props.streamingFps,
-        props.store,
-      ];
+      const _deps = [props.src, props.isolate, props.selector, props.streamingFps, props.store];
       if (hostEl && mounted()) setup();
     });
   }

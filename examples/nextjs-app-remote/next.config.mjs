@@ -7,9 +7,7 @@ const nextConfig = {
 
   transpilePackages: ["@virtual-frame/next", "@virtual-frame/store"],
   images: {
-    remotePatterns: [
-      { protocol: "https", hostname: "picsum.photos" },
-    ],
+    remotePatterns: [{ protocol: "https", hostname: "picsum.photos" }],
   },
   // Allow the host app to embed this page in an iframe (srcdoc) and
   // fetch resources cross-origin during SSR.

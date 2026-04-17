@@ -22,11 +22,11 @@ new VirtualFrame(
 
 Projection starts immediately; the constructor calls [`init()`](#init) internally. Subscribe to the iframe's `load` event or await navigation separately if you need a "ready" signal.
 
-| Parameter | Type                    | Description                                                 |
-| --------- | ----------------------- | ----------------------------------------------------------- |
-| `iframe`  | `HTMLIFrameElement`     | Source iframe whose document will be projected              |
-| `host`    | `HTMLElement`           | Container element that receives the projected DOM           |
-| `options` | `VirtualFrameOptions`   | See [Options](#options). Optional.                          |
+| Parameter | Type                  | Description                                       |
+| --------- | --------------------- | ------------------------------------------------- |
+| `iframe`  | `HTMLIFrameElement`   | Source iframe whose document will be projected    |
+| `host`    | `HTMLElement`         | Container element that receives the projected DOM |
+| `options` | `VirtualFrameOptions` | See [Options](#options). Optional.                |
 
 ### Options
 
@@ -40,10 +40,10 @@ interface VirtualFrameOptions {
 }
 ```
 
-| Option         | Type                               | Default     | Description                                                                                                                         |
-| -------------- | ---------------------------------- | ----------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| `isolate`      | `"open" \| "closed"`               | `undefined` | Attach a Shadow DOM of the given mode to the host for CSS isolation. Omit to render into the host's light DOM. See [Shadow DOM](/guide/shadow-dom). |
-| `selector`     | `string`                           | `undefined` | CSS selector to project only a matching subtree of the iframe document. See [Selector Projection](/guide/selector).                  |
+| Option         | Type                               | Default     | Description                                                                                                                                                                                                                                                                       |
+| -------------- | ---------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `isolate`      | `"open" \| "closed"`               | `undefined` | Attach a Shadow DOM of the given mode to the host for CSS isolation. Omit to render into the host's light DOM. See [Shadow DOM](/guide/shadow-dom).                                                                                                                               |
+| `selector`     | `string`                           | `undefined` | CSS selector to project only a matching subtree of the iframe document. See [Selector Projection](/guide/selector).                                                                                                                                                               |
 | `streamingFps` | `number \| Record<string, number>` | `undefined` | Frames-per-second for canvas/video streams. `undefined` means smooth per-frame (rAF) rendering same-origin; cross-origin falls back to ~5 FPS (set an explicit number for higher). A `{ selector: fps }` map allows per-element rates. See [Streaming FPS](/guide/streaming-fps). |
 
 ::: info Custom element only
@@ -54,15 +54,15 @@ The `<virtual-frame>` element also accepts a `proxy` attribute (same-origin fetc
 
 Read-only after construction.
 
-| Property        | Type                                      | Description                                                                      |
-| --------------- | ----------------------------------------- | -------------------------------------------------------------------------------- |
-| `iframe`        | `HTMLIFrameElement`                       | The source iframe passed to the constructor.                                     |
-| `host`          | `HTMLElement`                             | The host element receiving projected content.                                    |
-| `isolate`       | `"open" \| "closed" \| undefined`         | Shadow DOM mode in use.                                                          |
-| `selector`      | `string \| null`                          | CSS selector, normalized to `null` when omitted.                                 |
-| `streamingFps`  | `number \| Record<string, number> \| undefined` | The FPS configuration in effect.                                            |
-| `shadowRoot`    | `ShadowRoot \| null`                      | Open shadow root, when `isolate: "open"`. For closed mode use [`getShadowRoot()`](#getshadowroot). |
-| `isInitialized` | `boolean`                                 | `true` after `init()` has completed at least once.                               |
+| Property        | Type                                            | Description                                                                                        |
+| --------------- | ----------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| `iframe`        | `HTMLIFrameElement`                             | The source iframe passed to the constructor.                                                       |
+| `host`          | `HTMLElement`                                   | The host element receiving projected content.                                                      |
+| `isolate`       | `"open" \| "closed" \| undefined`               | Shadow DOM mode in use.                                                                            |
+| `selector`      | `string \| null`                                | CSS selector, normalized to `null` when omitted.                                                   |
+| `streamingFps`  | `number \| Record<string, number> \| undefined` | The FPS configuration in effect.                                                                   |
+| `shadowRoot`    | `ShadowRoot \| null`                            | Open shadow root, when `isolate: "open"`. For closed mode use [`getShadowRoot()`](#getshadowroot). |
+| `isInitialized` | `boolean`                                       | `true` after `init()` has completed at least once.                                                 |
 
 ### Methods
 
@@ -108,13 +108,13 @@ Declarative wrapper around `VirtualFrame`. Each element manages its own hidden `
 
 HTML attributes use kebab-case and always stringify. The element maps them to camelCase options at setup time.
 
-| Attribute       | Maps to         | Description                                                                                 |
-| --------------- | --------------- | ------------------------------------------------------------------------------------------- |
-| `src`           | —               | URL of the remote document, or `#id` to reference an existing `<iframe>` / element in-page. |
-| `isolate`       | `isolate`       | `"open"` or `"closed"`.                                                                     |
-| `selector`      | `selector`      | CSS selector to project a subtree.                                                          |
-| `streaming-fps` | `streamingFps`  | Either a number (e.g. `streaming-fps="30"`) or a JSON object (e.g. `streaming-fps='{"canvas":30,"video":60}'`). |
-| `proxy`         | — (env shim)    | Same-origin proxy prefix for `fetch`/`XHR` rewriting. See [Cross-Origin](/guide/cross-origin). |
+| Attribute       | Maps to        | Description                                                                                                     |
+| --------------- | -------------- | --------------------------------------------------------------------------------------------------------------- |
+| `src`           | —              | URL of the remote document, or `#id` to reference an existing `<iframe>` / element in-page.                     |
+| `isolate`       | `isolate`      | `"open"` or `"closed"`.                                                                                         |
+| `selector`      | `selector`     | CSS selector to project a subtree.                                                                              |
+| `streaming-fps` | `streamingFps` | Either a number (e.g. `streaming-fps="30"`) or a JSON object (e.g. `streaming-fps='{"canvas":30,"video":60}'`). |
+| `proxy`         | — (env shim)   | Same-origin proxy prefix for `fetch`/`XHR` rewriting. See [Cross-Origin](/guide/cross-origin).                  |
 
 Any attribute change on a connected element triggers a teardown + re-setup on the next microtask. To swap the source without restarting projection, prefer calling [`refresh()`](#refresh-1) on the underlying `VirtualFrame`.
 
@@ -177,7 +177,7 @@ Consumed by the internal `_buildEnvShim()` helper that composes the `<script>` i
 ## SSR entry point
 
 ```js
-import { /* … */ } from "virtual-frame/ssr";
+import {} from /* … */ "virtual-frame/ssr";
 ```
 
 Server-side helpers used by the Next.js, Nuxt, SvelteKit, TanStack Start, and other SSR integrations to seed projection payloads at render time. Most users consume these transitively through a framework wrapper. See the [SSR guide](/guide/ssr) for the primitives (`fetchVirtualFrame`, `renderVirtualFrame`) and the [Next.js guide](/guide/nextjs) for a framework-integrated walkthrough.
@@ -188,19 +188,19 @@ Server-side helpers used by the Next.js, Nuxt, SvelteKit, TanStack Start, and ot
 
 Each framework package wraps the core engine with idiomatic bindings (components, hooks, signals, stores). See the guide for the package you use:
 
-| Package                             | Guide                                     |
-| ----------------------------------- | ----------------------------------------- |
-| `@virtual-frame/react`              | [React](/guide/react)                     |
-| `@virtual-frame/next`               | [Next.js](/guide/nextjs)                  |
-| `@virtual-frame/react-router`       | [React Router](/guide/react-router)       |
-| `@virtual-frame/tanstack-start`     | [TanStack Start](/guide/tanstack-start)   |
-| `@virtual-frame/react-server`       | [@lazarv/react-server](/guide/react-server) |
-| `@virtual-frame/vue`                | [Vue](/guide/vue)                         |
-| `@virtual-frame/nuxt`               | [Nuxt](/guide/nuxt)                       |
-| `@virtual-frame/svelte`             | [Svelte](/guide/svelte)                   |
-| `@virtual-frame/sveltekit`          | [SvelteKit](/guide/sveltekit)             |
-| `@virtual-frame/solid`              | [Solid](/guide/solid)                     |
-| `@virtual-frame/solid-start`        | [SolidStart](/guide/solid-start)          |
-| `@virtual-frame/angular`            | [Angular](/guide/angular)                 |
-| `@virtual-frame/analog`             | [Analog](/guide/analog)                   |
-| `@virtual-frame/store`              | [Shared Store](/guide/store)              |
+| Package                         | Guide                                       |
+| ------------------------------- | ------------------------------------------- |
+| `@virtual-frame/react`          | [React](/guide/react)                       |
+| `@virtual-frame/next`           | [Next.js](/guide/nextjs)                    |
+| `@virtual-frame/react-router`   | [React Router](/guide/react-router)         |
+| `@virtual-frame/tanstack-start` | [TanStack Start](/guide/tanstack-start)     |
+| `@virtual-frame/react-server`   | [@lazarv/react-server](/guide/react-server) |
+| `@virtual-frame/vue`            | [Vue](/guide/vue)                           |
+| `@virtual-frame/nuxt`           | [Nuxt](/guide/nuxt)                         |
+| `@virtual-frame/svelte`         | [Svelte](/guide/svelte)                     |
+| `@virtual-frame/sveltekit`      | [SvelteKit](/guide/sveltekit)               |
+| `@virtual-frame/solid`          | [Solid](/guide/solid)                       |
+| `@virtual-frame/solid-start`    | [SolidStart](/guide/solid-start)            |
+| `@virtual-frame/angular`        | [Angular](/guide/angular)                   |
+| `@virtual-frame/analog`         | [Analog](/guide/analog)                     |
+| `@virtual-frame/store`          | [Shared Store](/guide/store)                |

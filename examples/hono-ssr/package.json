@@ -9,8 +9,8 @@
     "start": "tsx src/index.tsx"
   },
   "dependencies": {
-    "hono": "catalog:",
     "@hono/node-server": "catalog:",
+    "hono": "catalog:",
     "virtual-frame": "workspace:*"
   },
   "devDependencies": {

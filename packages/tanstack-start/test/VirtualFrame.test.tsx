@@ -47,12 +47,7 @@ describe("VirtualFrame (TanStack Start)", () => {
   it("instantiates VirtualFrameCore with correct options", async () => {
     await act(() =>
       root.render(
-        <VirtualFrame
-          src="/test.html"
-          isolate="open"
-          selector="#main"
-          streamingFps={30}
-        />,
+        <VirtualFrame src="/test.html" isolate="open" selector="#main" streamingFps={30} />,
       ),
     );
     expect(MockVF).toHaveBeenCalledOnce();
@@ -92,9 +87,7 @@ describe("VirtualFrame (TanStack Start)", () => {
 
   it("forwards extra props to host div", async () => {
     await act(() =>
-      root.render(
-        <VirtualFrame src="/test.html" className="my-frame" data-testid="vf" />,
-      ),
+      root.render(<VirtualFrame src="/test.html" className="my-frame" data-testid="vf" />),
     );
     const host = container.querySelector("[data-vf-host]");
     expect(host.className).toBe("my-frame");
@@ -117,11 +110,7 @@ describe("VirtualFrame (TanStack Start)", () => {
   });
 
   it("filters underscore-prefixed props from DOM", async () => {
-    await act(() =>
-      root.render(
-        <VirtualFrame src="/test.html" _vfHtml="<div>test</div>" />,
-      ),
-    );
+    await act(() => root.render(<VirtualFrame src="/test.html" _vfHtml="<div>test</div>" />));
     const host = container.querySelector("[data-vf-host]");
     expect(host.hasAttribute("_vfHtml")).toBe(false);
   });

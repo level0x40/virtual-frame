@@ -238,19 +238,12 @@ export function VirtualFrameActivator({
         if (portCleanup) return;
         if (!shared.iframe.contentWindow) return;
         const channel = new MessageChannel();
-        shared.iframe.contentWindow.postMessage(
-          { type: "vf-store:connect" },
-          "*",
-          [channel.port2],
-        );
+        shared.iframe.contentWindow.postMessage({ type: "vf-store:connect" }, "*", [channel.port2]);
         portCleanup = connectPort(store, channel.port1);
       };
 
       const onMessage = (e: MessageEvent) => {
-        if (
-          e.source === shared.iframe.contentWindow &&
-          e.data?.type === "vf-store:ready"
-        ) {
+        if (e.source === shared.iframe.contentWindow && e.data?.type === "vf-store:ready") {
           connect();
         }
       };
@@ -357,9 +350,7 @@ export function VirtualFrame({
   // so they never reach the DOM element.
   ...restProps
 }: VirtualFrameProps) {
-  const props = Object.fromEntries(
-    Object.entries(restProps).filter(([k]) => !k.startsWith("_"))
-  );
+  const props = Object.fromEntries(Object.entries(restProps).filter(([k]) => !k.startsWith("_")));
   // During SSR: `use()` resolves the request-scoped cached value
   // synchronously (already computed by the server component or
   // `prepareVirtualFrameProps`).

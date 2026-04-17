@@ -9,9 +9,8 @@ useSeoMeta({
   <div class="card" id="info-card">
     <h1>Remote Nuxt App</h1>
     <p>
-      This page is a standalone Nuxt application. During SSR, the host app
-      fetches this page and renders it instantly inside a virtual frame — no
-      extra client-side network request needed!
+      This page is a standalone Nuxt application. During SSR, the host app fetches this page and
+      renders it instantly inside a virtual frame — no extra client-side network request needed!
     </p>
     <Timestamp />
   </div>
@@ -41,7 +40,13 @@ useSeoMeta({
 }
 
 body {
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial,
+  font-family:
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    Helvetica,
+    Arial,
     sans-serif;
   background: linear-gradient(135deg, #00dc82 0%, #00a86b 100%);
   color: #fff;

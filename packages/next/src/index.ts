@@ -45,10 +45,7 @@ export interface PrepareVirtualFramePropsOptions {
   proxy?: string;
 }
 
-function buildSsrHtml(
-  result: VirtualFrameResult,
-  isolate?: "open" | "closed",
-): string {
+function buildSsrHtml(result: VirtualFrameResult, isolate?: "open" | "closed"): string {
   const deltaJson = JSON.stringify(result.resumeDelta).replace(/<\//g, "<\\/");
   const resumeScript = `<script type="text/vf-resume">${deltaJson}</script>`;
 

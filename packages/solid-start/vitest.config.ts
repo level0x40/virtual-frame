@@ -9,10 +9,7 @@ export default defineConfig({
     alias: {
       "@virtual-frame/store": resolve(__dirname, "../store/src/index.ts"),
       "@virtual-frame/solid": resolve(__dirname, "../solid/src/index.tsx"),
-      "@virtual-frame/solid/store": resolve(
-        __dirname,
-        "../solid/src/store.ts",
-      ),
+      "@virtual-frame/solid/store": resolve(__dirname, "../solid/src/store.ts"),
     },
   },
   test: {
@@ -20,7 +17,8 @@ export default defineConfig({
     browser: {
       enabled: true,
       provider: playwright(),
-      instances: [{ browser: "chromium" }], headless: true,
+      instances: [{ browser: "chromium" }],
+      headless: true,
     },
     include: ["test/**/*.test.{ts,tsx}"],
   },

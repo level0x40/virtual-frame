@@ -36,12 +36,12 @@ With a framework wrapper the prop is just `isolate="open"` on the component — 
 
 ## Open vs closed
 
-| Mode       | `host.shadowRoot` | `vf.getShadowRoot()` | When to pick                                                                                                                       |
-| ---------- | ----------------- | -------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| `"open"`   | accessible        | returns the root     | Default. Host scripts (devtools, analytics, a11y tooling, tests) can still traverse the subtree.                                  |
+| Mode       | `host.shadowRoot` | `vf.getShadowRoot()` | When to pick                                                                                                                           |
+| ---------- | ----------------- | -------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `"open"`   | accessible        | returns the root     | Default. Host scripts (devtools, analytics, a11y tooling, tests) can still traverse the subtree.                                       |
 | `"closed"` | `null`            | returns the root     | Actively discourages other scripts on the host page from reaching into the projected DOM. Use `getShadowRoot()` for legitimate access. |
 
-Closed mode is **not a security boundary.** Scripts on the same page can still patch prototypes, monkey-patch `attachShadow`, or otherwise work around it — so don't rely on it to hide secrets. It's a strong *signal* that the subtree is not meant to be poked at, and it hides the tree from casual DOM walks, but no more than that.
+Closed mode is **not a security boundary.** Scripts on the same page can still patch prototypes, monkey-patch `attachShadow`, or otherwise work around it — so don't rely on it to hide secrets. It's a strong _signal_ that the subtree is not meant to be poked at, and it hides the tree from casual DOM walks, but no more than that.
 
 ::: info Accessing a closed root from your own code
 When you construct a `VirtualFrame` with `isolate: "closed"`, the engine keeps a reference to the root on the instance. Call [`vf.getShadowRoot()`](/api/#getshadowroot) to reach it from the host — this works identically in open mode, so you can write host code that doesn't care which mode is in use.
@@ -62,14 +62,14 @@ This rewrite runs once per stylesheet when it's collected; dynamically added `<s
 
 Width units are rewritten to **container query units**:
 
-| Source unit  | Rewritten to |
-| ------------ | ------------ |
-| `vw`         | `cqw`        |
-| `svw`        | `cqw`        |
-| `dvw`        | `cqw`        |
-| `lvw`        | `cqw`        |
-| `vh` / `svh` / `dvh` / `lvh` | unchanged |
-| `vmin` / `vmax` | unchanged |
+| Source unit                  | Rewritten to |
+| ---------------------------- | ------------ |
+| `vw`                         | `cqw`        |
+| `svw`                        | `cqw`        |
+| `dvw`                        | `cqw`        |
+| `lvw`                        | `cqw`        |
+| `vh` / `svh` / `dvh` / `lvh` | unchanged    |
+| `vmin` / `vmax`              | unchanged    |
 
 The host element is given `container-type: inline-size`, so `100cqw` is the host's width — exactly what a source rule meant by "fill the viewport" when the page stood alone.
 
@@ -77,7 +77,7 @@ The host element is given `container-type: inline-size`, so `100cqw` is the host
 
 ### `@font-face` promotion
 
-Shadow DOMs can reference fonts, but a `@font-face` rule declared *inside* a shadow tree is scoped to it and cannot be used by any other shadow tree or by the main document. That matters because the projected document may declare its own custom fonts, and those need to render.
+Shadow DOMs can reference fonts, but a `@font-face` rule declared _inside_ a shadow tree is scoped to it and cannot be used by any other shadow tree or by the main document. That matters because the projected document may declare its own custom fonts, and those need to render.
 
 Virtual Frame handles fonts in two passes:
 
@@ -112,11 +112,11 @@ For closed mode, only the instance method works:
 ```js
 const vf = new VirtualFrame(iframe, host, { isolate: "closed" });
 
-host.shadowRoot;          // null — hidden by the browser
-vf.getShadowRoot();       // returns the root
+host.shadowRoot; // null — hidden by the browser
+vf.getShadowRoot(); // returns the root
 ```
 
-**Timing.** The shadow root is attached synchronously inside the constructor, so `getShadowRoot()` returns non-null immediately after `new VirtualFrame(...)`. The *content* inside the root appears asynchronously as the iframe finishes loading and projection starts streaming — so if you need to read rendered DOM, wait until `vf.isInitialized` is true, then use `waitFor` / `findBy…` patterns if you're in a test. See [Testing](/guide/testing).
+**Timing.** The shadow root is attached synchronously inside the constructor, so `getShadowRoot()` returns non-null immediately after `new VirtualFrame(...)`. The _content_ inside the root appears asynchronously as the iframe finishes loading and projection starts streaming — so if you need to read rendered DOM, wait until `vf.isInitialized` is true, then use `waitFor` / `findBy…` patterns if you're in a test. See [Testing](/guide/testing).
 
 ## CSS custom properties across the boundary
 
@@ -158,14 +158,14 @@ A few things the rewriter does **not** handle. Call them out up-front so you don
 
 ## Common issues
 
-**"My fonts look wrong in the projection."**  Fonts declared via `@font-face` in the *source* document are picked up automatically (rule-rewritten and, if already loaded as JS `FontFace` objects, promoted). Fonts declared only in the *host* page's stylesheet do not cross into the shadow, and would need a content-matching `@font-face` inside the source — or you can leave isolation off if you want host-side fonts.
+**"My fonts look wrong in the projection."** Fonts declared via `@font-face` in the _source_ document are picked up automatically (rule-rewritten and, if already loaded as JS `FontFace` objects, promoted). Fonts declared only in the _host_ page's stylesheet do not cross into the shadow, and would need a content-matching `@font-face` inside the source — or you can leave isolation off if you want host-side fonts.
 
-**"A CSS variable from my host theme isn't applying inside the projection."**  Custom properties inherit through the shadow boundary when set on a host-side ancestor. Set the variable on the `<virtual-frame>` element itself, on `:host` inside the shadow, or on `html` of the host page — don't set it only inside the source document and expect the host to read it back.
+**"A CSS variable from my host theme isn't applying inside the projection."** Custom properties inherit through the shadow boundary when set on a host-side ancestor. Set the variable on the `<virtual-frame>` element itself, on `:host` inside the shadow, or on `html` of the host page — don't set it only inside the source document and expect the host to read it back.
 
-**"`host.shadowRoot` returns `null` even though I used `isolate: 'open'`."**  If you're reading it synchronously before the element is in the DOM (custom element path) or before the constructor runs (core class path), it may not exist yet. In the custom element path, the shadow is attached on `connectedCallback`, so read `element.shadowRoot` after the element is connected or use `vf.getShadowRoot()` after the core instance is constructed.
+**"`host.shadowRoot` returns `null` even though I used `isolate: 'open'`."** If you're reading it synchronously before the element is in the DOM (custom element path) or before the constructor runs (core class path), it may not exist yet. In the custom element path, the shadow is attached on `connectedCallback`, so read `element.shadowRoot` after the element is connected or use `vf.getShadowRoot()` after the core instance is constructed.
 
-**"Styles from the host page show up inside the projection anyway."**  Either isolation is off (`isolate` not set — you rendered into light DOM), or the "leak" is inherited through custom properties / inherited font stacks. Shadow DOM isolates *selectors*, not inherited values.
+**"Styles from the host page show up inside the projection anyway."** Either isolation is off (`isolate` not set — you rendered into light DOM), or the "leak" is inherited through custom properties / inherited font stacks. Shadow DOM isolates _selectors_, not inherited values.
 
-**"Host-side devtools can't find the projected elements."**  In closed mode that's the point. In open mode, Chrome/Firefox devtools show shadow roots under the host element — expand the `#shadow-root (open)` entry. If you're using a testing tool that doesn't pierce shadow DOM, prefer `vf.getShadowRoot()` to reach the subtree programmatically.
+**"Host-side devtools can't find the projected elements."** In closed mode that's the point. In open mode, Chrome/Firefox devtools show shadow roots under the host element — expand the `#shadow-root (open)` entry. If you're using a testing tool that doesn't pierce shadow DOM, prefer `vf.getShadowRoot()` to reach the subtree programmatically.
 
-**"Projected SVG or canvas looks pixelated."**  Unrelated to Shadow DOM — that's [streaming FPS](/guide/streaming-fps) territory. Canvas / video frames are captured at buffer dimensions (no DPR scaling). If the source sizes its canvas without multiplying by `devicePixelRatio`, the projection will look soft on high-DPI displays; fix that on the source side. For motion smoothness, raise `streamingFps` (or omit it same-origin for smooth rAF).
+**"Projected SVG or canvas looks pixelated."** Unrelated to Shadow DOM — that's [streaming FPS](/guide/streaming-fps) territory. Canvas / video frames are captured at buffer dimensions (no DPR scaling). If the source sizes its canvas without multiplying by `devicePixelRatio`, the projection will look soft on high-DPI displays; fix that on the source side. For motion smoothness, raise `streamingFps` (or omit it same-origin for smooth rAF).

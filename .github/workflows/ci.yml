@@ -61,10 +61,10 @@ jobs:
       - uses: ./.github/actions/setup
 
       - name: Check formatting
-        run: pnpm format:check
+        run: vp run format:check
 
       - name: Lint
-        run: pnpm lint
+        run: vp run lint
 
   # ──────────────────────────────────────────────────────────────────────
   # Type-check across the workspace. Today this is a real CI gap.
@@ -78,7 +78,7 @@ jobs:
       - uses: ./.github/actions/setup
 
       - name: Typecheck all packages
-        run: pnpm typecheck
+        run: vp run typecheck
 
   # ──────────────────────────────────────────────────────────────────────
   # Unit + browser tests via vitest.
@@ -96,7 +96,7 @@ jobs:
         run: pnpm exec playwright install --with-deps chromium
 
       - name: Run vitest
-        run: pnpm test:run
+        run: vp run test:run
 
       - name: Upload coverage
         if: always()
@@ -121,7 +121,7 @@ jobs:
       - uses: ./.github/actions/setup
 
       - name: Build all packages
-        run: pnpm build
+        run: vp run build
 
   # ──────────────────────────────────────────────────────────────────────
   # End-to-end Playwright suite — boots real example apps in dev and prod
@@ -141,7 +141,7 @@ jobs:
         run: pnpm exec playwright install --with-deps chromium
 
       - name: Run E2E suite
-        run: pnpm test:e2e
+        run: vp run test:e2e
 
       - name: Upload Playwright report
         if: failure()
@@ -173,7 +173,7 @@ jobs:
       - uses: ./.github/actions/setup
 
       - name: Verify changeset present
-        run: pnpm changeset status --since=origin/${{ github.base_ref }}
+        run: vp run changeset status --since=origin/${{ github.base_ref }}
 
   # ──────────────────────────────────────────────────────────────────────
   # Aggregate gate — single status for branch protection to require.

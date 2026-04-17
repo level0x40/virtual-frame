@@ -7,11 +7,7 @@ const text = ref("");
 <template>
   <div class="card" id="echo-card">
     <h2>Echo Input</h2>
-    <input
-      type="text"
-      v-model="text"
-      placeholder="Type here..."
-    />
+    <input type="text" v-model="text" placeholder="Type here..." />
     <p class="echo">{{ text || "..." }}</p>
   </div>
 </template>

@@ -14,10 +14,7 @@ Create a `+page.server.ts` load function to fetch the remote page during SSR. Th
 
 ```ts
 // src/routes/+page.server.ts
-import {
-  fetchVirtualFrame,
-  prepareVirtualFrameProps,
-} from "@virtual-frame/sveltekit/server";
+import { fetchVirtualFrame, prepareVirtualFrameProps } from "@virtual-frame/sveltekit/server";
 
 const REMOTE_URL = process.env["REMOTE_URL"] ?? "http://localhost:3013";
 
@@ -140,10 +137,10 @@ Use `useStore` from `@virtual-frame/sveltekit/store` (remote-side singleton) tog
 <button onclick={() => store["count"]++}>Count: {$count ?? 0}</button>
 ```
 
-| Call                           | Returns        | Purpose                                 |
-| ------------------------------ | -------------- | --------------------------------------- |
-| `useRemoteStore()`             | `StoreProxy`   | Store instance (connects to host store) |
-| `useStore(store, ["count"])`   | `Readable<T>`  | Reactive value at path                  |
+| Call                         | Returns       | Purpose                                 |
+| ---------------------------- | ------------- | --------------------------------------- |
+| `useRemoteStore()`           | `StoreProxy`  | Store instance (connects to host store) |
+| `useStore(store, ["count"])` | `Readable<T>` | Reactive value at path                  |
 
 ## How Server Rendering Works
 
@@ -264,7 +261,7 @@ store["count"] = 0;
 Two things to notice:
 
 - **Host reads/writes are direct**: `store["count"]` and `$count` operate on the host's in-memory object — no serialisation, no round-trip.
-- **Passing `{store}` to `<VirtualFrame>` wires up the bridge**: when the hidden iframe finishes loading and the remote signals `vf-store:ready`, the component opens a `MessageChannel`, transfers one port to the iframe, and calls `connectPort()` on the host side. When multiple `<VirtualFrame>` instances share the same `src`, they share one iframe *and* one port — the store is bridged exactly once.
+- **Passing `{store}` to `<VirtualFrame>` wires up the bridge**: when the hidden iframe finishes loading and the remote signals `vf-store:ready`, the component opens a `MessageChannel`, transfers one port to the iframe, and calls `connectPort()` on the host side. When multiple `<VirtualFrame>` instances share the same `src`, they share one iframe _and_ one port — the store is bridged exactly once.
 
 ### 3. Consume the store on the remote
 
@@ -291,9 +288,9 @@ On the remote, use the singleton helper `useStore` from `@virtual-frame/svelteki
 
 Two imports, two different functions, both named `useStore`:
 
-| Import                                        | Purpose                                                        |
-| ---------------------------------------------- | -------------------------------------------------------------- |
-| `useStore` from `@virtual-frame/sveltekit/store` | **Remote singleton.** Returns the `StoreProxy` for the remote app. Sets up the `MessagePort` bridge on first call. |
+| Import                                           | Purpose                                                                                                                          |
+| ------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------- |
+| `useStore` from `@virtual-frame/sveltekit/store` | **Remote singleton.** Returns the `StoreProxy` for the remote app. Sets up the `MessagePort` bridge on first call.               |
 | `useStore` from `@virtual-frame/sveltekit`       | **Reactive subscription.** Takes a `StoreProxy` + path and returns a Svelte `Readable<T>`. Use with the `$` prefix in templates. |
 
 ### Standalone fallback

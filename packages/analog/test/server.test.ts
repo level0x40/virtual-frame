@@ -41,7 +41,7 @@ describe("prepareVirtualFrameProps (Analog server)", () => {
     expect(props.selector).toBeUndefined();
     expect(props.proxy).toBeUndefined();
     // render() is only called when a selector is provided.
-    expect((frame.render as any)).not.toHaveBeenCalled();
+    expect(frame.render as any).not.toHaveBeenCalled();
   });
 
   it("honours explicit isolate='closed'", async () => {

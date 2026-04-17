@@ -9,8 +9,8 @@
   },
   "dependencies": {
     "@virtual-frame/vue": "workspace:*",
-    "vue": "^3.5.0",
-    "virtual-frame": "workspace:*"
+    "virtual-frame": "workspace:*",
+    "vue": "^3.5.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^6.0.0",

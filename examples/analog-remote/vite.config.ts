@@ -20,6 +20,11 @@ export default defineConfig({
       },
     }),
   ],
-  server: { host: "127.0.0.1", port: Number(process.env.PORT) || 3011, strictPort: true, hmr: !process.env.CI },
+  server: {
+    host: "127.0.0.1",
+    port: Number(process.env.PORT) || 3011,
+    strictPort: true,
+    hmr: !process.env.CI,
+  },
   preview: { host: "127.0.0.1", port: Number(process.env.PORT) || 3011, strictPort: true },
 });

@@ -1,12 +1,6 @@
 import { describe, it, expect, afterEach } from "vitest";
 import { VirtualFrame } from "../src/core.js";
-import {
-  createIframe,
-  createHost,
-  waitForInit,
-  delay,
-  cleanup,
-} from "./helpers.js";
+import { createIframe, createHost, waitForInit, delay, cleanup } from "./helpers.js";
 
 describe("VirtualFrame — projection integration", () => {
   /** @type {HTMLIFrameElement} */
@@ -221,9 +215,7 @@ describe("VirtualFrame — projection integration", () => {
     expect(vf.observer).toBeTruthy();
     vf.destroy();
     // After destroy, adding DOM content in the iframe should not throw
-    iframe.contentDocument.body.appendChild(
-      iframe.contentDocument.createElement("div"),
-    );
+    iframe.contentDocument.body.appendChild(iframe.contentDocument.createElement("div"));
     await delay(100);
     vf = null;
   });

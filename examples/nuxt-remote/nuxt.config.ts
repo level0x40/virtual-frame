@@ -12,9 +12,7 @@ export default defineNuxtConfig({
   vite: {
     server: {
       hmr: {
-        port: process.env.PORT
-          ? Number(process.env.PORT) + 10000
-          : 24679,
+        port: process.env.PORT ? Number(process.env.PORT) + 10000 : 24679,
       },
     },
   },

@@ -7,10 +7,7 @@ import {
 import { appConfig } from "./app.config";
 
 const serverConfig: ApplicationConfig = {
-  providers: [
-    provideServerRendering(),
-    { provide: SERVER_CONTEXT, useValue: "ssr-analog" },
-  ],
+  providers: [provideServerRendering(), { provide: SERVER_CONTEXT, useValue: "ssr-analog" }],
 };
 
 export const config = mergeApplicationConfig(appConfig, serverConfig);

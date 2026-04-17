@@ -10,10 +10,9 @@ export default function About() {
     >
       <h1>About — Remote SolidStart App</h1>
       <p>
-        This page demonstrates client-side navigation inside the remote app.
-        Because the host uses the <code>proxy</code> option, data requests
-        issued by the remote's router are routed through the host's dev
-        proxy so the projection keeps working across origins.
+        This page demonstrates client-side navigation inside the remote app. Because the host uses
+        the <code>proxy</code> option, data requests issued by the remote's router are routed
+        through the host's dev proxy so the projection keeps working across origins.
       </p>
       <nav>
         <A href="/">Home</A>

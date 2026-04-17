@@ -19,18 +19,16 @@ export default function Home() {
         style={{
           padding: "24px",
           "border-radius": "12px",
-          background:
-            "linear-gradient(135deg, #2c4f7c 0%, #335d91 50%, #4477a8 100%)",
+          background: "linear-gradient(135deg, #2c4f7c 0%, #335d91 50%, #4477a8 100%)",
           color: "#fff",
           "margin-bottom": "16px",
         }}
       >
         <h1>Remote SolidStart App</h1>
         <p>
-          Standalone SolidStart application. During SSR the host fetches this
-          page and renders it instantly inside a virtual frame — no extra
-          client-side network request. The counter is backed by a shared store,
-          synced with the host via MessagePort.
+          Standalone SolidStart application. During SSR the host fetches this page and renders it
+          instantly inside a virtual frame — no extra client-side network request. The counter is
+          backed by a shared store, synced with the host via MessagePort.
         </p>
       </div>
 
@@ -45,9 +43,7 @@ export default function Home() {
         }}
       >
         <h2>Counter (shared store)</h2>
-        <div style={{ "font-size": "2em", "font-weight": "bold" }}>
-          {count() ?? 0}
-        </div>
+        <div style={{ "font-size": "2em", "font-weight": "bold" }}>{count() ?? 0}</div>
         <button
           onClick={() => (store["count"] = (count() ?? 0) + 1)}
           style={{

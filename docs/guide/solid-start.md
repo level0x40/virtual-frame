@@ -25,11 +25,7 @@ export default defineConfig({
       // Node's ESM resolver bypasses the `solid` export condition and
       // loads the browser build on the server, which throws
       // "Client-only API called on the server side".
-      noExternal: [
-        "@solidjs/router",
-        "@virtual-frame/solid",
-        "@virtual-frame/solid-start",
-      ],
+      noExternal: ["@solidjs/router", "@virtual-frame/solid", "@virtual-frame/solid-start"],
       resolve: {
         // `solid` must come first so packages that expose a `solid`
         // export condition (pointing at raw source JSX/TSX) are picked
@@ -62,10 +58,7 @@ Create a `query(..., "frames")` function that runs `"use server"` to fetch the r
 import { query, createAsync, type RouteDefinition } from "@solidjs/router";
 import { Show } from "solid-js";
 import { VirtualFrame } from "@virtual-frame/solid-start";
-import {
-  fetchVirtualFrame,
-  prepareVirtualFrameProps,
-} from "@virtual-frame/solid-start/server";
+import { fetchVirtualFrame, prepareVirtualFrameProps } from "@virtual-frame/solid-start/server";
 
 const REMOTE_URL = process.env.REMOTE_URL ?? "http://localhost:3015";
 
@@ -83,11 +76,7 @@ export const route = {
 
 export default function Home() {
   const data = createAsync(() => getFrames());
-  return (
-    <Show when={data()}>
-      {(frames) => <VirtualFrame {...frames().frame} />}
-    </Show>
-  );
+  return <Show when={data()}>{(frames) => <VirtualFrame {...frames().frame} />}</Show>;
 }
 ```
 
@@ -189,9 +178,7 @@ export default function Home() {
   return (
     <>
       <p>Host count: {count() ?? 0}</p>
-      <button onClick={() => (store["count"] = (count() ?? 0) + 1)}>
-        Increment from host
-      </button>
+      <button onClick={() => (store["count"] = (count() ?? 0) + 1)}>Increment from host</button>
       <button onClick={() => (store["count"] = 0)}>Reset</button>
 
       <Show when={data()}>
@@ -209,7 +196,7 @@ export default function Home() {
 ```
 
 - **Host reads/writes are direct**: `store["count"]` operates on the host's in-memory object — no serialisation, no round-trip.
-- **Passing `store={store}` wires up the bridge**: when the hidden iframe loads and the remote signals `vf-store:ready`, the component opens a `MessageChannel`, transfers one port to the iframe, and calls `connectPort()` on the host side. Multiple `<VirtualFrame>` instances sharing the same `src` share one iframe *and* one port — the store is bridged exactly once.
+- **Passing `store={store}` wires up the bridge**: when the hidden iframe loads and the remote signals `vf-store:ready`, the component opens a `MessageChannel`, transfers one port to the iframe, and calls `connectPort()` on the host side. Multiple `<VirtualFrame>` instances sharing the same `src` share one iframe _and_ one port — the store is bridged exactly once.
 
 ### 3. Consume the store on the remote
 
@@ -227,9 +214,7 @@ export default function Home() {
   return (
     <div id="counter-card">
       <div>{count() ?? 0}</div>
-      <button onClick={() => (store["count"] = (count() ?? 0) + 1)}>
-        Increment
-      </button>
+      <button onClick={() => (store["count"] = (count() ?? 0) + 1)}>Increment</button>
       <button onClick={() => (store["count"] = 0)}>Reset</button>
     </div>
   );
@@ -238,10 +223,10 @@ export default function Home() {
 
 Two imports, two different functions, both named `useStore`:
 
-| Import                                             | Purpose                                                                                            |
-| -------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| Import                                             | Purpose                                                                                                            |
+| -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
 | `useStore` from `@virtual-frame/solid-start/store` | **Remote singleton.** Returns the `StoreProxy` for the remote app. Sets up the `MessagePort` bridge on first call. |
-| `useStore` from `@virtual-frame/solid-start`       | **Reactive subscription.** Takes a `StoreProxy` + path and returns a Solid signal accessor. |
+| `useStore` from `@virtual-frame/solid-start`       | **Reactive subscription.** Takes a `StoreProxy` + path and returns a Solid signal accessor.                        |
 
 ### Standalone fallback
 

@@ -5,7 +5,13 @@
 }
 
 body {
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial,
+  font-family:
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    Helvetica,
+    Arial,
     sans-serif;
   background: #f0f2f5;
   padding: 32px;

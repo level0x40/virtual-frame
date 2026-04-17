@@ -73,11 +73,8 @@ export interface VirtualFrameResult {
     r: string;
     d: string[];
   };
-  render: (
-    overrides?: Partial<RenderVirtualFrameOptions>,
-  ) => Promise<VirtualFrameResult>;
+  render: (overrides?: Partial<RenderVirtualFrameOptions>) => Promise<VirtualFrameResult>;
 }
-
 
 // ── HTML helpers ────────────────────────────────────────────
 
@@ -97,8 +94,7 @@ function _extractStyles(html: string, baseUrl?: string): StyleEntry[] {
   }
 
   // <link rel="stylesheet"> hrefs — these need to be fetched separately
-  const linkRegex =
-    /<link\s[^>]*rel=["']stylesheet["'][^>]*href=["']([^"']+)["'][^>]*\/?>/gi;
+  const linkRegex = /<link\s[^>]*rel=["']stylesheet["'][^>]*href=["']([^"']+)["'][^>]*\/?>/gi;
   while ((m = linkRegex.exec(html)) !== null) {
     let href = m[1];
     // Resolve relative URLs
@@ -108,8 +104,7 @@ function _extractStyles(html: string, baseUrl?: string): StyleEntry[] {
     styles.push({ href, index: index++, type: "link" });
   }
   // Also match href before rel
-  const linkRegex2 =
-    /<link\s[^>]*href=["']([^"']+)["'][^>]*rel=["']stylesheet["'][^>]*\/?>/gi;
+  const linkRegex2 = /<link\s[^>]*href=["']([^"']+)["'][^>]*rel=["']stylesheet["'][^>]*\/?>/gi;
   while ((m = linkRegex2.exec(html)) !== null) {
     let href = m[1];
     if (baseUrl && !/^https?:\/\//i.test(href)) {
@@ -221,10 +216,7 @@ function _extractCssFromViteModule(js: string): string {
   try {
     return JSON.parse(`"${m[1]}"`);
   } catch {
-    return m[1]
-      .replace(/\\n/g, "\n")
-      .replace(/\\"/g, '"')
-      .replace(/\\\\/g, "\\");
+    return m[1].replace(/\\n/g, "\n").replace(/\\"/g, '"').replace(/\\\\/g, "\\");
   }
 }
 
@@ -240,16 +232,13 @@ function _resolveRelativeUrls(html: string, baseUrl?: string): string {
       `(${attr}\\s*=\\s*["'])(?!https?://|data:|blob:|#|javascript:|mailto:)([^"']+)(["'])`,
       "gi",
     );
-    result = result.replace(
-      re,
-      (_match: string, pre: string, url: string, post: string) => {
-        try {
-          return pre + new URL(url, baseUrl).href + post;
-        } catch {
-          return _match;
-        }
-      },
-    );
+    result = result.replace(re, (_match: string, pre: string, url: string, post: string) => {
+      try {
+        return pre + new URL(url, baseUrl).href + post;
+      } catch {
+        return _match;
+      }
+    });
   }
   // srcset needs special handling (comma-separated list of urls)
   result = result.replace(
@@ -368,16 +357,11 @@ export async function fetchVirtualFrame(
           }
         } else {
           s.css = "";
-          console.warn(
-            `virtual-frame SSR: failed to fetch stylesheet ${s.href}`,
-          );
+          console.warn(`virtual-frame SSR: failed to fetch stylesheet ${s.href}`);
         }
       } catch (e) {
         s.css = "";
-        console.warn(
-          `virtual-frame SSR: failed to fetch stylesheet ${s.href}:`,
-          e,
-        );
+        console.warn(`virtual-frame SSR: failed to fetch stylesheet ${s.href}:`, e);
       }
     });
   await Promise.all(fetchPromises);
@@ -480,9 +464,7 @@ export async function renderVirtualFrame(
         `virtual-frame SSR: selector "${selector}" matched nothing — rendering full body`,
       );
       const strippedBody = _stripScripts(bodyContent);
-      processedBody = url
-        ? _resolveRelativeUrls(strippedBody, url)
-        : strippedBody;
+      processedBody = url ? _resolveRelativeUrls(strippedBody, url) : strippedBody;
       diffOps = allScripts ? [strippedBody, allScripts] : [strippedBody];
     } else {
       // Get consistent serialisations from the parser.
@@ -498,16 +480,12 @@ export async function renderVirtualFrame(
       if (idx < 0) {
         // Extremely unlikely with the same parser — fall back to full body
         const strippedBody = _stripScripts(bodyContent);
-        processedBody = url
-          ? _resolveRelativeUrls(strippedBody, url)
-          : strippedBody;
+        processedBody = url ? _resolveRelativeUrls(strippedBody, url) : strippedBody;
         diffOps = allScripts ? [strippedBody, allScripts] : [strippedBody];
       } else {
         // Splice the placeholder into the body string
         const modifiedBody =
-          bodyInner.slice(0, idx) +
-          PH +
-          bodyInner.slice(idx + matchOuter.length);
+          bodyInner.slice(0, idx) + PH + bodyInner.slice(idx + matchOuter.length);
 
         // Strip scripts from the body-with-placeholder, then split around it.
         // We compute TWO versions:
@@ -521,14 +499,11 @@ export async function renderVirtualFrame(
         const strippedModified = _stripScripts(modifiedBody);
 
         // Unresolved split (for diff ops)
-        const [unresolvedPrefix, unresolvedSuffix] =
-          strippedModified.split(PH);
+        const [unresolvedPrefix, unresolvedSuffix] = strippedModified.split(PH);
 
         // Process the matched element
         const strippedMatch = _stripScripts(matchOuter);
-        processedBody = url
-          ? _resolveRelativeUrls(strippedMatch, url)
-          : strippedMatch;
+        processedBody = url ? _resolveRelativeUrls(strippedMatch, url) : strippedMatch;
 
         // Build diff with unresolved (relative URL) content
         diffOps = [];
@@ -550,9 +525,7 @@ export async function renderVirtualFrame(
     // and the remote app's client-side code (e.g. next/image, next/link)
     // generates relative URLs during hydration.
     const strippedBody = _stripScripts(bodyContent);
-    processedBody = url
-      ? _resolveRelativeUrls(strippedBody, url)
-      : strippedBody;
+    processedBody = url ? _resolveRelativeUrls(strippedBody, url) : strippedBody;
     diffOps = allScripts ? [strippedBody, allScripts] : [strippedBody];
   }
 

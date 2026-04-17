@@ -46,9 +46,7 @@ for (const mode of ["dev", "prod"] as const) {
     test("host page renders the Pages Router shell", async ({ page }) => {
       const res = await page.goto(url);
       expect(res?.status()).toBe(200);
-      await expect(page).toHaveTitle(
-        "Virtual Frame — Next.js Pages Router SSR Host",
-      );
+      await expect(page).toHaveTitle("Virtual Frame — Next.js Pages Router SSR Host");
       await expect(
         page.getByRole("heading", {
           name: "Virtual Frame — Next.js Pages Router SSR Example",
@@ -70,15 +68,11 @@ for (const mode of ["dev", "prod"] as const) {
       // into the host via declarative shadow DOM during SSR; once the page
       // arrives the heading is visible inside the projected shadow root.
       await expect(
-        page
-          .getByRole("heading", { name: /Remote Next.js App.*Pages Router/ })
-          .first(),
+        page.getByRole("heading", { name: /Remote Next.js App.*Pages Router/ }).first(),
       ).toBeVisible({ timeout: 30_000 });
     });
 
-    test("counter-card selector projection renders the counter", async ({
-      page,
-    }) => {
+    test("counter-card selector projection renders the counter", async ({ page }) => {
       await page.goto(url);
       // The "Counter Card Only" panel should contain a #counter-card from
       // the remote, which renders a number (initial count "0").

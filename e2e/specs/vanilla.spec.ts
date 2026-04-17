@@ -38,29 +38,21 @@ for (const mode of ["dev", "prod"] as const) {
       // Scope to the host's h1 — `getByRole("heading", { level: 1 })`
       // pierces the projected shadow DOM and would also match the
       // iframe's <h1>Dashboard</h1>, tripping strict mode.
-      await expect(
-        page.getByRole("heading", { level: 1, name: /Demo/ }),
-      ).toBeVisible();
+      await expect(page.getByRole("heading", { level: 1, name: /Demo/ })).toBeVisible();
     });
 
-    test("virtual-frame element exists with an open shadow root", async ({
-      page,
-    }) => {
+    test("virtual-frame element exists with an open shadow root", async ({ page }) => {
       await page.goto(url);
       const vf = page.locator("virtual-frame");
       await expect(vf).toHaveCount(1);
 
       // Wait for the custom element to upgrade and project.
       await expect
-        .poll(async () =>
-          vf.evaluate((el) => Boolean((el as HTMLElement).shadowRoot)),
-        )
+        .poll(async () => vf.evaluate((el) => Boolean((el as HTMLElement).shadowRoot)))
         .toBe(true);
     });
 
-    test("default showcase page is projected into the host", async ({
-      page,
-    }) => {
+    test("default showcase page is projected into the host", async ({ page }) => {
       await page.goto(url);
       // The showcase iframe contains an <h1>Dashboard</h1>; once the
       // virtual-frame element projects it, that heading should be visible
@@ -70,9 +62,7 @@ for (const mode of ["dev", "prod"] as const) {
       ).toBeVisible();
     });
 
-    test("switching to the Forms tab updates the projected content", async ({
-      page,
-    }) => {
+    test("switching to the Forms tab updates the projected content", async ({ page }) => {
       await page.goto(url);
       await expect(
         page.locator("virtual-frame").getByRole("heading", { name: "Dashboard" }),
@@ -81,9 +71,7 @@ for (const mode of ["dev", "prod"] as const) {
       await page.getByRole("button", { name: "Forms" }).click();
 
       await expect(
-        page
-          .locator("virtual-frame")
-          .getByRole("heading", { name: "Form Elements" }),
+        page.locator("virtual-frame").getByRole("heading", { name: "Form Elements" }),
       ).toBeVisible();
     });
   });

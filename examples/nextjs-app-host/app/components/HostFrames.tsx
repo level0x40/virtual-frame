@@ -22,21 +22,19 @@ export function HostFrames({ frameProps, counterProps }: HostFramesProps) {
     <div className="layout">
       <div className="panel info">
         <strong>How it works:</strong> The host Server Component calls{" "}
-        <code>fetchVirtualFrame()</code> to fetch the remote Next.js page
-        during SSR. Two <code>&lt;VirtualFrame&gt;</code> components are
-        rendered — one showing the full page, one showing only{" "}
-        <code>#counter-card</code> (via the <code>selector</code> prop). On
-        the client, both components{" "}
-        <strong>share a single hidden iframe</strong> (ref-counted). The{" "}
-        <code>store</code> prop bridges <code>@virtual-frame/store</code>{" "}
-        state between the host and remote via a <code>MessagePort</code>.
+        <code>fetchVirtualFrame()</code> to fetch the remote Next.js page during SSR. Two{" "}
+        <code>&lt;VirtualFrame&gt;</code> components are rendered — one showing the full page, one
+        showing only <code>#counter-card</code> (via the <code>selector</code> prop). On the client,
+        both components <strong>share a single hidden iframe</strong> (ref-counted). The{" "}
+        <code>store</code> prop bridges <code>@virtual-frame/store</code> state between the host and
+        remote via a <code>MessagePort</code>.
       </div>
 
       <div className="panel">
         <h2>Shared Store</h2>
         <p style={{ color: "#666", fontSize: 14, marginBottom: 16 }}>
-          Modify the counter from the host — changes propagate live to the
-          remote app via <code>@virtual-frame/store</code>.
+          Modify the counter from the host — changes propagate live to the remote app via{" "}
+          <code>@virtual-frame/store</code>.
         </p>
         <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
           <button

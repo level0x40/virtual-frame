@@ -10,8 +10,8 @@ export function StoreControls() {
     <div className="panel">
       <h2>Shared Store</h2>
       <p style={{ color: "#666", fontSize: 14, marginBottom: 16 }}>
-        Modify the counter from the host — changes propagate live to the
-        remote app via <code>@virtual-frame/store</code>.
+        Modify the counter from the host — changes propagate live to the remote app via{" "}
+        <code>@virtual-frame/store</code>.
       </p>
       <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
         <button

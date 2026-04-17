@@ -20,7 +20,7 @@ A consolidated index of the most common failure modes, with pointers to the guid
 - **First paint looks wrong, hydration fixes it.** A `<link rel="stylesheet">` wasn't inlined server-side. Use `fetchVirtualFrame` (not `renderVirtualFrame` on a pre-fetched string), which fetches linked stylesheets server-side. See [SSR → Common issues](/guide/ssr#common-issues).
 - **Host fonts don't render inside the projection.** Fonts declared only in the host's stylesheet don't cross into a closed shadow tree. Declare fonts in the source document, or load them from the top-level page where both sides inherit them. See [Shadow DOM → `@font-face` promotion](/guide/shadow-dom#font-face-promotion).
 - **CSS custom properties from a host theme don't apply.** Custom properties inherit through the shadow boundary only when set on a host-side ancestor. Set them on the `<virtual-frame>` element itself, on `:host` inside the shadow, or on the host page's `html` / `:root`.
-- **`height: 100vh` inside the projection fills the browser, not the host element.** Expected: only *width* viewport units (`vw`/`svw`/`dvw`/`lvw`) are rewritten to `cqw`. Height units are intentionally left alone because the host doesn't use `container-type: size`. If the projection needs to fit the host exactly, give the host an explicit height and let the source use percentages. See [Shadow DOM → Viewport units](/guide/shadow-dom#viewport-units).
+- **`height: 100vh` inside the projection fills the browser, not the host element.** Expected: only _width_ viewport units (`vw`/`svw`/`dvw`/`lvw`) are rewritten to `cqw`. Height units are intentionally left alone because the host doesn't use `container-type: size`. If the projection needs to fit the host exactly, give the host an explicit height and let the source use percentages. See [Shadow DOM → Viewport units](/guide/shadow-dom#viewport-units).
 
 ## Interactivity is broken
 
@@ -35,7 +35,7 @@ A consolidated index of the most common failure modes, with pointers to the guid
 ## Cross-origin fails silently
 
 - **No snapshot arrives.** The bridge loaded but never acknowledged. Look for `vf:ready` repeating on an interval in the remote console — if you see it, the host's `vf:ack` isn't coming through. Check that your host is actually mounting the `<virtual-frame>` element and that CSP isn't dropping the `postMessage`.
-- **Import the bridge *before* your framework runtime.** If your framework clobbers `fetch`, `history`, or prototype listeners before the bridge patches them, cross-origin breaks in subtle ways.
+- **Import the bridge _before_ your framework runtime.** If your framework clobbers `fetch`, `history`, or prototype listeners before the bridge patches them, cross-origin breaks in subtle ways.
 - **CSP blocks the bridge.** Host: `frame-src` must allow the remote origin. Remote: `script-src` must allow the bridge URL if it's loaded from a CDN. Look for `Refused to load` in both consoles.
 - **Multiple `<virtual-frame>` elements pointed at the same remote.** Works out of the box via the custom element's hidden-iframe ref-counting. If you're constructing `VirtualFrame` instances directly, you need to share the iframe yourself — a single bridge can only broadcast to `window.parent`. See [Cross-Origin → Channel IDs and multiple hosts](/guide/cross-origin#channel-ids-and-multiple-hosts).
 - **Channel crosstalk.** Each `createBridge()` generates a random channel id. If you passed an explicit `channel` string, make sure it's unique per bridge instance — two bridges on the same channel will deliver messages to both hosts.
@@ -49,7 +49,7 @@ A consolidated index of the most common failure modes, with pointers to the guid
 ## Selector doesn't match what I expected
 
 - **Multiple elements match but only one shows.** Expected — `selector` uses `querySelector` (first-match) semantics, not `querySelectorAll`. Use a more specific selector, or use multiple `<virtual-frame>` elements. See [Selector → How matching works](/guide/selector#how-matching-works).
-- **Match is gone but old content lingers briefly.** Expected — the mirror *freezes* with previous content while watching for a replacement match, rather than flashing empty. If a replacement appears, projection resumes.
+- **Match is gone but old content lingers briefly.** Expected — the mirror _freezes_ with previous content while watching for a replacement match, rather than flashing empty. If a replacement appears, projection resumes.
 - **Selector matches on the client but not at SSR time.** Server-side matching runs against the fetched HTML string; if the target only mounts during hydration, SSR falls back to rendering the full body and the client re-evaluates on mount. Not a bug; pick a selector stable in server output or accept the fallback.
 
 ## SSR-specific

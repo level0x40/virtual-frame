@@ -64,43 +64,41 @@ for (const mode of ["dev", "prod"] as const) {
           name: "Module Federation + Virtual Frame",
         }),
       ).toBeVisible({ timeout: 20_000 });
-      await expect(
-        page.getByRole("heading", { name: "Host Counter" }),
-      ).toBeVisible({ timeout: 20_000 });
+      await expect(page.getByRole("heading", { name: "Host Counter" })).toBeVisible({
+        timeout: 20_000,
+      });
     });
 
-    test("MF Counter (Module Federation) loads from the remote", async ({
-      page,
-    }) => {
+    test("MF Counter (Module Federation) loads from the remote", async ({ page }) => {
       await page.goto(url, { waitUntil: "load" });
       // The lazy-loaded MFCounter is wrapped in <Suspense fallback="Loading
       // MF Counter…">. Once it resolves, its label "MF Counter" appears.
-      await expect(
-        page.getByRole("heading", { name: "MF Counter" }),
-      ).toBeVisible({ timeout: 30_000 });
+      await expect(page.getByRole("heading", { name: "MF Counter" })).toBeVisible({
+        timeout: 30_000,
+      });
     });
 
-    test("host counter increment updates MF counter (shared store)", async ({
-      page,
-    }) => {
+    test("host counter increment updates MF counter (shared store)", async ({ page }) => {
       await page.goto(url, { waitUntil: "load" });
-      await expect(
-        page.getByRole("heading", { name: "MF Counter" }),
-      ).toBeVisible({ timeout: 30_000 });
+      await expect(page.getByRole("heading", { name: "MF Counter" })).toBeVisible({
+        timeout: 30_000,
+      });
 
       // Click the FIRST "+ Increment" button — that's the host's. Both the
       // host counter and the MF counter should advance to 1 because they
       // share `@virtual-frame/store`.
-      await page.getByRole("button", { name: /\+ Increment/ }).first().click();
+      await page
+        .getByRole("button", { name: /\+ Increment/ })
+        .first()
+        .click();
 
       // Two visible "1"s expected (host + MF). We assert at least 2.
-      await expect.poll(async () => await page.getByText("1", { exact: true }).count())
+      await expect
+        .poll(async () => await page.getByText("1", { exact: true }).count())
         .toBeGreaterThanOrEqual(2);
     });
 
-    test("VF Counter (Virtual Frame iframe) is also projected", async ({
-      page,
-    }) => {
+    test("VF Counter (Virtual Frame iframe) is also projected", async ({ page }) => {
       await page.goto(url, { waitUntil: "load" });
       // The projected #counter-card from the remote uses label "Remote
       // Counter" by default (Counter component default). Three counters
@@ -111,9 +109,9 @@ for (const mode of ["dev", "prod"] as const) {
       // In dev mode the iframe is same-origin (via proxy); in prod mode
       // it's cross-origin — the bridge script in the remote handles
       // DOM mirroring via postMessage.
-      await expect(
-        page.getByRole("heading", { name: "Remote Counter" }).first(),
-      ).toBeVisible({ timeout: 30_000 });
+      await expect(page.getByRole("heading", { name: "Remote Counter" }).first()).toBeVisible({
+        timeout: 30_000,
+      });
     });
   });
 }

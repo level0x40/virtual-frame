@@ -122,9 +122,7 @@ describe("connectPort", () => {
     await flushMessages();
 
     // No new messages after disconnect (port is closed)
-    const opMsgsAfter = received
-      .slice(initCount)
-      .filter((e) => e.data?.type === "vf-store:op");
+    const opMsgsAfter = received.slice(initCount).filter((e) => e.data?.type === "vf-store:op");
     expect(opMsgsAfter).toHaveLength(0);
 
     port2.close();
@@ -200,9 +198,7 @@ describe("connectPort — bidirectional sync", () => {
 
     // The frame should have exactly 1 op for x, not duplicated
     const frameHandle = getStore(frame);
-    const setXOps = frameHandle.log.filter(
-      (op) => op.type === "set" && op.path[0] === "x",
-    );
+    const setXOps = frameHandle.log.filter((op) => op.type === "set" && op.path[0] === "x");
     expect(setXOps).toHaveLength(1);
   });
 

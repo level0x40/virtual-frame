@@ -1,12 +1,6 @@
 import { describe, it, expect, afterEach } from "vitest";
 import { VirtualFrame } from "../src/core.js";
-import {
-  createIframe,
-  createHost,
-  waitForInit,
-  delay,
-  cleanup,
-} from "./helpers.js";
+import { createIframe, createHost, waitForInit, delay, cleanup } from "./helpers.js";
 
 describe("VirtualFrame — canvas projection", () => {
   let iframe;
@@ -93,9 +87,7 @@ describe("VirtualFrame — canvas projection", () => {
     await delay(200);
 
     // activeStreams should have at least one entry with rafId
-    const hasRaf = vf.activeStreams.some(
-      (e) => e.rafId != null || typeof e.rafId === "number",
-    );
+    const hasRaf = vf.activeStreams.some((e) => e.rafId != null || typeof e.rafId === "number");
     expect(hasRaf || vf.activeStreams.length > 0).toBe(true);
 
     vf.destroy();

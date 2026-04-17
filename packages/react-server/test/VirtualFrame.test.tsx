@@ -31,25 +31,19 @@ describe("VirtualFrameActivator (react-server)", () => {
   });
 
   it("renders a marker span with data-vf-init", async () => {
-    await act(() =>
-      root.render(<VirtualFrameActivator src="/test.html" />),
-    );
+    await act(() => root.render(<VirtualFrameActivator src="/test.html" />));
     expect(container.querySelector("[data-vf-init]")).toBeTruthy();
   });
 
   it("marker span is hidden", async () => {
-    await act(() =>
-      root.render(<VirtualFrameActivator src="/test.html" />),
-    );
+    await act(() => root.render(<VirtualFrameActivator src="/test.html" />));
     const marker = container.querySelector("[data-vf-init]");
     expect(marker.style.display).toBe("none");
   });
 
   it("exposes refresh method via ref", async () => {
     const ref = createRef();
-    await act(() =>
-      root.render(<VirtualFrameActivator src="/test.html" ref={ref} />),
-    );
+    await act(() => root.render(<VirtualFrameActivator src="/test.html" ref={ref} />));
     expect(ref.current).toBeTruthy();
     expect(typeof ref.current.refresh).toBe("function");
   });

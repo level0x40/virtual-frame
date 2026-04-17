@@ -1,8 +1,5 @@
 import net from "node:net";
-import {
-  existsSync, mkdirSync, writeFileSync, unlinkSync, readdirSync,
-  statSync,
-} from "node:fs";
+import { existsSync, mkdirSync, writeFileSync, unlinkSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 
@@ -34,9 +31,7 @@ export async function waitForPort(
     }
     await sleep(intervalMs);
   }
-  throw new Error(
-    `Timed out after ${timeoutMs}ms waiting for ${hosts.join("/")}:${port}`,
-  );
+  throw new Error(`Timed out after ${timeoutMs}ms waiting for ${hosts.join("/")}:${port}`);
 }
 
 function tryConnect(host: string, port: number): Promise<boolean> {
@@ -103,7 +98,11 @@ function isPortReservedCrossProcess(port: number): boolean {
     // previous run that didn't clean up (crash, SIGKILL, etc.)
     const { mtimeMs } = statSync(marker);
     if (Date.now() - mtimeMs > 10 * 60 * 1000) {
-      try { unlinkSync(marker); } catch { /* ok */ }
+      try {
+        unlinkSync(marker);
+      } catch {
+        /* ok */
+      }
       return false;
     }
     return true;
@@ -132,12 +131,22 @@ function reservePortCrossProcess(port: number): boolean {
 const ownMarkers = new Set<string>();
 function cleanupMarkers(): void {
   for (const marker of ownMarkers) {
-    try { unlinkSync(marker); } catch { /* best effort */ }
+    try {
+      unlinkSync(marker);
+    } catch {
+      /* best effort */
+    }
   }
 }
 process.on("exit", cleanupMarkers);
-process.on("SIGTERM", () => { cleanupMarkers(); process.exit(0); });
-process.on("SIGINT", () => { cleanupMarkers(); process.exit(0); });
+process.on("SIGTERM", () => {
+  cleanupMarkers();
+  process.exit(0);
+});
+process.on("SIGINT", () => {
+  cleanupMarkers();
+  process.exit(0);
+});
 
 function randomPort(): number {
   return PORT_MIN + Math.floor(Math.random() * (PORT_MAX - PORT_MIN));
@@ -155,9 +164,13 @@ export async function getFreePort(): Promise<number> {
         if (Date.now() - mtimeMs > 10 * 60 * 1000) {
           unlinkSync(marker);
         }
-      } catch { /* ignore */ }
+      } catch {
+        /* ignore */
+      }
     }
-  } catch { /* ignore */ }
+  } catch {
+    /* ignore */
+  }
 
   for (let attempt = 0; attempt < 100; attempt++) {
     const candidate = randomPort();

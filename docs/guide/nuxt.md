@@ -14,10 +14,7 @@ Create a Nitro server route to fetch the remote page during SSR. The route runs 
 
 ```ts
 // server/api/frame.ts
-import {
-  fetchVirtualFrame,
-  prepareVirtualFrameProps,
-} from "@virtual-frame/nuxt/server";
+import { fetchVirtualFrame, prepareVirtualFrameProps } from "@virtual-frame/nuxt/server";
 
 const REMOTE_URL = process.env.REMOTE_URL ?? "http://localhost:3009";
 
@@ -129,7 +126,7 @@ import { store } from "~/composables/store";
 
 const { data } = await useFetch("/api/frame");
 // Subscribe to a path — returns a reactive Vue `Ref`.
-const count = useStore<number>(store, ["count"]);
+const count = useStore < number > (store, ["count"]);
 </script>
 
 <template>
@@ -146,7 +143,7 @@ const count = useStore<number>(store, ["count"]);
 ```
 
 - **Host reads/writes are direct**: `store.count` operates on the host's in-memory object — no serialisation, no round-trip.
-- **Passing `:store` wires up the bridge**: when the hidden iframe loads and the remote signals `vf-store:ready`, the component opens a `MessageChannel`, transfers one port to the iframe, and calls `connectPort()` on the host side. Multiple `<VirtualFrame>` instances sharing the same `src` share one iframe *and* one port — the store is bridged exactly once.
+- **Passing `:store` wires up the bridge**: when the hidden iframe loads and the remote signals `vf-store:ready`, the component opens a `MessageChannel`, transfers one port to the iframe, and calls `connectPort()` on the host side. Multiple `<VirtualFrame>` instances sharing the same `src` share one iframe _and_ one port — the store is bridged exactly once.
 
 ### 3. Consume the store on the remote
 
@@ -158,7 +155,7 @@ import { useStore as useRemoteStore } from "@virtual-frame/nuxt/store";
 import { useStore } from "@virtual-frame/vue";
 
 const store = useRemoteStore();
-const count = useStore<number>(store, ["count"]);
+const count = useStore < number > (store, ["count"]);
 </script>
 
 <template>
@@ -168,10 +165,10 @@ const count = useStore<number>(store, ["count"]);
 
 Two imports, two different functions, both named `useStore`:
 
-| Import                                     | Purpose                                                        |
-| ------------------------------------------ | -------------------------------------------------------------- |
+| Import                                      | Purpose                                                                                                            |
+| ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
 | `useStore` from `@virtual-frame/nuxt/store` | **Remote singleton.** Returns the `StoreProxy` for the remote app. Sets up the `MessagePort` bridge on first call. |
-| `useStore` from `@virtual-frame/vue`        | **Reactive subscription.** Takes a `StoreProxy` + path and returns a Vue `Ref<T>`. |
+| `useStore` from `@virtual-frame/vue`        | **Reactive subscription.** Takes a `StoreProxy` + path and returns a Vue `Ref<T>`.                                 |
 
 ### Standalone fallback
 
@@ -313,13 +310,13 @@ The proxy prefix (`/__vf`) is a convention — you can use any path that doesn't
 
 Client component that displays server-fetched content and resumes live mirroring.
 
-| Prop           | Type                               | Default  | Description                             |
-| -------------- | ---------------------------------- | -------- | --------------------------------------- |
-| `src`          | `string`                           | —        | Remote URL to fetch and project         |
-| `selector`     | `string`                           | —        | CSS selector for partial projection     |
-| `isolate`      | `"open" \| "closed"`               | `"open"` | Shadow DOM mode                         |
-| `streamingFps` | `number \| Record<string, number>` | —        | Canvas/video streaming FPS              |
-| `store`        | `StoreProxy`                       | —        | Shared store for cross-frame state sync |
+| Prop           | Type                               | Default  | Description                                         |
+| -------------- | ---------------------------------- | -------- | --------------------------------------------------- |
+| `src`          | `string`                           | —        | Remote URL to fetch and project                     |
+| `selector`     | `string`                           | —        | CSS selector for partial projection                 |
+| `isolate`      | `"open" \| "closed"`               | `"open"` | Shadow DOM mode                                     |
+| `streamingFps` | `number \| Record<string, number>` | —        | Canvas/video streaming FPS                          |
+| `store`        | `StoreProxy`                       | —        | Shared store for cross-frame state sync             |
 | `proxy`        | `string`                           | —        | Same-origin proxy prefix for client-side navigation |
 
 ### `useStore(store, selector?)`
@@ -351,10 +348,10 @@ Server-only. Fetches a remote page and produces a server render result. Import f
 
 Server-only. Converts a server render result into serialisable props for `<VirtualFrame>`. Returns a **`Promise`** — always `await` it.
 
-| Option     | Type                 | Default  | Description                          |
-| ---------- | -------------------- | -------- | ------------------------------------ |
-| `selector` | `string`             | —        | CSS selector for partial projection  |
-| `isolate`  | `"open" \| "closed"` | `"open"` | Shadow DOM mode                      |
+| Option     | Type                 | Default  | Description                                         |
+| ---------- | -------------------- | -------- | --------------------------------------------------- |
+| `selector` | `string`             | —        | CSS selector for partial projection                 |
+| `isolate`  | `"open" \| "closed"` | `"open"` | Shadow DOM mode                                     |
 | `proxy`    | `string`             | —        | Same-origin proxy prefix for client-side navigation |
 
 ## Examples

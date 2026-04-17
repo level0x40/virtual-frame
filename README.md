@@ -102,10 +102,7 @@ npm install virtual-frame
   import "virtual-frame/element";
 </script>
 
-<virtual-frame
-  src="https://other-team.example.com/widget"
-  isolate="open"
-></virtual-frame>
+<virtual-frame src="https://other-team.example.com/widget" isolate="open"></virtual-frame>
 ```
 
 ### React

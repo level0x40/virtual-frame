@@ -45,19 +45,15 @@ describe("VirtualFrame (SolidStart, SSR-aware)", () => {
     container.innerHTML = "";
     container.remove();
     // Also clean up any leaked shared iframes parked on <body>.
-    document
-      .querySelectorAll('iframe[aria-hidden="true"]')
-      .forEach((el) => el.remove());
+    document.querySelectorAll('iframe[aria-hidden="true"]').forEach((el) => el.remove());
   });
 
   it("creates a hidden shared iframe when src is provided", async () => {
-    dispose = render(
-      () => <VirtualFrame src="/test-solid-a.html" />,
-      container,
-    );
+    dispose = render(() => <VirtualFrame src="/test-solid-a.html" />, container);
     await flush();
 
-    const iframe = container.querySelector("iframe") ??
+    const iframe =
+      container.querySelector("iframe") ??
       document.querySelector('iframe[src$="/test-solid-a.html"]');
     expect(iframe).toBeTruthy();
     expect(iframe!.src).toContain("/test-solid-a.html");
@@ -68,12 +64,7 @@ describe("VirtualFrame (SolidStart, SSR-aware)", () => {
   it("instantiates VirtualFrameCore with correct options", async () => {
     dispose = render(
       () => (
-        <VirtualFrame
-          src="/test-solid-b.html"
-          isolate="open"
-          selector="#main"
-          streamingFps={30}
-        />
+        <VirtualFrame src="/test-solid-b.html" isolate="open" selector="#main" streamingFps={30} />
       ),
       container,
     );
@@ -92,17 +83,12 @@ describe("VirtualFrame (SolidStart, SSR-aware)", () => {
   });
 
   it("cleans up the core and removes the iframe on unmount", async () => {
-    dispose = render(
-      () => <VirtualFrame src="/test-solid-c.html" />,
-      container,
-    );
+    dispose = render(() => <VirtualFrame src="/test-solid-c.html" />, container);
     await flush();
 
     const results = (MockVF as unknown as MockVFFn).mock.results;
     const instance = results[results.length - 1].value;
-    const iframe = document.querySelector(
-      'iframe[src$="/test-solid-c.html"]',
-    );
+    const iframe = document.querySelector('iframe[src$="/test-solid-c.html"]');
 
     dispose();
     dispose = undefined;
@@ -112,10 +98,7 @@ describe("VirtualFrame (SolidStart, SSR-aware)", () => {
   });
 
   it("does not create iframe when no src is provided", async () => {
-    dispose = render(
-      () => <VirtualFrame src={undefined as unknown as string} />,
-      container,
-    );
+    dispose = render(() => <VirtualFrame src={undefined as unknown as string} />, container);
     await flush();
     expect(container.querySelector("iframe")).toBeNull();
     expect(MockVF).not.toHaveBeenCalled();
@@ -138,9 +121,7 @@ describe("VirtualFrame (SolidStart, SSR-aware)", () => {
     const iframeB = calls[calls.length - 1][0];
     expect(iframeA).toBe(iframeB);
 
-    const iframes = document.querySelectorAll(
-      'iframe[src$="/test-solid-shared.html"]',
-    );
+    const iframes = document.querySelectorAll('iframe[src$="/test-solid-shared.html"]');
     expect(iframes.length).toBe(1);
 
     dispose();
@@ -151,10 +132,7 @@ describe("VirtualFrame (SolidStart, SSR-aware)", () => {
   });
 
   it("renders an empty host div when no _vfHtml is provided", async () => {
-    dispose = render(
-      () => <VirtualFrame src="/test-solid-empty.html" />,
-      container,
-    );
+    dispose = render(() => <VirtualFrame src="/test-solid-empty.html" />, container);
     await flush();
     const host = container.querySelector("[data-vf-host]") as HTMLElement;
     expect(host).toBeTruthy();

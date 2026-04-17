@@ -22,11 +22,7 @@ export default defineConfig([
     format: ["esm"],
     dts: true,
     deps: {
-      neverBundle: [
-        "@tanstack/react-start",
-        "@tanstack/react-router",
-        "virtual-frame",
-      ],
+      neverBundle: ["@tanstack/react-start", "@tanstack/react-router", "virtual-frame"],
     },
   },
   // Client entry — VirtualFrame React component ("use client").

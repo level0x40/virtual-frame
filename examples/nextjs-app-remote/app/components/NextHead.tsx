@@ -13,13 +13,8 @@ export function NextHead() {
     setMeta({
       title: document.title,
       description:
-        document
-          .querySelector('meta[name="description"]')
-          ?.getAttribute("content") ?? "—",
-      viewport:
-        document
-          .querySelector('meta[name="viewport"]')
-          ?.getAttribute("content") ?? "—",
+        document.querySelector('meta[name="description"]')?.getAttribute("content") ?? "—",
+      viewport: document.querySelector('meta[name="viewport"]')?.getAttribute("content") ?? "—",
     });
   }, []);
 
@@ -27,8 +22,8 @@ export function NextHead() {
     <div className="card" id="head-card">
       <h2>Metadata API</h2>
       <p>
-        Next.js Metadata API sets <code>&lt;head&gt;</code> tags via the{" "}
-        <code>metadata</code> export in server components.
+        Next.js Metadata API sets <code>&lt;head&gt;</code> tags via the <code>metadata</code>{" "}
+        export in server components.
       </p>
       {meta && (
         <div className="meta-list">

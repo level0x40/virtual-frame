@@ -657,11 +657,7 @@
         width: 20px;
         height: 20px;
         border-radius: 50%;
-        background: radial-gradient(
-          circle,
-          rgba(99, 102, 241, 0.6),
-          transparent 70%
-        );
+        background: radial-gradient(circle, rgba(99, 102, 241, 0.6), transparent 70%);
         transform: translate(-50%, -50%);
         pointer-events: none;
         display: none;
@@ -825,9 +821,7 @@
         </div>
         <button class="active" title="Dashboard">
           <svg viewBox="0 0 24 24">
-            <path
-              d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"
-            />
+            <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z" />
           </svg>
         </button>
         <button title="Analytics">
@@ -911,12 +905,7 @@
             <div class="stat-label">Revenue</div>
             <div class="stat-value" id="statRevenue">$48,352</div>
             <div class="stat-change up">
-              <svg
-                width="12"
-                height="12"
-                viewBox="0 0 12 12"
-                fill="currentColor"
-              >
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
                 <path d="M6 2l4 5H2z" />
               </svg>
               12.5%
@@ -929,12 +918,7 @@
             <div class="stat-label">Users</div>
             <div class="stat-value" id="statUsers">2,847</div>
             <div class="stat-change up">
-              <svg
-                width="12"
-                height="12"
-                viewBox="0 0 12 12"
-                fill="currentColor"
-              >
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
                 <path d="M6 2l4 5H2z" />
               </svg>
               8.2%
@@ -947,12 +931,7 @@
             <div class="stat-label">Orders</div>
             <div class="stat-value" id="statOrders">1,024</div>
             <div class="stat-change down">
-              <svg
-                width="12"
-                height="12"
-                viewBox="0 0 12 12"
-                fill="currentColor"
-              >
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
                 <path d="M6 10L2 5h8z" />
               </svg>
               3.1%
@@ -965,12 +944,7 @@
             <div class="stat-label">Conversion</div>
             <div class="stat-value" id="statConv">3.6%</div>
             <div class="stat-change up">
-              <svg
-                width="12"
-                height="12"
-                viewBox="0 0 12 12"
-                fill="currentColor"
-              >
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
                 <path d="M6 2l4 5H2z" />
               </svg>
               0.8%
@@ -1004,12 +978,7 @@
             </div>
             <div class="card-body">
               <div class="donut-wrap">
-                <svg
-                  id="donutChart"
-                  width="130"
-                  height="130"
-                  viewBox="0 0 42 42"
-                >
+                <svg id="donutChart" width="130" height="130" viewBox="0 0 42 42">
                   <circle
                     cx="21"
                     cy="21"
@@ -1072,9 +1041,7 @@
           <div class="card">
             <div class="card-header">
               <h2>Click Heatmap</h2>
-              <span style="font-size: 11px; color: var(--text-muted)"
-                >Move mouse to track</span
-              >
+              <span style="font-size: 11px; color: var(--text-muted)">Move mouse to track</span>
             </div>
             <div class="card-body" style="padding: 12px">
               <div class="heatmap-area" id="heatmapArea">
@@ -1103,9 +1070,7 @@
               </div>
             </div>
             <div class="scroll-list" id="scrollList"></div>
-            <div class="scroll-status-bar" id="scrollStatus">
-              Scroll to see all activity
-            </div>
+            <div class="scroll-status-bar" id="scrollStatus">Scroll to see all activity</div>
           </div>
 
           <!-- Tasks = DnD -->
@@ -1184,10 +1149,7 @@
         ctx.lineTo(0, h);
         ctx.closePath();
         const grad = ctx.createLinearGradient(0, 0, 0, h);
-        grad.addColorStop(
-          0,
-          color.replace(")", ",0.15)").replace("rgb", "rgba"),
-        );
+        grad.addColorStop(0, color.replace(")", ",0.15)").replace("rgb", "rgba"));
         grad.addColorStop(1, "transparent");
         ctx.fillStyle = grad;
         ctx.fill();
@@ -1206,9 +1168,7 @@
         "rgb(6, 182, 212)",
       ];
 
-      sparkData.forEach((d, i) =>
-        drawSparkline(`spark${i}`, d, sparkColors[i]),
-      );
+      sparkData.forEach((d, i) => drawSparkline(`spark${i}`, d, sparkColors[i]));
 
       /* ─── Line chart (animated) ──────────────────────────────── */
       const lineCanvas = document.getElementById("lineChart");
@@ -1288,10 +1248,7 @@
       const donutSvg = document.getElementById("donutChart");
       let offset = 25;
       donutData.forEach((pct, i) => {
-        const circle = document.createElementNS(
-          "http://www.w3.org/2000/svg",
-          "circle",
-        );
+        const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
         circle.setAttribute("cx", 21);
         circle.setAttribute("cy", 21);
         circle.setAttribute("r", 15.9);
@@ -1344,10 +1301,7 @@
           const cy = h / 2 + Math.cos(vidT * (0.4 + i * 0.3)) * (h * 0.25);
           const r = 20 + i * 8;
           const rg = vctx.createRadialGradient(cx, cy, 0, cx, cy, r);
-          rg.addColorStop(
-            0,
-            `hsla(${(vidT * 30 + i * 72) % 360}, 80%, 60%, 0.4)`,
-          );
+          rg.addColorStop(0, `hsla(${(vidT * 30 + i * 72) % 360}, 80%, 60%, 0.4)`);
           rg.addColorStop(1, "transparent");
           vctx.beginPath();
           vctx.arc(cx, cy, r, 0, Math.PI * 2);
@@ -1395,8 +1349,7 @@
         vidProgress = (vidProgress + 0.3) % 100;
         document.getElementById("vidBar").style.width = vidProgress + "%";
         const s = Math.floor(vidProgress * 1.8);
-        document.getElementById("vidTime").textContent =
-          `0:${String(s).padStart(2, "0")}`;
+        document.getElementById("vidTime").textContent = `0:${String(s).padStart(2, "0")}`;
       }, 300);
 
       /* ─── Heatmap (mouse tracker) ───────────────────────────── */
@@ -1584,16 +1537,13 @@
           scrollStatus.textContent = "You've seen all activity ✓";
           scrollStatus.className = "scroll-status-bar reached";
         } else {
-          const pct = Math.round(
-            (scrollTop / (scrollHeight - clientHeight)) * 100,
-          );
+          const pct = Math.round((scrollTop / (scrollHeight - clientHeight)) * 100);
           scrollStatus.textContent = `Scrolled ${pct}%`;
           scrollStatus.className = "scroll-status-bar";
         }
         clearTimeout(scrollTimeout);
         scrollTimeout = setTimeout(() => {
-          if (remaining >= 5)
-            scrollStatus.textContent = "Scroll to see all activity";
+          if (remaining >= 5) scrollStatus.textContent = "Scroll to see all activity";
         }, 800);
       });
 
@@ -1661,9 +1611,7 @@
       [colTodo, colDone].forEach((col) => {
         col.addEventListener("dragover", (e) => {
           e.preventDefault();
-          col
-            .querySelectorAll(".task-card")
-            .forEach((c) => c.classList.remove("drag-over"));
+          col.querySelectorAll(".task-card").forEach((c) => c.classList.remove("drag-over"));
         });
         col.addEventListener("drop", (e) => {
           e.preventDefault();
@@ -1754,27 +1702,17 @@
         }
         const tag = el.tagName?.toLowerCase() || "?";
         const id = el.id ? `#${el.id}` : "";
-        const cls =
-          type === "focus" || type === "focusin" ? "ev-focus" : "ev-blur";
+        const cls = type === "focus" || type === "focusin" ? "ev-focus" : "ev-blur";
         const line = document.createElement("div");
         line.className = cls;
         line.textContent = `${type} → <${tag}${id}>`;
         focusLog.appendChild(line);
         focusLog.scrollTop = focusLog.scrollHeight;
-        while (focusLog.children.length > 40)
-          focusLog.removeChild(focusLog.firstChild);
+        while (focusLog.children.length > 40) focusLog.removeChild(focusLog.firstChild);
       }
 
-      document.addEventListener(
-        "focus",
-        (e) => logFocus("focus", e.target),
-        true,
-      );
-      document.addEventListener(
-        "blur",
-        (e) => logFocus("blur", e.target),
-        true,
-      );
+      document.addEventListener("focus", (e) => logFocus("focus", e.target), true);
+      document.addEventListener("blur", (e) => logFocus("blur", e.target), true);
 
       /* ─── Chart tabs ────────────────────────────────────────── */
       document.querySelector(".chart-tabs").addEventListener("click", (e) => {
@@ -1790,10 +1728,7 @@
       setInterval(() => {
         const now = new Date();
         document.getElementById("statRevenue").textContent =
-          "$" +
-          (
-            48352 + Math.floor(Math.sin(now.getTime() / 5000) * 200)
-          ).toLocaleString();
+          "$" + (48352 + Math.floor(Math.sin(now.getTime() / 5000) * 200)).toLocaleString();
       }, 2000);
     </script>
   </body>

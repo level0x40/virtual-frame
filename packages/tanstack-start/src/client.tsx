@@ -68,9 +68,7 @@ export function VirtualFrame({
   // live shadow root content.
   const [mounted, setMounted] = useState(false);
 
-  const props = Object.fromEntries(
-    Object.entries(restProps).filter(([k]) => !k.startsWith("_"))
-  );
+  const props = Object.fromEntries(Object.entries(restProps).filter(([k]) => !k.startsWith("_")));
 
   const html = _vfHtml || "";
 
@@ -91,9 +89,7 @@ export function VirtualFrame({
     if (host && html && !host.shadowRoot) {
       // Check if there's an unprocessed <template shadowrootmode> in the
       // light DOM — this means innerHTML was used (client-side navigation).
-      const template = host.querySelector(
-        "template[shadowrootmode]"
-      ) as HTMLTemplateElement | null;
+      const template = host.querySelector("template[shadowrootmode]") as HTMLTemplateElement | null;
       if (template && typeof (host as any).setHTMLUnsafe === "function") {
         (host as any).setHTMLUnsafe(html);
       }
@@ -144,19 +140,12 @@ export function VirtualFrame({
           if (portCleanup) return;
           if (!s.iframe.contentWindow) return;
           const channel = new MessageChannel();
-          s.iframe.contentWindow.postMessage(
-            { type: "vf-store:connect" },
-            "*",
-            [channel.port2],
-          );
+          s.iframe.contentWindow.postMessage({ type: "vf-store:connect" }, "*", [channel.port2]);
           portCleanup = connectPort(store, channel.port1);
         };
 
         const onMessage = (e: MessageEvent) => {
-          if (
-            e.source === s.iframe.contentWindow &&
-            e.data?.type === "vf-store:ready"
-          ) {
+          if (e.source === s.iframe.contentWindow && e.data?.type === "vf-store:ready") {
             connect();
           }
         };

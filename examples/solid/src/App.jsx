@@ -15,8 +15,7 @@ export default function App() {
     <div style={{ "font-family": "system-ui, sans-serif", margin: "20px" }}>
       <h1>Virtual Frame — Solid Example</h1>
       <p>
-        This example uses <code>@virtual-frame/solid</code> to mirror pages into
-        a shadow DOM.
+        This example uses <code>@virtual-frame/solid</code> to mirror pages into a shadow DOM.
       </p>
 
       <nav style={{ display: "flex", gap: "8px", "margin-bottom": "16px" }}>

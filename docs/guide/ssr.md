@@ -39,24 +39,27 @@ import { fetchVirtualFrame } from "virtual-frame/ssr";
 
 const frame = await fetchVirtualFrame("https://remote.example.com/dashboard");
 
-return new Response(`<!doctype html>
+return new Response(
+  `<!doctype html>
 <html>
   <body>
     ${frame.html}
   </body>
-</html>`, { headers: { "content-type": "text/html" } });
+</html>`,
+  { headers: { "content-type": "text/html" } },
+);
 ```
 
 `frame.html` is a ready-to-emit `<virtual-frame>` tag with the shadow template and resume delta inline.
 
 ### Options
 
-| Option         | Type                         | Default  | Description                                                                                  |
-| -------------- | ---------------------------- | -------- | -------------------------------------------------------------------------------------------- |
-| `headers`      | `Record<string, string>`     | `{}`     | Extra request headers (merged with `Accept: text/html`). Forward cookies or auth from the incoming request here. |
-| `selector`     | `string`                     | —        | CSS selector — only the matched element is placed in the shadow DOM. The rest of the body is preserved via the resume delta for full-page reconstruction on the client. |
-| `isolate`      | `"open" \| "closed"`         | `"open"` | Shadow DOM mode. `"open"` is required for most hydration scenarios because the client needs to read `host.shadowRoot`. |
-| `fetchOptions` | `RequestInit`                | —        | Escape hatch: any other `fetch()` init options (method, body, signal). Merged with the computed `headers`. |
+| Option         | Type                     | Default  | Description                                                                                                                                                             |
+| -------------- | ------------------------ | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `headers`      | `Record<string, string>` | `{}`     | Extra request headers (merged with `Accept: text/html`). Forward cookies or auth from the incoming request here.                                                        |
+| `selector`     | `string`                 | —        | CSS selector — only the matched element is placed in the shadow DOM. The rest of the body is preserved via the resume delta for full-page reconstruction on the client. |
+| `isolate`      | `"open" \| "closed"`     | `"open"` | Shadow DOM mode. `"open"` is required for most hydration scenarios because the client needs to read `host.shadowRoot`.                                                  |
+| `fetchOptions` | `RequestInit`            | —        | Escape hatch: any other `fetch()` init options (method, body, signal). Merged with the computed `headers`.                                                              |
 
 ### Errors
 
@@ -83,11 +86,11 @@ Use this when you already have the HTML — for example, from an internal servic
 
 ### Options
 
-| Option     | Type                 | Default  | Description                                                                 |
-| ---------- | -------------------- | -------- | --------------------------------------------------------------------------- |
-| `url`      | `string`             | —        | Original URL, used to resolve relative `href`/`src` in the extracted body.  |
-| `selector` | `string`             | —        | As above.                                                                   |
-| `isolate`  | `"open" \| "closed"` | `"open"` | As above.                                                                   |
+| Option     | Type                 | Default  | Description                                                                |
+| ---------- | -------------------- | -------- | -------------------------------------------------------------------------- |
+| `url`      | `string`             | —        | Original URL, used to resolve relative `href`/`src` in the extracted body. |
+| `selector` | `string`             | —        | As above.                                                                  |
+| `isolate`  | `"open" \| "closed"` | `"open"` | As above.                                                                  |
 
 ::: warning Linked stylesheets are not fetched
 `renderVirtualFrame` only inlines `<style>` tags found in the HTML string. If the remote uses `<link rel="stylesheet">`, those are preserved as links — the browser will fetch them client-side, re-introducing a round-trip. Use `fetchVirtualFrame` (which fetches linked stylesheets server-side) when you want everything inlined.
@@ -99,21 +102,19 @@ Both helpers return the same shape:
 
 ```ts
 interface VirtualFrameResult {
-  html: string;          // Complete <virtual-frame> tag — emit this
-  srcdoc: string;        // The srcdoc value alone, if you need to build the tag yourself
-  body: string;          // Projected body HTML (inside the shadow template)
-  styles: string;        // Inlined <style> block(s) with rewritten CSS
-  rawHtml: string;       // Original unmodified HTML from the fetch
+  html: string; // Complete <virtual-frame> tag — emit this
+  srcdoc: string; // The srcdoc value alone, if you need to build the tag yourself
+  body: string; // Projected body HTML (inside the shadow template)
+  styles: string; // Inlined <style> block(s) with rewritten CSS
+  rawHtml: string; // Original unmodified HTML from the fetch
   resumeDelta: {
-    u: string;           // Source URL
-    h: string;           // <html> tag attrs
-    a: string;           // <body> tag attrs
-    r: string;           // Shadow DOM root content (processed body)
-    d: string[];         // Body fragments — client reconstructs: d.join("")
+    u: string; // Source URL
+    h: string; // <html> tag attrs
+    a: string; // <body> tag attrs
+    r: string; // Shadow DOM root content (processed body)
+    d: string[]; // Body fragments — client reconstructs: d.join("")
   };
-  render: (
-    overrides?: Partial<RenderVirtualFrameOptions>,
-  ) => Promise<VirtualFrameResult>;
+  render: (overrides?: Partial<RenderVirtualFrameOptions>) => Promise<VirtualFrameResult>;
 }
 ```
 

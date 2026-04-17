@@ -1,12 +1,6 @@
 import { describe, it, expect, afterEach } from "vitest";
 import { VirtualFrame } from "../src/core.js";
-import {
-  createIframe,
-  createHost,
-  waitForInit,
-  delay,
-  cleanup,
-} from "./helpers.js";
+import { createIframe, createHost, waitForInit, delay, cleanup } from "./helpers.js";
 
 describe("VirtualFrame — mutation observation", () => {
   let iframe;
@@ -76,9 +70,7 @@ describe("VirtualFrame — mutation observation", () => {
     await waitForInit(vf);
 
     // Set an attribute in the iframe
-    iframe.contentDocument
-      .getElementById("initial")
-      .setAttribute("data-custom", "hello");
+    iframe.contentDocument.getElementById("initial").setAttribute("data-custom", "hello");
     await delay(300);
 
     const shadow = host.shadowRoot;

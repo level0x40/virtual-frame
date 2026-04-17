@@ -1,8 +1,6 @@
 const rspack = require("@rspack/core");
 const refreshPlugin = require("@rspack/plugin-react-refresh");
-const {
-  ModuleFederationPlugin,
-} = require("@module-federation/enhanced/rspack");
+const { ModuleFederationPlugin } = require("@module-federation/enhanced/rspack");
 
 const isDev = process.env.NODE_ENV === "development";
 const PORT = Number(process.env.PORT) || 3013;
@@ -35,8 +33,7 @@ module.exports = {
     headers: {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
-      "Access-Control-Allow-Headers":
-        "X-Requested-With, content-type, Authorization",
+      "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization",
     },
   },
 

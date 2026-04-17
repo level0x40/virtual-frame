@@ -64,9 +64,7 @@ export async function VirtualFrame({
   proxy,
   ...restProps
 }: VirtualFrameProps) {
-  const props = Object.fromEntries(
-    Object.entries(restProps).filter(([k]) => !k.startsWith("_"))
-  );
+  const props = Object.fromEntries(Object.entries(restProps).filter(([k]) => !k.startsWith("_")));
 
   let ssrHtml: string;
   let resolvedSrc: string;

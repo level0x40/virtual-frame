@@ -10,7 +10,10 @@ import type { StoreProxy } from "@virtual-frame/store";
  * The wrapper decides which path, so each inner component has a stable
  * hook call order (React requires hooks to be called unconditionally).
  */
-export declare function Counter({ label, store, }: {
-    label?: string;
-    store?: StoreProxy;
+export declare function Counter({
+  label,
+  store,
+}: {
+  label?: string;
+  store?: StoreProxy;
 }): import("react/jsx-runtime").JSX.Element;

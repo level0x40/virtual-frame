@@ -58,39 +58,31 @@ for (const mode of ["dev", "prod"] as const) {
     test("remote app is reachable directly", async ({ page }) => {
       const res = await page.goto(remoteUrl);
       expect(res?.status()).toBe(200);
-      await expect(
-        page.getByRole("heading", { name: "Remote Next.js App" }),
-      ).toBeVisible();
+      await expect(page.getByRole("heading", { name: "Remote Next.js App" })).toBeVisible();
     });
 
-    test("remote content is projected into the host (SSR resume)", async ({
-      page,
-    }) => {
+    test("remote content is projected into the host (SSR resume)", async ({ page }) => {
       const res = await page.goto(url);
       expect(res?.status()).toBe(200);
       // The remote's <h1>Remote Next.js App</h1> is rendered into both
       // VirtualFrame instances during SSR via declarative shadow DOM.
       // Playwright's role/text locators pierce open shadow roots.
-      await expect(
-        page.getByRole("heading", { name: "Remote Next.js App" }).first(),
-      ).toBeVisible({ timeout: 30_000 });
+      await expect(page.getByRole("heading", { name: "Remote Next.js App" }).first()).toBeVisible({
+        timeout: 30_000,
+      });
     });
 
-    test("host counter increment propagates to projected counter card", async ({
-      page,
-    }) => {
+    test("host counter increment propagates to projected counter card", async ({ page }) => {
       await page.goto(url);
       // Wait for the projection to be live before interacting.
-      await expect(
-        page.getByRole("heading", { name: "Remote Next.js App" }).first(),
-      ).toBeVisible({ timeout: 30_000 });
+      await expect(page.getByRole("heading", { name: "Remote Next.js App" }).first()).toBeVisible({
+        timeout: 30_000,
+      });
 
       // The host's "+ Increment" button lives in the "Shared Store" panel.
       // It's the FIRST + Increment on the page (the projected remote also
       // has its own copy inside #counter-card).
-      const incrementBtn = page
-        .getByRole("button", { name: /\+ Increment/ })
-        .first();
+      const incrementBtn = page.getByRole("button", { name: /\+ Increment/ }).first();
       const counter = page
         .getByRole("heading", { name: "Shared Store" })
         .locator("..")

@@ -35,13 +35,7 @@ function CounterWithRemoteStore({ label }: { label: string }) {
 }
 
 /** Pure presentational counter — store is always provided. */
-function CounterView({
-  label,
-  store,
-}: {
-  label: string;
-  store: StoreProxy;
-}) {
+function CounterView({ label, store }: { label: string; store: StoreProxy }) {
   const count = useStore<number>(store, ["count"]);
 
   return (
@@ -56,9 +50,7 @@ function CounterView({
       }}
     >
       <h2 style={{ margin: "0 0 16px" }}>{label}</h2>
-      <div style={{ fontSize: 48, fontWeight: "bold", marginBottom: 16 }}>
-        {count ?? 0}
-      </div>
+      <div style={{ fontSize: 48, fontWeight: "bold", marginBottom: 16 }}>{count ?? 0}</div>
       <div style={{ display: "flex", gap: 8, justifyContent: "center" }}>
         <button
           onClick={() => {

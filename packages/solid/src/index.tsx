@@ -1,15 +1,5 @@
-import {
-  onMount,
-  onCleanup,
-  createEffect,
-  createSignal,
-  mergeProps,
-  type JSX,
-} from "solid-js";
-import {
-  VirtualFrame as VirtualFrameCore,
-  type VirtualFrameOptions,
-} from "virtual-frame";
+import { onMount, onCleanup, createEffect, createSignal, mergeProps, type JSX } from "solid-js";
+import { VirtualFrame as VirtualFrameCore, type VirtualFrameOptions } from "virtual-frame";
 import { getStore as _getStore, type StoreProxy } from "@virtual-frame/store";
 
 // ── Shared frame handle ─────────────────────────────────────
@@ -70,19 +60,12 @@ export function createVirtualFrame(
         if (portCleanup) return;
         if (!iframe.contentWindow) return;
         const channel = new MessageChannel();
-        iframe.contentWindow.postMessage(
-          { type: "vf-store:connect" },
-          "*",
-          [channel.port2],
-        );
+        iframe.contentWindow.postMessage({ type: "vf-store:connect" }, "*", [channel.port2]);
         portCleanup = connectPort(store, channel.port1);
       };
 
       const onMessage = (e: MessageEvent) => {
-        if (
-          e.source === iframe.contentWindow &&
-          e.data?.type === "vf-store:ready"
-        ) {
+        if (e.source === iframe.contentWindow && e.data?.type === "vf-store:ready") {
           connect();
         }
       };
@@ -191,19 +174,14 @@ export function VirtualFrame(props: VirtualFrameProps) {
             if (portCleanup) return;
             if (!capturedIframe.contentWindow) return;
             const channel = new MessageChannel();
-            capturedIframe.contentWindow.postMessage(
-              { type: "vf-store:connect" },
-              "*",
-              [channel.port2],
-            );
+            capturedIframe.contentWindow.postMessage({ type: "vf-store:connect" }, "*", [
+              channel.port2,
+            ]);
             portCleanup = connectPort(store, channel.port1);
           };
 
           const onMessage = (e: MessageEvent) => {
-            if (
-              e.source === capturedIframe.contentWindow &&
-              e.data?.type === "vf-store:ready"
-            ) {
+            if (e.source === capturedIframe.contentWindow && e.data?.type === "vf-store:ready") {
               connect();
             }
           };
@@ -297,10 +275,7 @@ export function VirtualFrame(props: VirtualFrameProps) {
  *                  omitted the signal updates on any mutation.
  * @returns A Solid signal accessor with the current value at the path.
  */
-export function useStore<T = unknown>(
-  store: StoreProxy,
-  selector?: PropertyKey[],
-): () => T {
+export function useStore<T = unknown>(store: StoreProxy, selector?: PropertyKey[]): () => T {
   const handle = _getStore(store);
 
   function getSnapshot(): T {

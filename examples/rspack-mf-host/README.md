@@ -40,11 +40,11 @@ This example demonstrates using **Module Federation v2** (via Rspack) and **Virt
 
 ## Three rendering strategies, one shared store
 
-| Strategy | How it works | Isolation | Latency |
-|----------|-------------|-----------|---------|
-| **Host Counter** | Rendered natively by the host app | None (same code) | Zero |
-| **MF Counter** | Counter component loaded via Module Federation | Same JS context | Module load time only |
-| **VF Counter** | Remote app in iframe, projected via Virtual Frame | Full iframe isolation | MessagePort (~<1ms) |
+| Strategy         | How it works                                      | Isolation             | Latency               |
+| ---------------- | ------------------------------------------------- | --------------------- | --------------------- |
+| **Host Counter** | Rendered natively by the host app                 | None (same code)      | Zero                  |
+| **MF Counter**   | Counter component loaded via Module Federation    | Same JS context       | Module load time only |
+| **VF Counter**   | Remote app in iframe, projected via Virtual Frame | Full iframe isolation | MessagePort (~<1ms)   |
 
 All three read and write the same `@virtual-frame/store` instance. Click any button — all three update.
 

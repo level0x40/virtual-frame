@@ -49,9 +49,7 @@ function readScript(workspaceDir: string, scriptName: string): string {
   };
   const cmd = pkg.scripts?.[scriptName];
   if (!cmd) {
-    throw new Error(
-      `Workspace ${workspaceDir} has no "${scriptName}" script in package.json`,
-    );
+    throw new Error(`Workspace ${workspaceDir} has no "${scriptName}" script in package.json`);
   }
   return cmd;
 }
@@ -125,9 +123,7 @@ export interface ServerHandle {
  * stdout/stderr are buffered and dumped on boot failure. Set
  * `VF_E2E_VERBOSE=1` to also stream them live, tagged by workspace name.
  */
-export async function spawnExample(
-  opts: SpawnExampleOptions,
-): Promise<ServerHandle> {
+export async function spawnExample(opts: SpawnExampleOptions): Promise<ServerHandle> {
   const verbose = !!process.env.VF_E2E_VERBOSE;
   const bootTimeoutMs = opts.bootTimeoutMs ?? 180_000;
 
@@ -157,9 +153,7 @@ export async function spawnExample(
         // set REMOTE_URL. Without this, passing REMOTE_URL="" creates
         // a unique cache key per invocation, forcing redundant rebuilds
         // of shared deps when running in parallel with other specs.
-        ...(remoteUrl
-          ? { REMOTE_URL: remoteUrl, VITE_REMOTE_URL: remoteUrl }
-          : {}),
+        ...(remoteUrl ? { REMOTE_URL: remoteUrl, VITE_REMOTE_URL: remoteUrl } : {}),
         ...opts.env,
       },
       verbose,
@@ -331,7 +325,6 @@ export async function spawnExample(
       // see a blank page while vite/rspack are still chewing on modules
       // behind the scenes, even though the port is already bound.
       await warmup(urls[i]!, filter, bootTimeoutMs);
-
     }
   } catch (err) {
     // Kill whatever we did start and surface every child's captured output.
@@ -344,9 +337,7 @@ export async function spawnExample(
       const exited = childExited.get(child);
       parts.push(`--- ${tag} ---`);
       if (exited) {
-        parts.push(
-          `child exited early (code=${exited.code}, signal=${exited.signal})`,
-        );
+        parts.push(`child exited early (code=${exited.code}, signal=${exited.signal})`);
       }
       parts.push((childLogs.get(child) ?? []).join(""));
     }
@@ -375,23 +366,19 @@ function runBuild(
 ): Promise<void> {
   return new Promise((resolve, reject) => {
     const args = ["run", ...filters.flatMap((f) => ["--filter", f]), "build"];
-    const child = spawn(
-      "vp",
-      args,
-      {
-        cwd: REPO_ROOT,
-        // When verbose, pipe stdout/stderr so we can buffer+stream them.
-        // Otherwise fully ignore: no buffering, no write to parent fds, so
-        // nothing the child prints can leak into the Playwright reporter.
-        stdio: verbose ? ["ignore", "pipe", "pipe"] : ["ignore", "ignore", "ignore"],
-        env: {
-          ...process.env,
-          FORCE_COLOR: "0",
-          ...(verbose ? {} : { CI: "1" }),
-          ...env,
-        },
+    const child = spawn("vp", args, {
+      cwd: REPO_ROOT,
+      // When verbose, pipe stdout/stderr so we can buffer+stream them.
+      // Otherwise fully ignore: no buffering, no write to parent fds, so
+      // nothing the child prints can leak into the Playwright reporter.
+      stdio: verbose ? ["ignore", "pipe", "pipe"] : ["ignore", "ignore", "ignore"],
+      env: {
+        ...process.env,
+        FORCE_COLOR: "0",
+        ...(verbose ? {} : { CI: "1" }),
+        ...env,
       },
-    );
+    });
 
     const logs: string[] = [];
     const capture = (stream: "out" | "err") => (chunk: Buffer) => {
@@ -445,11 +432,7 @@ function runBuild(
  * to consume them, and surfaces "remote crashed on boot" as an early,
  * legible failure.
  */
-async function warmup(
-  url: string,
-  tag: string,
-  timeoutMs: number,
-): Promise<void> {
+async function warmup(url: string, tag: string, timeoutMs: number): Promise<void> {
   const deadline = Date.now() + timeoutMs;
   let lastErr: unknown;
   while (Date.now() < deadline) {

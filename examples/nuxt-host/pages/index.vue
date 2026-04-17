@@ -7,15 +7,11 @@ const { data } = await useFetch("/api/frame");
     <h1>Virtual Frame — Nuxt SSR Example</h1>
     <p class="subtitle">
       Two separate Nuxt apps: <strong>host</strong> (port 3008) fetches
-      <strong>remote</strong> (port 3009) during SSR via a server API route,
-      then VirtualFrame mirrors on the client.
+      <strong>remote</strong> (port 3009) during SSR via a server API route, then VirtualFrame
+      mirrors on the client.
     </p>
 
-    <HostFrames
-      v-if="data"
-      :frame-props="data.fullFrame"
-      :counter-props="data.counterFrame"
-    />
+    <HostFrames v-if="data" :frame-props="data.fullFrame" :counter-props="data.counterFrame" />
   </div>
 </template>
 
@@ -27,7 +23,13 @@ const { data } = await useFetch("/api/frame");
 }
 
 body {
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial,
+  font-family:
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    Helvetica,
+    Arial,
     sans-serif;
   background: #f0f2f5;
   padding: 32px;

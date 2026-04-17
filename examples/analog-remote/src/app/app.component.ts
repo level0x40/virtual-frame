@@ -5,13 +5,15 @@ import { RouterOutlet } from "@angular/router";
   selector: "app-root",
   standalone: true,
   imports: [RouterOutlet],
-  template: `<router-outlet />`,
+  template: `
+    <router-outlet />
+  `,
   styles: [
     `
-    :host {
-      display: block;
-    }
-  `,
+      :host {
+        display: block;
+      }
+    `,
   ],
 })
 export class AppComponent {}

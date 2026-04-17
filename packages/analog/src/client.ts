@@ -18,10 +18,7 @@ import {
   inject,
 } from "@angular/core";
 import { isPlatformBrowser } from "@angular/common";
-import {
-  VirtualFrame as VirtualFrameCore,
-  type VirtualFrameOptions,
-} from "virtual-frame";
+import { VirtualFrame as VirtualFrameCore, type VirtualFrameOptions } from "virtual-frame";
 import type { StoreProxy } from "@virtual-frame/store";
 
 // ── Shared iframe registry (module-scoped) ──────────────────────
@@ -117,9 +114,7 @@ export class VirtualFrameComponent implements OnInit, OnDestroy, OnChanges {
     // On client-side navigation, the browser's HTML parser doesn't process
     // <template shadowrootmode> in innerHTML.  Use setHTMLUnsafe() to parse it.
     if (this.vfHtml && !host.shadowRoot) {
-      const template = host.querySelector(
-        "template[shadowrootmode]",
-      ) as HTMLTemplateElement | null;
+      const template = host.querySelector("template[shadowrootmode]") as HTMLTemplateElement | null;
       if (template && typeof (host as any).setHTMLUnsafe === "function") {
         (host as any).setHTMLUnsafe(this.vfHtml);
       }
@@ -161,19 +156,12 @@ export class VirtualFrameComponent implements OnInit, OnDestroy, OnChanges {
           if (portCleanup) return;
           if (!s.iframe.contentWindow) return;
           const channel = new MessageChannel();
-          s.iframe.contentWindow.postMessage(
-            { type: "vf-store:connect" },
-            "*",
-            [channel.port2],
-          );
+          s.iframe.contentWindow.postMessage({ type: "vf-store:connect" }, "*", [channel.port2]);
           portCleanup = connectPort(store, channel.port1);
         };
 
         const onMessage = (e: MessageEvent) => {
-          if (
-            e.source === s.iframe.contentWindow &&
-            e.data?.type === "vf-store:ready"
-          ) {
+          if (e.source === s.iframe.contentWindow && e.data?.type === "vf-store:ready") {
             connect();
           }
         };

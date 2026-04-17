@@ -2,9 +2,7 @@ import { describe, it, expect, vi } from "vitest";
 import { OperationLog } from "../src/log.js";
 import type { Operation } from "../src/types.js";
 
-function makeOp(
-  partial: Partial<Operation> & Pick<Operation, "type" | "path">,
-): Operation {
+function makeOp(partial: Partial<Operation> & Pick<Operation, "type" | "path">): Operation {
   return {
     ts: 0,
     source: "a",
@@ -34,10 +32,7 @@ describe("OperationLog — append", () => {
 
   it("returns true for new operations", () => {
     const log = new OperationLog();
-    const result = log.append(
-      makeOp({ type: "set", path: ["x"], value: 1 }),
-      true,
-    );
+    const result = log.append(makeOp({ type: "set", path: ["x"], value: 1 }), true);
     expect(result).toBe(true);
   });
 });
@@ -90,16 +85,10 @@ describe("OperationLog — duplicate detection", () => {
   it("accepts operations with different seqs from same source", () => {
     const log = new OperationLog();
     expect(
-      log.append(
-        makeOp({ source: "a", seq: 0, type: "set", path: ["x"], value: 1 }),
-        true,
-      ),
+      log.append(makeOp({ source: "a", seq: 0, type: "set", path: ["x"], value: 1 }), true),
     ).toBe(true);
     expect(
-      log.append(
-        makeOp({ source: "a", seq: 1, type: "set", path: ["x"], value: 2 }),
-        true,
-      ),
+      log.append(makeOp({ source: "a", seq: 1, type: "set", path: ["x"], value: 2 }), true),
     ).toBe(true);
     expect(log.ops).toHaveLength(2);
   });
@@ -122,10 +111,7 @@ describe("OperationLog — appendBatch", () => {
 
   it("skips duplicates in batch", () => {
     const log = new OperationLog();
-    log.append(
-      makeOp({ source: "a", seq: 0, type: "set", path: ["x"], value: 1 }),
-      true,
-    );
+    log.append(makeOp({ source: "a", seq: 0, type: "set", path: ["x"], value: 1 }), true);
     const ops = [
       makeOp({ source: "a", seq: 0, type: "set", path: ["x"], value: 1 }), // dup
       makeOp({ source: "b", seq: 0, type: "set", path: ["y"], value: 2 }), // new
@@ -137,13 +123,8 @@ describe("OperationLog — appendBatch", () => {
 
   it("returns 0 when all ops are duplicates", () => {
     const log = new OperationLog();
-    log.append(
-      makeOp({ source: "a", seq: 0, type: "set", path: ["x"], value: 1 }),
-      true,
-    );
-    const ops = [
-      makeOp({ source: "a", seq: 0, type: "set", path: ["x"], value: 99 }),
-    ];
+    log.append(makeOp({ source: "a", seq: 0, type: "set", path: ["x"], value: 1 }), true);
+    const ops = [makeOp({ source: "a", seq: 0, type: "set", path: ["x"], value: 99 })];
     expect(log.appendBatch(ops)).toBe(0);
   });
 });
@@ -153,10 +134,7 @@ describe("OperationLog — appendBatch", () => {
 describe("OperationLog — materialization", () => {
   it("materializes state from operations", () => {
     const log = new OperationLog();
-    log.append(
-      makeOp({ type: "set", path: ["name"], value: "Viktor", seq: 0 }),
-      true,
-    );
+    log.append(makeOp({ type: "set", path: ["name"], value: "Viktor", seq: 0 }), true);
     log.append(makeOp({ type: "set", path: ["age"], value: 30, seq: 1 }), true);
     const state = log.state;
     expect(state).toEqual({ name: "Viktor", age: 30 });
@@ -196,10 +174,7 @@ describe("OperationLog — materialization", () => {
 describe("OperationLog — dirty tracking", () => {
   it("marks paths dirty on append", () => {
     const log = new OperationLog();
-    log.append(
-      makeOp({ type: "set", path: ["user", "name"], value: "V", seq: 0 }),
-      true,
-    );
+    log.append(makeOp({ type: "set", path: ["user", "name"], value: "V", seq: 0 }), true);
     expect(log.isDirty(["user", "name"])).toBe(true);
     expect(log.isDirty(["user"])).toBe(true);
     expect(log.isDirty([])).toBe(true);
@@ -274,19 +249,13 @@ describe("OperationLog — destroy", () => {
 describe("OperationLog — isDirty edge cases", () => {
   it("isDirty returns false for unaffected sibling path", () => {
     const log = new OperationLog();
-    log.append(
-      makeOp({ type: "set", path: ["user", "name"], value: "V", seq: 0 }),
-      true,
-    );
+    log.append(makeOp({ type: "set", path: ["user", "name"], value: "V", seq: 0 }), true);
     // user.name and user and root are dirty
     // but "theme" is not
     // After materialization dirty is cleared. Before, cursor < ops.length returns true for all.
     // So we must materialize first, then add a new op
     const _state = log.state; // materialize
-    log.append(
-      makeOp({ type: "set", path: ["user", "age"], value: 30, seq: 1 }),
-      true,
-    );
+    log.append(makeOp({ type: "set", path: ["user", "age"], value: 30, seq: 1 }), true);
     // Now only user.age, user, and root are dirty
     // "theme" should not be dirty
     // But cursor < ops.length so isDirty returns true for everything
@@ -316,17 +285,11 @@ describe("OperationLog — isDirty edge cases", () => {
 
   it("isDirty checks prefixes after materialization", () => {
     const log = new OperationLog();
-    log.append(
-      makeOp({ type: "set", path: ["a", "b", "c"], value: 1, seq: 0 }),
-      true,
-    );
+    log.append(makeOp({ type: "set", path: ["a", "b", "c"], value: 1, seq: 0 }), true);
     const _s = log.state; // materialize & clear dirty
 
     // Append another op
-    log.append(
-      makeOp({ type: "set", path: ["a", "b", "c"], value: 2, seq: 1 }),
-      true,
-    );
+    log.append(makeOp({ type: "set", path: ["a", "b", "c"], value: 2, seq: 1 }), true);
     // Now cursor = 1 < ops.length = 2, so isDirty returns true
     expect(log.isDirty(["x"])).toBe(true);
 

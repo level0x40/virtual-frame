@@ -18,13 +18,7 @@ export default defineConfig([
     format: ["esm"],
     dts: true,
     deps: {
-      neverBundle: [
-        "react",
-        "react/jsx-runtime",
-        "next",
-        "virtual-frame",
-        "virtual-frame/ssr",
-      ],
+      neverBundle: ["react", "react/jsx-runtime", "next", "virtual-frame", "virtual-frame/ssr"],
     },
   },
   // Client entry — the activator component ("use client").

@@ -14,9 +14,9 @@
     "@virtual-frame/nuxt": "workspace:*",
     "@virtual-frame/store": "workspace:*",
     "@virtual-frame/vue": "workspace:*",
+    "nuxt": "^3.17.0",
     "virtual-frame": "workspace:*",
-    "vue": "^3.5.0",
-    "nuxt": "^3.17.0"
+    "vue": "^3.5.0"
   },
   "devDependencies": {
     "typescript": "catalog:",

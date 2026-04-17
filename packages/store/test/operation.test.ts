@@ -1,16 +1,10 @@
 import { describe, it, expect } from "vitest";
-import {
-  applyOperation,
-  compareOperations,
-  deepClone,
-} from "../src/operation.js";
+import { applyOperation, compareOperations, deepClone } from "../src/operation.js";
 import type { Operation } from "../src/types.js";
 
 // ── Helpers ──────────────────────────────────────────────────────────
 
-function makeOp(
-  partial: Partial<Operation> & Pick<Operation, "type" | "path">,
-): Operation {
+function makeOp(partial: Partial<Operation> & Pick<Operation, "type" | "path">): Operation {
   return {
     ts: 0,
     source: "a",
@@ -54,28 +48,19 @@ describe("compareOperations", () => {
 describe("applyOperation — set", () => {
   it("sets a root-level property", () => {
     const state: Record<string, unknown> = {};
-    applyOperation(
-      state,
-      makeOp({ type: "set", path: ["name"], value: "Viktor" }),
-    );
+    applyOperation(state, makeOp({ type: "set", path: ["name"], value: "Viktor" }));
     expect(state.name).toBe("Viktor");
   });
 
   it("sets a nested property", () => {
     const state: Record<string, unknown> = { user: { name: "Old" } };
-    applyOperation(
-      state,
-      makeOp({ type: "set", path: ["user", "name"], value: "New" }),
-    );
+    applyOperation(state, makeOp({ type: "set", path: ["user", "name"], value: "New" }));
     expect((state.user as Record<string, unknown>).name).toBe("New");
   });
 
   it("sets an array element by index", () => {
     const state: Record<string, unknown> = { items: [1, 2, 3] };
-    applyOperation(
-      state,
-      makeOp({ type: "set", path: ["items", 1], value: 99 }),
-    );
+    applyOperation(state, makeOp({ type: "set", path: ["items", 1], value: 99 }));
     expect((state.items as number[])[1]).toBe(99);
   });
 
@@ -83,31 +68,24 @@ describe("applyOperation — set", () => {
     const state: Record<string, unknown> = {
       a: { b: { c: { d: "old" } } },
     };
-    applyOperation(
-      state,
-      makeOp({ type: "set", path: ["a", "b", "c", "d"], value: "new" }),
-    );
+    applyOperation(state, makeOp({ type: "set", path: ["a", "b", "c", "d"], value: "new" }));
     expect(
-      ((state.a as Record<string, unknown>).b as Record<string, unknown>)
-        .c as Record<string, unknown>,
+      ((state.a as Record<string, unknown>).b as Record<string, unknown>).c as Record<
+        string,
+        unknown
+      >,
     ).toEqual({ d: "new" });
   });
 
   it("overwrites an entire subtree", () => {
     const state: Record<string, unknown> = { user: { name: "A", age: 25 } };
-    applyOperation(
-      state,
-      makeOp({ type: "set", path: ["user"], value: { name: "B" } }),
-    );
+    applyOperation(state, makeOp({ type: "set", path: ["user"], value: { name: "B" } }));
     expect(state.user).toEqual({ name: "B" });
   });
 
   it("silently ignores set on missing parent", () => {
     const state: Record<string, unknown> = {};
-    applyOperation(
-      state,
-      makeOp({ type: "set", path: ["missing", "child"], value: 1 }),
-    );
+    applyOperation(state, makeOp({ type: "set", path: ["missing", "child"], value: 1 }));
     expect(state).toEqual({});
   });
 
@@ -119,29 +97,20 @@ describe("applyOperation — set", () => {
 
   it("sets value to undefined", () => {
     const state: Record<string, unknown> = { x: 1 };
-    applyOperation(
-      state,
-      makeOp({ type: "set", path: ["x"], value: undefined }),
-    );
+    applyOperation(state, makeOp({ type: "set", path: ["x"], value: undefined }));
     expect(state.x).toBeUndefined();
   });
 
   it("sets value to an array", () => {
     const state: Record<string, unknown> = {};
-    applyOperation(
-      state,
-      makeOp({ type: "set", path: ["items"], value: [1, 2, 3] }),
-    );
+    applyOperation(state, makeOp({ type: "set", path: ["items"], value: [1, 2, 3] }));
     expect(state.items).toEqual([1, 2, 3]);
   });
 
   it("sets value in a Map container", () => {
     const map = new Map<string, unknown>();
     const state: Record<string, unknown> = { data: map };
-    applyOperation(
-      state,
-      makeOp({ type: "set", path: ["data", "key"], value: "val" }),
-    );
+    applyOperation(state, makeOp({ type: "set", path: ["data", "key"], value: "val" }));
     expect(map.get("key")).toBe("val");
   });
 });
@@ -163,10 +132,7 @@ describe("applyOperation — delete", () => {
 
   it("silently ignores delete on missing parent", () => {
     const state: Record<string, unknown> = {};
-    applyOperation(
-      state,
-      makeOp({ type: "delete", path: ["missing", "child"] }),
-    );
+    applyOperation(state, makeOp({ type: "delete", path: ["missing", "child"] }));
     expect(state).toEqual({});
   });
 
@@ -296,19 +262,13 @@ describe("applyOperation — splice", () => {
 describe("applyOperation — Map", () => {
   it("map-set adds a key-value pair", () => {
     const state: Record<string, unknown> = { m: new Map() };
-    applyOperation(
-      state,
-      makeOp({ type: "map-set", path: ["m"], key: "hello", value: "world" }),
-    );
+    applyOperation(state, makeOp({ type: "map-set", path: ["m"], key: "hello", value: "world" }));
     expect((state.m as Map<string, string>).get("hello")).toBe("world");
   });
 
   it("map-set overwrites existing key", () => {
     const state: Record<string, unknown> = { m: new Map([["k", "old"]]) };
-    applyOperation(
-      state,
-      makeOp({ type: "map-set", path: ["m"], key: "k", value: "new" }),
-    );
+    applyOperation(state, makeOp({ type: "map-set", path: ["m"], key: "k", value: "new" }));
     expect((state.m as Map<string, string>).get("k")).toBe("new");
   });
 
@@ -319,10 +279,7 @@ describe("applyOperation — Map", () => {
         ["b", 2],
       ]),
     };
-    applyOperation(
-      state,
-      makeOp({ type: "map-delete", path: ["m"], key: "a" }),
-    );
+    applyOperation(state, makeOp({ type: "map-delete", path: ["m"], key: "a" }));
     expect((state.m as Map<string, unknown>).has("a")).toBe(false);
     expect((state.m as Map<string, unknown>).get("b")).toBe(2);
   });
@@ -340,10 +297,7 @@ describe("applyOperation — Map", () => {
 
   it("map operations silently ignore non-Map targets", () => {
     const state: Record<string, unknown> = { m: {} };
-    applyOperation(
-      state,
-      makeOp({ type: "map-set", path: ["m"], key: "k", value: "v" }),
-    );
+    applyOperation(state, makeOp({ type: "map-set", path: ["m"], key: "k", value: "v" }));
     expect(state.m).toEqual({});
   });
 });
@@ -365,10 +319,7 @@ describe("applyOperation — Set", () => {
 
   it("set-delete removes a value", () => {
     const state: Record<string, unknown> = { s: new Set([1, 2, 3]) };
-    applyOperation(
-      state,
-      makeOp({ type: "set-delete", path: ["s"], value: 2 }),
-    );
+    applyOperation(state, makeOp({ type: "set-delete", path: ["s"], value: 2 }));
     expect((state.s as Set<number>).has(2)).toBe(false);
     expect((state.s as Set<number>).size).toBe(2);
   });
@@ -504,10 +455,7 @@ describe("applyOperation — Map parent navigation", () => {
     const inner = { a: 1, b: 2 };
     const map = new Map<string, unknown>([["child", inner]]);
     const state: Record<string, unknown> = { data: map };
-    applyOperation(
-      state,
-      makeOp({ type: "delete", path: ["data", "child", "a"] }),
-    );
+    applyOperation(state, makeOp({ type: "delete", path: ["data", "child", "a"] }));
     expect("a" in inner).toBe(false);
     expect(inner.b).toBe(2);
   });
@@ -566,10 +514,7 @@ describe("applyOperation — Map parent navigation", () => {
 describe("applyOperation — edge cases", () => {
   it("set on primitive parent is no-op", () => {
     const state: Record<string, unknown> = { x: 42 };
-    applyOperation(
-      state,
-      makeOp({ type: "set", path: ["x", "y"], value: "nope" }),
-    );
+    applyOperation(state, makeOp({ type: "set", path: ["x", "y"], value: "nope" }));
     expect(state.x).toBe(42);
   });
 
@@ -581,10 +526,7 @@ describe("applyOperation — edge cases", () => {
 
   it("map-delete on non-Map is no-op", () => {
     const state: Record<string, unknown> = { m: { a: 1 } };
-    applyOperation(
-      state,
-      makeOp({ type: "map-delete", path: ["m"], key: "a" }),
-    );
+    applyOperation(state, makeOp({ type: "map-delete", path: ["m"], key: "a" }));
     expect((state.m as Record<string, unknown>).a).toBe(1);
   });
 
@@ -596,10 +538,7 @@ describe("applyOperation — edge cases", () => {
 
   it("set-delete on non-Set is no-op", () => {
     const state: Record<string, unknown> = { s: [1, 2] };
-    applyOperation(
-      state,
-      makeOp({ type: "set-delete", path: ["s"], value: 1 }),
-    );
+    applyOperation(state, makeOp({ type: "set-delete", path: ["s"], value: 1 }));
     expect(state.s).toEqual([1, 2]);
   });
 

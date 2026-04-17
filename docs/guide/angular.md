@@ -45,14 +45,14 @@ On `ngOnDestroy`, the iframe is torn down, mutation observers and capture stream
 
 ## Inputs
 
-| Input          | Type                               | Description                                                                                             |
-| -------------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------- |
-| `src`          | `string`                           | URL to load and project. Mutually exclusive with `frame`.                                               |
-| `frame`        | `VirtualFrameRef`                  | Shared source from [`createVirtualFrame()`](#sharing-one-source-across-directives). Mutually exclusive with `src`. |
-| `isolate`      | `"open" \| "closed"`               | Shadow DOM mode for CSS isolation. Omit to render into the host `<div>` directly. See [Shadow DOM](/guide/shadow-dom). |
-| `selector`     | `string`                           | CSS selector — only project a matching subtree. See [Selector Projection](/guide/selector).             |
+| Input          | Type                               | Description                                                                                                                                                                                           |
+| -------------- | ---------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `src`          | `string`                           | URL to load and project. Mutually exclusive with `frame`.                                                                                                                                             |
+| `frame`        | `VirtualFrameRef`                  | Shared source from [`createVirtualFrame()`](#sharing-one-source-across-directives). Mutually exclusive with `src`.                                                                                    |
+| `isolate`      | `"open" \| "closed"`               | Shadow DOM mode for CSS isolation. Omit to render into the host `<div>` directly. See [Shadow DOM](/guide/shadow-dom).                                                                                |
+| `selector`     | `string`                           | CSS selector — only project a matching subtree. See [Selector Projection](/guide/selector).                                                                                                           |
 | `streamingFps` | `number \| Record<string, number>` | FPS for `<canvas>` / `<video>` capture. Omit for smooth per-frame rAF same-origin (cross-origin falls back to ~5 FPS — set an explicit number for higher). See [Streaming FPS](/guide/streaming-fps). |
-| `store`        | `StoreProxy`                       | Shared store from `@virtual-frame/store`. When provided, state syncs between host and remote. See [Shared Store](#shared-store). |
+| `store`        | `StoreProxy`                       | Shared store from `@virtual-frame/store`. When provided, state syncs between host and remote. See [Shared Store](#shared-store).                                                                      |
 
 All other attributes and bindings on the host `<div>` are preserved — the directive never rewrites the element's own markup. Size the `<div>` with CSS; the projection fills it.
 
@@ -130,11 +130,11 @@ One hidden iframe loads, both directives project different subtrees from it, and
 
 ### `createVirtualFrame(src, options?)`
 
-| Parameter       | Type              | Description                          |
-| --------------- | ----------------- | ------------------------------------ |
-| `src`           | `string`          | URL to load                          |
-| `options.store` | `StoreProxy`      | Optional store for shared state      |
-| **Returns**     | `VirtualFrameRef` | Opaque handle — pass via `[frame]`   |
+| Parameter       | Type              | Description                        |
+| --------------- | ----------------- | ---------------------------------- |
+| `src`           | `string`          | URL to load                        |
+| `options.store` | `StoreProxy`      | Optional store for shared state    |
+| **Returns**     | `VirtualFrameRef` | Opaque handle — pass via `[frame]` |
 
 ### `destroyVirtualFrame(frame)`
 
@@ -169,12 +169,7 @@ import { createStore } from "@virtual-frame/store";
     <p>Host count: {{ count() ?? 0 }}</p>
     <button (click)="inc()">Increment</button>
 
-    <div
-      virtualFrame
-      src="/remote/"
-      isolate="open"
-      [store]="store"
-    ></div>
+    <div virtualFrame src="/remote/" isolate="open" [store]="store"></div>
   `,
 })
 export class AppComponent {
@@ -206,9 +201,7 @@ import { injectStore, injectStoreValue } from "@virtual-frame/angular";
   standalone: true,
   template: `
     <div [attr.data-theme]="theme()">
-      <button (click)="increment()">
-        Count: {{ count() }}
-      </button>
+      <button (click)="increment()">Count: {{ count() }}</button>
     </div>
   `,
 })
@@ -246,11 +239,11 @@ name = injectStoreValue<string>(store, ["user", "name"]);
 all = injectStoreValue(store);
 ```
 
-| Parameter   | Type            | Description                                 |
-| ----------- | --------------- | ------------------------------------------- |
+| Parameter   | Type            | Description                                         |
+| ----------- | --------------- | --------------------------------------------------- |
 | `store`     | `StoreProxy`    | Store proxy from `createStore()` or `injectStore()` |
-| `selector`  | `PropertyKey[]` | Path to subscribe to (omit for root)        |
-| **Returns** | `Signal<T>`     | Read-only Angular signal with current value |
+| `selector`  | `PropertyKey[]` | Path to subscribe to (omit for root)                |
+| **Returns** | `Signal<T>`     | Read-only Angular signal with current value         |
 
 The subscription is automatically cleaned up via `DestroyRef`.
 

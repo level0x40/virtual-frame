@@ -45,63 +45,41 @@ describe("VirtualFrame", () => {
   });
 
   it("defaults streamingFps to undefined (smooth)", () => {
-    const vf = new VirtualFrame(
-      document.createElement("iframe"),
-      document.createElement("div"),
-    );
+    const vf = new VirtualFrame(document.createElement("iframe"), document.createElement("div"));
     expect(vf.streamingFps).toBeUndefined();
   });
 
   it("accepts streamingFps as selector map", () => {
     const fpsMap = { canvas: 30, video: 10 };
-    const vf = new VirtualFrame(
-      document.createElement("iframe"),
-      document.createElement("div"),
-      {
-        streamingFps: fpsMap,
-      },
-    );
+    const vf = new VirtualFrame(document.createElement("iframe"), document.createElement("div"), {
+      streamingFps: fpsMap,
+    });
     expect(vf.streamingFps).toEqual(fpsMap);
   });
 
   it("has destroy method", () => {
-    const vf = new VirtualFrame(
-      document.createElement("iframe"),
-      document.createElement("div"),
-    );
+    const vf = new VirtualFrame(document.createElement("iframe"), document.createElement("div"));
     expect(typeof vf.destroy).toBe("function");
   });
 
   it("has refresh method", () => {
-    const vf = new VirtualFrame(
-      document.createElement("iframe"),
-      document.createElement("div"),
-    );
+    const vf = new VirtualFrame(document.createElement("iframe"), document.createElement("div"));
     expect(typeof vf.refresh).toBe("function");
   });
 
   it("selector defaults to null", () => {
-    const vf = new VirtualFrame(
-      document.createElement("iframe"),
-      document.createElement("div"),
-    );
+    const vf = new VirtualFrame(document.createElement("iframe"), document.createElement("div"));
     expect(vf.selector).toBeNull();
   });
 
   it("initialises cross-origin state", () => {
-    const vf = new VirtualFrame(
-      document.createElement("iframe"),
-      document.createElement("div"),
-    );
+    const vf = new VirtualFrame(document.createElement("iframe"), document.createElement("div"));
     expect(vf._crossOrigin).toBe(false);
     expect(vf._remoteIdToNode).toBeInstanceOf(Map);
   });
 
   it("destroy does not throw when called before init", () => {
-    const vf = new VirtualFrame(
-      document.createElement("iframe"),
-      document.createElement("div"),
-    );
+    const vf = new VirtualFrame(document.createElement("iframe"), document.createElement("div"));
     expect(() => vf.destroy()).not.toThrow();
   });
 });
@@ -116,9 +94,7 @@ describe("_rewriteBodySelectors", () => {
 
   it("rewrites body with class selector", () => {
     const css = "body.dark { color: #fff; }";
-    expect(_rewriteBodySelectors(css)).toBe(
-      "[data-vf-body].dark { color: #fff; }",
-    );
+    expect(_rewriteBodySelectors(css)).toBe("[data-vf-body].dark { color: #fff; }");
   });
 
   it("rewrites html to :host", () => {

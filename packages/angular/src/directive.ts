@@ -1,12 +1,4 @@
-import {
-  Directive,
-  ElementRef,
-  Input,
-  OnInit,
-  OnDestroy,
-  OnChanges,
-  inject,
-} from "@angular/core";
+import { Directive, ElementRef, Input, OnInit, OnDestroy, OnChanges, inject } from "@angular/core";
 import { VirtualFrame } from "virtual-frame";
 import type { StoreProxy } from "@virtual-frame/store";
 
@@ -75,19 +67,12 @@ export function createVirtualFrame(
         if (portCleanup) return;
         if (!iframe.contentWindow) return;
         const channel = new MessageChannel();
-        iframe.contentWindow.postMessage(
-          { type: "vf-store:connect" },
-          "*",
-          [channel.port2],
-        );
+        iframe.contentWindow.postMessage({ type: "vf-store:connect" }, "*", [channel.port2]);
         portCleanup = connectPort(store, channel.port1);
       };
 
       const onMessage = (e: MessageEvent) => {
-        if (
-          e.source === iframe.contentWindow &&
-          e.data?.type === "vf-store:ready"
-        ) {
+        if (e.source === iframe.contentWindow && e.data?.type === "vf-store:ready") {
           connect();
         }
       };
@@ -189,19 +174,14 @@ export class VirtualFrameDirective implements OnInit, OnDestroy, OnChanges {
             if (portCleanup) return;
             if (!capturedIframe.contentWindow) return;
             const channel = new MessageChannel();
-            capturedIframe.contentWindow.postMessage(
-              { type: "vf-store:connect" },
-              "*",
-              [channel.port2],
-            );
+            capturedIframe.contentWindow.postMessage({ type: "vf-store:connect" }, "*", [
+              channel.port2,
+            ]);
             portCleanup = connectPort(store, channel.port1);
           };
 
           const onMessage = (e: MessageEvent) => {
-            if (
-              e.source === capturedIframe.contentWindow &&
-              e.data?.type === "vf-store:ready"
-            ) {
+            if (e.source === capturedIframe.contentWindow && e.data?.type === "vf-store:ready") {
               connect();
             }
           };

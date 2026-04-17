@@ -54,9 +54,7 @@ for (const mode of ["dev", "prod"] as const) {
       const res = await page.goto(remoteUrl);
       expect(res?.status()).toBe(200);
       await expect(page).toHaveTitle("Remote Nuxt App");
-      await expect(
-        page.getByRole("heading", { name: "Remote Nuxt App" }),
-      ).toBeVisible();
+      await expect(page.getByRole("heading", { name: "Remote Nuxt App" })).toBeVisible();
     });
 
     test("remote content is projected via SSR resume", async ({ page }) => {
@@ -64,9 +62,9 @@ for (const mode of ["dev", "prod"] as const) {
       // The Nitro `/api/frame` route fetched the remote during SSR; the
       // declarative shadow DOM in the host response contains the remote's
       // <h1>Remote Nuxt App</h1>.
-      await expect(
-        page.getByRole("heading", { name: "Remote Nuxt App" }).first(),
-      ).toBeVisible({ timeout: 30_000 });
+      await expect(page.getByRole("heading", { name: "Remote Nuxt App" }).first()).toBeVisible({
+        timeout: 30_000,
+      });
     });
 
     test("counter card is projected (selector frame)", async ({ page }) => {

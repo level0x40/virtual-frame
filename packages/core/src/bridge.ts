@@ -53,8 +53,7 @@ export function createBridge(config: BridgeConfig = {}) {
   // Unique channel id — the host will echo this back so we only listen
   // to our own parent.
   // ------------------------------------------------------------------
-  const CHANNEL =
-    config.channel || "__vf_" + Math.random().toString(36).slice(2, 10);
+  const CHANNEL = config.channel || "__vf_" + Math.random().toString(36).slice(2, 10);
 
   // ------------------------------------------------------------------
   // Node ID book-keeping
@@ -370,35 +369,24 @@ export function createBridge(config: BridgeConfig = {}) {
           // Check for CSS changes
           for (const n of m.addedNodes) {
             if (n.nodeType === 1) {
-              if (
-                (n as Element).tagName === "STYLE" ||
-                (n as Element).tagName === "LINK"
-              ) {
+              if ((n as Element).tagName === "STYLE" || (n as Element).tagName === "LINK") {
                 cssChanged = true;
               }
               // Track newly added canvas/video elements — restart streaming
-              if (
-                (n as Element).tagName === "CANVAS" ||
-                (n as Element).tagName === "VIDEO"
-              ) {
+              if ((n as Element).tagName === "CANVAS" || (n as Element).tagName === "VIDEO") {
                 if (getId(n) == null) assignId(n);
                 mediaChanged = true;
               }
               // Also check children
-              (n as Element)
-                .querySelectorAll("canvas, video")
-                .forEach((el: Element) => {
-                  if (getId(el) == null) assignId(el);
-                  mediaChanged = true;
-                });
+              (n as Element).querySelectorAll("canvas, video").forEach((el: Element) => {
+                if (getId(el) == null) assignId(el);
+                mediaChanged = true;
+              });
             }
           }
           for (const n of m.removedNodes) {
             if (n.nodeType === 1) {
-              if (
-                (n as Element).tagName === "STYLE" ||
-                (n as Element).tagName === "LINK"
-              ) {
+              if ((n as Element).tagName === "STYLE" || (n as Element).tagName === "LINK") {
                 cssChanged = true;
               }
               // Removed canvas/video — restart streaming
@@ -636,12 +624,7 @@ export function createBridge(config: BridgeConfig = {}) {
     const notPrevented = el.dispatchEvent(event);
 
     // For click on anchors — navigate if not prevented
-    if (
-      d.eventType === "click" &&
-      notPrevented &&
-      el.matches?.("a[href]") &&
-      el.href
-    ) {
+    if (d.eventType === "click" && notPrevented && el.matches?.("a[href]") && el.href) {
       window.location.href = el.href;
     }
 
@@ -700,9 +683,7 @@ export function createBridge(config: BridgeConfig = {}) {
   function setupScrollListeners() {
     _scrollHandler = (e: any) => {
       const el =
-        e.target === document
-          ? document.scrollingElement || document.documentElement
-          : e.target;
+        e.target === document ? document.scrollingElement || document.documentElement : e.target;
       if (!el) return;
       // Guard against loops (host sent vf:scroll → we scrolled → this fires)
       if (el._vfScrollFromHost) {
@@ -891,10 +872,6 @@ export function createBridge(config: BridgeConfig = {}) {
 // automatically.  When imported by tests (window.parent === window)
 // nothing happens — call createBridge() explicitly.
 // ------------------------------------------------------------------
-if (
-  typeof window !== "undefined" &&
-  window.parent &&
-  window.parent !== window
-) {
+if (typeof window !== "undefined" && window.parent && window.parent !== window) {
   createBridge().start();
 }

@@ -57,7 +57,7 @@ Reach for the class when you need to create, move, or destroy projections progra
 ```js
 import { VirtualFrame } from "virtual-frame";
 
-const iframe = document.getElementById("my-source");     // <iframe>
+const iframe = document.getElementById("my-source"); // <iframe>
 const host = document.getElementById("projection-host"); // <div>
 
 const vf = new VirtualFrame(iframe, host, {
@@ -69,7 +69,7 @@ const vf = new VirtualFrame(iframe, host, {
 vf.destroy();
 ```
 
-You bring the iframe and the host element; Virtual Frame wires them together. Projection starts synchronously from the constructor, but the first *content* arrives once the iframe finishes loading — wait for `iframe.onload` or poll `vf.isInitialized` if you need to know when to read the projected DOM. Full lifecycle and options in the [API reference](/api/).
+You bring the iframe and the host element; Virtual Frame wires them together. Projection starts synchronously from the constructor, but the first _content_ arrives once the iframe finishes loading — wait for `iframe.onload` or poll `vf.isInitialized` if you need to know when to read the projected DOM. Full lifecycle and options in the [API reference](/api/).
 
 ### Path C: a framework wrapper
 
@@ -111,11 +111,11 @@ If you're on Next.js, Nuxt, SvelteKit, TanStack Start, SolidStart, Analog, React
 - Svelte-based: [SvelteKit](/guide/sveltekit)
 - Solid-based: [SolidStart](/guide/solid-start)
 - Angular-based: [Analog](/guide/analog)
-:::
+  :::
 
 ## Cross-origin in 30 seconds
 
-Same-origin projection works out of the box. For a cross-origin source, include the bridge script once in the remote document, *before* your framework runtime:
+Same-origin projection works out of the box. For a cross-origin source, include the bridge script once in the remote document, _before_ your framework runtime:
 
 ```html
 <!-- Inside the cross-origin source document -->
@@ -128,10 +128,10 @@ Then use Virtual Frame on the host normally — it detects the cross-origin sour
 
 These are accepted by the `VirtualFrame` constructor. The custom element exposes them as kebab-case HTML attributes (`streaming-fps`, etc.) — see the [API reference](/api/#virtual-frame-custom-element) for the full mapping, and the linked guides for each option's semantics in depth.
 
-| Option         | Type                               | Default     | Description                                                                  |
-| -------------- | ---------------------------------- | ----------- | ---------------------------------------------------------------------------- |
-| `isolate`      | `"open" \| "closed"`               | `undefined` | Shadow DOM mode for CSS isolation. See [Shadow DOM](/guide/shadow-dom).      |
-| `selector`     | `string`                           | `undefined` | CSS selector — only project a matching subtree. See [Selector](/guide/selector). |
+| Option         | Type                               | Default     | Description                                                                                                          |
+| -------------- | ---------------------------------- | ----------- | -------------------------------------------------------------------------------------------------------------------- |
+| `isolate`      | `"open" \| "closed"`               | `undefined` | Shadow DOM mode for CSS isolation. See [Shadow DOM](/guide/shadow-dom).                                              |
+| `selector`     | `string`                           | `undefined` | CSS selector — only project a matching subtree. See [Selector](/guide/selector).                                     |
 | `streamingFps` | `number \| Record<string, number>` | `undefined` | Canvas/video streaming rate (`undefined` = smooth rAF, same-origin only). See [Streaming FPS](/guide/streaming-fps). |
 
 ::: tip Custom-element-only: `proxy`

@@ -2,16 +2,8 @@
   <footer class="vf-footer">
     <div class="vf-footer-inner">
       <div class="vf-footer-brand">
-        <a
-          href="https://level0x40.com"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <img
-            :src="logoSrc"
-            alt="Level 0x40 Labs"
-            class="vf-footer-logo"
-          />
+        <a href="https://level0x40.com" target="_blank" rel="noopener noreferrer">
+          <img :src="logoSrc" alt="Level 0x40 Labs" class="vf-footer-logo" />
         </a>
         <p class="vf-footer-tagline">Open-source tools for the modern web</p>
       </div>
@@ -69,18 +61,10 @@
           <h4>Level 0<span>x</span>40</h4>
           <ul>
             <li>
-              <a
-                href="https://level0x40.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                >Website</a
-              >
+              <a href="https://level0x40.com" target="_blank" rel="noopener noreferrer">Website</a>
             </li>
             <li>
-              <a
-                href="https://github.com/level0x40"
-                target="_blank"
-                rel="noopener noreferrer"
+              <a href="https://github.com/level0x40" target="_blank" rel="noopener noreferrer"
                 >GitHub</a
               >
             </li>

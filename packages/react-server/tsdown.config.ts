@@ -24,12 +24,7 @@ export default defineConfig([
     format: ["esm"],
     dts: true,
     deps: {
-      neverBundle: [
-        "react",
-        "react/jsx-runtime",
-        "virtual-frame",
-        "virtual-frame/ssr",
-      ],
+      neverBundle: ["react", "react/jsx-runtime", "virtual-frame", "virtual-frame/ssr"],
     },
   },
   // Cache module — request-scoped SSR HTML cache ("use cache: request")
@@ -38,9 +33,7 @@ export default defineConfig([
     format: ["esm"],
     dts: true,
     deps: {
-      neverBundle: [
-        "virtual-frame/ssr",
-      ],
+      neverBundle: ["virtual-frame/ssr"],
     },
   },
   // Client component — the activator ("use client")
@@ -59,11 +52,7 @@ export default defineConfig([
     format: ["esm"],
     dts: true,
     deps: {
-      neverBundle: [
-        "react",
-        "react/jsx-runtime",
-        "@virtual-frame/store",
-      ],
+      neverBundle: ["react", "react/jsx-runtime", "@virtual-frame/store"],
     },
     banner: { js: '"use client";' },
   },

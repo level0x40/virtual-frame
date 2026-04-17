@@ -32,10 +32,7 @@ import { _ssrHtmlCache, _nextSsrId } from "./shared";
  * inside the content so the client can read it from the DOM — no need
  * to serialise it as a separate prop.
  */
-function buildSsrHtml(
-  result: VirtualFrameResult,
-  isolate?: "open" | "closed",
-): string {
+function buildSsrHtml(result: VirtualFrameResult, isolate?: "open" | "closed"): string {
   const deltaJson = JSON.stringify(result.resumeDelta).replace(/<\//g, "<\\/");
   const resumeScript = `<script type="text/vf-resume">${deltaJson}</script>`;
 
@@ -187,9 +184,7 @@ export async function VirtualFrame({
   proxy,
   ...restProps
 }: VirtualFrameProps) {
-  const props = Object.fromEntries(
-    Object.entries(restProps).filter(([k]) => !k.startsWith("_"))
-  );
+  const props = Object.fromEntries(Object.entries(restProps).filter(([k]) => !k.startsWith("_")));
 
   let result: VirtualFrameResult;
   if (frame) {

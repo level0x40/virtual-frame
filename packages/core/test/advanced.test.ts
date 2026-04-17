@@ -1,12 +1,6 @@
 import { describe, it, expect, afterEach } from "vitest";
 import { VirtualFrame } from "../src/core.js";
-import {
-  createIframe,
-  createHost,
-  waitForInit,
-  delay,
-  cleanup,
-} from "./helpers.js";
+import { createIframe, createHost, waitForInit, delay, cleanup } from "./helpers.js";
 
 describe("VirtualFrame — audio placeholder", () => {
   let iframe;
@@ -141,16 +135,12 @@ describe("VirtualFrame — navigation re-init", () => {
 
     const shadow = host.shadowRoot;
     expect(shadow.querySelector("#page-id").textContent).toBe("page-1");
-    expect(shadow.querySelector("#content").textContent).toBe(
-      "First page content",
-    );
+    expect(shadow.querySelector("#content").textContent).toBe("First page content");
 
     // Navigate iframe to a different page
     const navUrl = new URL("./fixtures/navigate-b.html", import.meta.url).href;
     iframe.src = navUrl;
-    await new Promise((r) =>
-      iframe.addEventListener("load", r, { once: true }),
-    );
+    await new Promise((r) => iframe.addEventListener("load", r, { once: true }));
     // Wait for re-init to complete
     await delay(1000);
 
@@ -158,9 +148,7 @@ describe("VirtualFrame — navigation re-init", () => {
     const pageId = shadow.querySelector("#page-id");
     expect(pageId).toBeTruthy();
     expect(pageId.textContent).toBe("page-2");
-    expect(shadow.querySelector("#content").textContent).toBe(
-      "Second page content",
-    );
+    expect(shadow.querySelector("#content").textContent).toBe("Second page content");
     expect(shadow.querySelector("#extra")).toBeTruthy();
   });
 
@@ -177,9 +165,7 @@ describe("VirtualFrame — navigation re-init", () => {
     // Navigate to page B
     const navUrl = new URL("./fixtures/navigate-b.html", import.meta.url).href;
     iframe.src = navUrl;
-    await new Promise((r) =>
-      iframe.addEventListener("load", r, { once: true }),
-    );
+    await new Promise((r) => iframe.addEventListener("load", r, { once: true }));
     await delay(1000);
 
     // Page A content should be gone, page B content should be present
@@ -208,8 +194,7 @@ describe("VirtualFrame — form sync edge cases", () => {
 
     const shadow = host.shadowRoot;
     const projectedSelect = shadow.querySelector("#select-input");
-    const originalSelect =
-      iframe.contentDocument.getElementById("select-input");
+    const originalSelect = iframe.contentDocument.getElementById("select-input");
 
     // Select uses event proxying (click) not setupFormElementSync.
     // Programmatically changing value + dispatching change on mirror
@@ -230,8 +215,7 @@ describe("VirtualFrame — form sync edge cases", () => {
 
     const shadow = host.shadowRoot;
     const projectedTextarea = shadow.querySelector("#textarea-input");
-    const originalTextarea =
-      iframe.contentDocument.getElementById("textarea-input");
+    const originalTextarea = iframe.contentDocument.getElementById("textarea-input");
 
     projectedTextarea.value = "updated text";
     projectedTextarea.dispatchEvent(new Event("input", { bubbles: true }));

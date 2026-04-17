@@ -35,25 +35,23 @@ for (const mode of ["dev", "prod"] as const) {
 
     test("default Hello page is projected", async ({ page }) => {
       await page.goto(url);
-      await expect(
-        page.getByRole("heading", { name: "Interactive Iframe Content" }),
-      ).toBeVisible({ timeout: 30_000 });
+      await expect(page.getByRole("heading", { name: "Interactive Iframe Content" })).toBeVisible({
+        timeout: 30_000,
+      });
     });
 
-    test("clicking the Media tab swaps the projected page", async ({
-      page,
-    }) => {
+    test("clicking the Media tab swaps the projected page", async ({ page }) => {
       await page.goto(url);
-      await expect(
-        page.getByRole("heading", { name: "Interactive Iframe Content" }),
-      ).toBeVisible({ timeout: 30_000 });
+      await expect(page.getByRole("heading", { name: "Interactive Iframe Content" })).toBeVisible({
+        timeout: 30_000,
+      });
 
       await page.getByRole("button", { name: "Media" }).click();
 
       // media.html → <h1>Media Elements</h1>
-      await expect(
-        page.getByRole("heading", { name: "Media Elements" }),
-      ).toBeVisible({ timeout: 30_000 });
+      await expect(page.getByRole("heading", { name: "Media Elements" })).toBeVisible({
+        timeout: 30_000,
+      });
     });
   });
 }

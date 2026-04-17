@@ -186,19 +186,12 @@ export function VirtualFrameActivator({
           if (portCleanup) return;
           if (!s.iframe.contentWindow) return;
           const channel = new MessageChannel();
-          s.iframe.contentWindow.postMessage(
-            { type: "vf-store:connect" },
-            "*",
-            [channel.port2],
-          );
+          s.iframe.contentWindow.postMessage({ type: "vf-store:connect" }, "*", [channel.port2]);
           portCleanup = connectPort(store, channel.port1);
         };
 
         const onMessage = (e: MessageEvent) => {
-          if (
-            e.source === s.iframe.contentWindow &&
-            e.data?.type === "vf-store:ready"
-          ) {
+          if (e.source === s.iframe.contentWindow && e.data?.type === "vf-store:ready") {
             connect();
           }
         };
@@ -310,9 +303,7 @@ export function VirtualFrame({
   // so they never reach the DOM element.
   ...restProps
 }: VirtualFrameProps) {
-  const props = Object.fromEntries(
-    Object.entries(restProps).filter(([k]) => !k.startsWith("_"))
-  );
+  const props = Object.fromEntries(Object.entries(restProps).filter(([k]) => !k.startsWith("_")));
   // Server: read SSR HTML from cache (populated by prepareVirtualFrameProps).
   // Client: cache is empty → renders '' → server-rendered DOM preserved
   //         by suppressHydrationWarning.
@@ -342,4 +333,3 @@ export function VirtualFrame({
     </div>
   );
 }
-
