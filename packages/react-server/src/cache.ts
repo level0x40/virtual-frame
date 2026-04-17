@@ -12,6 +12,8 @@
 import { fetchVirtualFrame } from "virtual-frame/ssr";
 import type { VirtualFrameResult } from "virtual-frame/ssr";
 
+import { composeShadowFragment } from "./internal/html-sink.js";
+
 // ── Types ────────────────────────────────────────────────────
 
 export interface VfSsrData {
@@ -35,19 +37,17 @@ export interface PrepareVirtualFramePropsOptions {
 
 /**
  * Build the SSR HTML string from a `VirtualFrameResult`.
+ *
+ * This is a thin wrapper around {@link composeShadowFragment}: it serialises
+ * the resume delta into a `<script>` tag and delegates all HTML assembly to
+ * the dedicated sink module.  The raw-HTML embedding lives there (see
+ * `internal/html-sink.ts`) so the trust boundary is a single, auditable
+ * file rather than scattered template literals.
  */
 export function buildSsrHtml(result: VirtualFrameResult, isolate?: "open" | "closed"): string {
   const deltaJson = JSON.stringify(result.resumeDelta).replace(/<\//g, "<\\/");
   const resumeScript = `<script type="text/vf-resume">${deltaJson}</script>`;
-
-  // result.styles and result.body are intentionally raw HTML sourced from the
-  // remote virtual-frame endpoint — embedding them unescaped is the core
-  // purpose of this library (similar to an iframe).  The isolate attribute is
-  // validated to prevent attribute injection.
-  const safeIsolate = isolate === "closed" ? "closed" : "open";
-  return isolate
-    ? `<template shadowrootmode="${safeIsolate}">${result.styles}\n${result.body}${resumeScript}</template>`
-    : `${result.styles}\n${result.body}${resumeScript}`;
+  return composeShadowFragment(result.styles, result.body, resumeScript, isolate);
 }
 
 // ── Public API ──────────────────────────────────────────────

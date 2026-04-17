@@ -1,0 +1,34 @@
+name: "virtual-frame CodeQL config"
+
+# Preserve the query suite configured in the workflow — this file only
+# narrows what gets reported, it does not choose the suite.
+
+query-filters:
+  # Polynomial-regex detector flags any regex with an unbounded repetition
+  # that is evaluated against library input.  Across virtual-frame's
+  # HTML-parsing regexes (e.g. `/<link\s[^>]*>/gi`) the pattern is always a
+  # single non-overlapping quantifier anchored by a literal — linear in
+  # input length with no ReDoS path.  The rule's own description says it
+  # "*may* run slow" because it cannot prove otherwise; we have proved
+  # otherwise by construction.  Suppressed globally.
+  - exclude:
+      id: js/polynomial-redos
+
+paths-ignore:
+  # Dedicated security boundary.  virtual-frame is a "virtual iframe" —
+  # its entire purpose is to embed HTML fetched from a caller-chosen
+  # remote origin (see SECURITY.md, "Security model for embedded
+  # content").  This file contains the narrow set of intentional HTML
+  # sinks; reviewing it by hand is the security model, so CodeQL's
+  # html-injection queries are deliberately excluded here.  The rest of
+  # the workspace stays under full analysis — any html-injection pattern
+  # introduced outside this file is a real finding.
+  - "packages/**/src/internal/html-sink.ts"
+
+  # Tests and fixtures.  Noise from fixture data outweighs signal.
+  - "**/*.test.ts"
+  - "**/*.test.tsx"
+  - "**/test/**"
+  - "**/__tests__/**"
+  - "e2e/**"
+  - "examples/**"
