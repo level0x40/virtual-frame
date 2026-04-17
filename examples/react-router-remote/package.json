@@ -6,7 +6,7 @@
     "dev": "react-router dev",
     "build": "react-router build",
     "start": "PORT=${PORT:-3007} react-router-serve ./build/server/index.js",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "react-router typegen && tsc --noEmit"
   },
   "dependencies": {
     "@react-router/node": "^7.0.0",
