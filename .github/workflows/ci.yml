@@ -107,6 +107,9 @@ jobs:
           name: build-output
           path: .
 
+      - name: Debug artifact layout
+        run: find packages/*/dist -maxdepth 0 -type d 2>/dev/null || echo "No packages/*/dist found"; ls -la packages/core/ 2>/dev/null || echo "No packages/core/"; ls -la core/dist/ 2>/dev/null || echo "No core/dist/"
+
       - name: Typecheck all packages
         run: vp run typecheck
 
