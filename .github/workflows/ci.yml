@@ -148,6 +148,8 @@ jobs:
 
       - name: Run E2E suite
         run: vp run test:e2e
+        env:
+          VF_E2E_VERBOSE: "1"
 
       - name: Upload Playwright report
         if: failure()
