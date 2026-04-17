@@ -89,6 +89,14 @@ jobs:
             packages/*/dist
           retention-days: 1
 
+      - name: Upload generated route files
+        uses: actions/upload-artifact@v5
+        with:
+          name: generated-routes
+          path: |
+            examples/*/src/routeTree.gen.ts
+          retention-days: 1
+
   # ──────────────────────────────────────────────────────────────────────
   # Type-check across the workspace.
   # ──────────────────────────────────────────────────────────────────────
@@ -106,6 +114,12 @@ jobs:
         with:
           name: build-output
           path: packages
+
+      - name: Download generated route files
+        uses: actions/download-artifact@v5
+        with:
+          name: generated-routes
+          path: examples
 
       - name: Typecheck all packages
         run: vp run typecheck
