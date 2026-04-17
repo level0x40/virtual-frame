@@ -1,10 +1,4 @@
-import {
-  Links,
-  Meta,
-  Outlet,
-  Scripts,
-  ScrollRestoration,
-} from "react-router";
+import { Links, Meta, Outlet, Scripts, ScrollRestoration } from "react-router";
 import type { LinksFunction } from "react-router";
 
 // Virtual Frame bridge — auto-initialises when loaded inside an iframe
@@ -15,9 +9,7 @@ import "virtual-frame/bridge";
 
 import appCss from "./styles/globals.css?url";
 
-export const links: LinksFunction = () => [
-  { rel: "stylesheet", href: appCss },
-];
+export const links: LinksFunction = () => [{ rel: "stylesheet", href: appCss }];
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (

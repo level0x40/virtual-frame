@@ -8,21 +8,18 @@
         <div class="vf-eyebrow">The pitch</div>
         <h2>A remote app, projected into your layout.</h2>
         <p>
-          An iframe gives you perfect isolation and zero composability — a rigid
-          rectangle that fights your page on sizing, focus, and theme. A shared
-          bundle gives you composability and zero isolation — shared globals,
-          shared CSS cascade, shared bugs.
+          An iframe gives you perfect isolation and zero composability — a rigid rectangle that
+          fights your page on sizing, focus, and theme. A shared bundle gives you composability and
+          zero isolation — shared globals, shared CSS cascade, shared bugs.
         </p>
         <p>
           Virtual Frame does neither. It loads the remote in a
-          <em>hidden</em> iframe — so its framework, router, and runtime work
-          normally — and mirrors the live DOM into a host element you control,
-          with CSS rewritten, events replayed, and full cross-origin support.
+          <em>hidden</em> iframe — so its framework, router, and runtime work normally — and mirrors
+          the live DOM into a host element you control, with CSS rewritten, events replayed, and
+          full cross-origin support.
         </p>
         <p class="vf-pitch-cta">
-          <a
-            :href="withBase('/guide/what-is-virtual-frame')"
-            class="vf-link-arrow"
+          <a :href="withBase('/guide/what-is-virtual-frame')" class="vf-link-arrow"
             >Read the mental model<span aria-hidden="true">&nbsp;→</span></a
           >
         </p>
@@ -35,7 +32,9 @@
             <span class="vf-dot vf-dot-g" />
             <span class="vf-code-window-title">index.html</span>
           </div>
-          <pre class="vf-code"><code><span class="vf-t-c">&lt;!-- One import, anywhere on the page --&gt;</span>
+          <pre
+            class="vf-code"
+          ><code><span class="vf-t-c">&lt;!-- One import, anywhere on the page --&gt;</span>
 <span class="vf-t-k">&lt;script</span> <span class="vf-t-a">type</span>=<span class="vf-t-s">"module"</span><span class="vf-t-k">&gt;</span>
   <span class="vf-t-kw">import</span> <span class="vf-t-s">"virtual-frame/element"</span>;
 <span class="vf-t-k">&lt;/script&gt;</span>
@@ -59,9 +58,9 @@
         <div class="vf-eyebrow">How it works</div>
         <h2>Three primitives. Real DOM. No magic.</h2>
         <p class="vf-section-lede">
-          Virtual Frame doesn't re-execute your app — it observes it. A hidden
-          iframe keeps the remote's runtime intact. A mirror layer copies DOM
-          into your host. Events flow back. That's the whole model.
+          Virtual Frame doesn't re-execute your app — it observes it. A hidden iframe keeps the
+          remote's runtime intact. A mirror layer copies DOM into your host. Events flow back.
+          That's the whole model.
         </p>
       </div>
 
@@ -78,9 +77,8 @@
           <div class="vf-primitive-index">01</div>
           <h3>Source iframe</h3>
           <p>
-            Hidden off-screen, pointed at the remote URL. The remote runs as a
-            complete standalone application — its framework, router, effects,
-            fonts. Nothing is re-executed.
+            Hidden off-screen, pointed at the remote URL. The remote runs as a complete standalone
+            application — its framework, router, effects, fonts. Nothing is re-executed.
           </p>
         </div>
         <div class="vf-primitive">
@@ -88,18 +86,17 @@
           <h3>Host element</h3>
           <p>
             Any element on your page — a
-            <code>&lt;div&gt;</code>, a section, a component root. Virtual Frame
-            attaches an optional Shadow DOM and mirrors the remote's
-            <code>&lt;body&gt;</code> subtree in.
+            <code>&lt;div&gt;</code>, a section, a component root. Virtual Frame attaches an
+            optional Shadow DOM and mirrors the remote's <code>&lt;body&gt;</code> subtree in.
           </p>
         </div>
         <div class="vf-primitive">
           <div class="vf-primitive-index">03</div>
           <h3>Sync layer</h3>
           <p>
-            Same-origin uses a MutationObserver and CSS rewriter. Cross-origin
-            routes through a bridge script over <code>postMessage</code>. Events
-            replay. Inputs stay in sync. Scroll is bidirectional.
+            Same-origin uses a MutationObserver and CSS rewriter. Cross-origin routes through a
+            bridge script over <code>postMessage</code>. Events replay. Inputs stay in sync. Scroll
+            is bidirectional.
           </p>
         </div>
       </div>
@@ -113,9 +110,8 @@
         <div class="vf-eyebrow">Ecosystem</div>
         <h2>Works with your stack.</h2>
         <p class="vf-section-lede">
-          First-class bindings for every major framework, and SSR-ready
-          integrations for the meta-frameworks. Host and remote can be any
-          combination — they don't need to match.
+          First-class bindings for every major framework, and SSR-ready integrations for the
+          meta-frameworks. Host and remote can be any combination — they don't need to match.
         </p>
       </div>
 
@@ -143,11 +139,7 @@
             :href="withBase(f.href)"
             class="vf-logo-tile"
           >
-            <span
-              class="vf-logo-icon"
-              :class="f.iconClass"
-              :style="{ backgroundImage: f.icon }"
-            />
+            <span class="vf-logo-icon" :class="f.iconClass" :style="{ backgroundImage: f.icon }" />
             <span class="vf-logo-label">{{ f.label }}</span>
           </a>
         </div>
@@ -163,9 +155,7 @@
           <h4>Start here</h4>
           <ul>
             <li>
-              <a :href="withBase('/guide/what-is-virtual-frame')"
-                >What is Virtual Frame?</a
-              >
+              <a :href="withBase('/guide/what-is-virtual-frame')">What is Virtual Frame?</a>
             </li>
             <li><a :href="withBase('/guide/getting-started')">Getting Started</a></li>
             <li><a :href="withBase('/guide/vanilla')">Vanilla JS</a></li>
@@ -233,14 +223,8 @@
           <p>Install once. Drop it in. Ship the rectangle to the bin.</p>
         </div>
         <div class="vf-cta-banner-actions">
-          <a
-            :href="withBase('/guide/getting-started')"
-            class="vf-btn vf-btn-brand"
-            >Get Started</a
-          >
-          <a :href="withBase('/api/')" class="vf-btn vf-btn-alt"
-            >API Reference</a
-          >
+          <a :href="withBase('/guide/getting-started')" class="vf-btn vf-btn-brand">Get Started</a>
+          <a :href="withBase('/api/')" class="vf-btn vf-btn-alt">API Reference</a>
         </div>
       </div>
     </section>
@@ -262,13 +246,28 @@ const clientFrameworks = [
 ];
 
 const metaFrameworks = [
-  { label: "Next.js", href: "/guide/nextjs", icon: "var(--icon-nextjs)", iconClass: "vf-icon-nextjs" },
+  {
+    label: "Next.js",
+    href: "/guide/nextjs",
+    icon: "var(--icon-nextjs)",
+    iconClass: "vf-icon-nextjs",
+  },
   { label: "Nuxt", href: "/guide/nuxt", icon: "var(--icon-nuxt)", iconClass: "vf-icon-nuxt" },
   { label: "SvelteKit", href: "/guide/sveltekit", icon: "var(--icon-svelte)" },
   { label: "SolidStart", href: "/guide/solid-start", icon: "var(--icon-solid)" },
   { label: "Analog", href: "/guide/analog", icon: "var(--icon-analog)" },
-  { label: "TanStack Start", href: "/guide/tanstack-start", icon: "var(--icon-tanstack)", iconClass: "vf-icon-tanstack" },
-  { label: "React Router", href: "/guide/react-router", icon: "var(--icon-react-router)", iconClass: "vf-icon-react-router" },
+  {
+    label: "TanStack Start",
+    href: "/guide/tanstack-start",
+    icon: "var(--icon-tanstack)",
+    iconClass: "vf-icon-tanstack",
+  },
+  {
+    label: "React Router",
+    href: "/guide/react-router",
+    icon: "var(--icon-react-router)",
+    iconClass: "vf-icon-react-router",
+  },
   { label: "@lazarv/react-server", href: "/guide/react-server", icon: "var(--icon-react-server)" },
 ];
 </script>
@@ -377,7 +376,9 @@ const metaFrameworks = [
   border: 1px solid var(--vp-c-divider);
   border-radius: 10px;
   overflow: hidden;
-  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.18), 0 2px 6px rgba(0, 0, 0, 0.08);
+  box-shadow:
+    0 8px 28px rgba(0, 0, 0, 0.18),
+    0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
 .vf-code-window-bar {
@@ -396,9 +397,15 @@ const metaFrameworks = [
   display: inline-block;
 }
 
-.vf-dot-r { background: #ff5f57; }
-.vf-dot-y { background: #febc2e; }
-.vf-dot-g { background: #28c840; }
+.vf-dot-r {
+  background: #ff5f57;
+}
+.vf-dot-y {
+  background: #febc2e;
+}
+.vf-dot-g {
+  background: #28c840;
+}
 
 .vf-code-window-title {
   margin-left: 12px;
@@ -424,11 +431,22 @@ const metaFrameworks = [
 }
 
 /* syntax colors — brand-aligned, readable on both themes */
-.vf-t-c  { color: #7c7c9a; font-style: italic; } /* comment */
-.vf-t-k  { color: #aaffff; }                      /* tag */
-.vf-t-a  { color: #ff96ff; }                      /* attr name */
-.vf-t-s  { color: #a5e1a7; }                      /* string */
-.vf-t-kw { color: #ff96ff; }                      /* keyword */
+.vf-t-c {
+  color: #7c7c9a;
+  font-style: italic;
+} /* comment */
+.vf-t-k {
+  color: #aaffff;
+} /* tag */
+.vf-t-a {
+  color: #ff96ff;
+} /* attr name */
+.vf-t-s {
+  color: #a5e1a7;
+} /* string */
+.vf-t-kw {
+  color: #ff96ff;
+} /* keyword */
 
 /* ═══════════════════════════════════════════════════════════════
    SECTION 2 — Architecture
@@ -468,7 +486,9 @@ const metaFrameworks = [
   background: var(--vp-c-bg-soft);
   border: 1px solid var(--vp-c-divider);
   border-radius: 12px;
-  transition: border-color 0.15s, transform 0.15s;
+  transition:
+    border-color 0.15s,
+    transform 0.15s;
 }
 
 .vf-primitive:hover {
@@ -550,7 +570,10 @@ const metaFrameworks = [
   color: var(--vp-c-text-1);
   font-size: 14px;
   font-weight: 500;
-  transition: border-color 0.15s, background 0.15s, transform 0.15s;
+  transition:
+    border-color 0.15s,
+    background 0.15s,
+    transform 0.15s;
 }
 
 .vf-logo-tile:hover {
@@ -575,7 +598,9 @@ const metaFrameworks = [
 }
 
 /* dark-mode icon swaps — match the rules in custom.css */
-.dark .vf-icon-nextjs { filter: invert(1); }
+.dark .vf-icon-nextjs {
+  filter: invert(1);
+}
 .dark .vf-icon-react-router {
   background-image: url("/react-router-white.svg") !important;
 }
@@ -677,7 +702,10 @@ const metaFrameworks = [
   font-size: 14px;
   font-weight: 600;
   text-decoration: none;
-  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  transition:
+    background 0.15s,
+    color 0.15s,
+    border-color 0.15s;
   white-space: nowrap;
 }
 
@@ -708,23 +736,61 @@ const metaFrameworks = [
    ═══════════════════════════════════════════════════════════════ */
 
 @media (max-width: 960px) {
-  .vf-section { padding: 48px 0; }
-  .vf-pitch { grid-template-columns: 1fr; gap: 32px; }
-  .vf-primitives { grid-template-columns: 1fr; }
-  .vf-cta-grid { grid-template-columns: repeat(2, 1fr); gap: 24px; }
-  .vf-cta-banner { flex-direction: column; text-align: center; gap: 20px; }
-  .vf-section h2 { font-size: 26px; }
-  .vf-pitch-prose h2 { font-size: 24px; }
+  .vf-section {
+    padding: 48px 0;
+  }
+  .vf-pitch {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  .vf-primitives {
+    grid-template-columns: 1fr;
+  }
+  .vf-cta-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+  .vf-cta-banner {
+    flex-direction: column;
+    text-align: center;
+    gap: 20px;
+  }
+  .vf-section h2 {
+    font-size: 26px;
+  }
+  .vf-pitch-prose h2 {
+    font-size: 24px;
+  }
 }
 
 @media (max-width: 640px) {
-  .vf-landing { padding: 0 20px; }
-  .vf-section { padding: 40px 0; }
-  .vf-cta-grid { grid-template-columns: 1fr; }
-  .vf-cta-banner { padding: 28px 24px; }
-  .vf-cta-banner-actions { flex-direction: column; width: 100%; }
-  .vf-btn { justify-content: center; width: 100%; }
-  .vf-code { font-size: 12px; padding: 14px 16px; }
-  .vf-arch-figure { padding: 4px; border-radius: 12px; }
+  .vf-landing {
+    padding: 0 20px;
+  }
+  .vf-section {
+    padding: 40px 0;
+  }
+  .vf-cta-grid {
+    grid-template-columns: 1fr;
+  }
+  .vf-cta-banner {
+    padding: 28px 24px;
+  }
+  .vf-cta-banner-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+  .vf-btn {
+    justify-content: center;
+    width: 100%;
+  }
+  .vf-code {
+    font-size: 12px;
+    padding: 14px 16px;
+  }
+  .vf-arch-figure {
+    padding: 4px;
+    border-radius: 12px;
+  }
 }
 </style>

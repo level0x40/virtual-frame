@@ -1,10 +1,7 @@
 import { query, createAsync } from "@solidjs/router";
 import { Show } from "solid-js";
 import { VirtualFrame, useStore } from "@virtual-frame/solid-start";
-import {
-  fetchVirtualFrame,
-  prepareVirtualFrameProps,
-} from "@virtual-frame/solid-start/server";
+import { fetchVirtualFrame, prepareVirtualFrameProps } from "@virtual-frame/solid-start/server";
 import { store } from "../store";
 
 const REMOTE_URL = process.env.REMOTE_URL ?? "http://localhost:3015";
@@ -29,11 +26,10 @@ export default function Home() {
     <main style={{ padding: "32px", "font-family": "system-ui, sans-serif" }}>
       <h1>Virtual Frame — SolidStart SSR Example</h1>
       <p>
-        Two separate SolidStart apps: <strong>host</strong> (port 3014) fetches
-        {" "}<strong>remote</strong> (port 3015) during SSR via a{" "}
-        <code>"use server"</code> route query, then VirtualFrame mirrors on the
-        client. A shared store keeps the counter in sync across host and both
-        projected frames.
+        Two separate SolidStart apps: <strong>host</strong> (port 3014) fetches{" "}
+        <strong>remote</strong> (port 3015) during SSR via a <code>"use server"</code> route query,
+        then VirtualFrame mirrors on the client. A shared store keeps the counter in sync across
+        host and both projected frames.
       </p>
 
       <section

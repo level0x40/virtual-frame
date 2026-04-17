@@ -13,12 +13,7 @@ export default defineConfig({
     outDir: "dist",
     emptyOutDir: true,
     rollupOptions: {
-      external: [
-        "react",
-        "react/jsx-runtime",
-        "virtual-frame",
-        "@virtual-frame/store",
-      ],
+      external: ["react", "react/jsx-runtime", "virtual-frame", "@virtual-frame/store"],
     },
   },
   esbuild: {

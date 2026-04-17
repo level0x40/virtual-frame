@@ -47,12 +47,7 @@ describe("VirtualFrame (React)", () => {
   it("instantiates VirtualFrameCore with correct options", async () => {
     await act(() =>
       root.render(
-        <VirtualFrame
-          src="/test.html"
-          isolate="open"
-          selector="#main"
-          streamingFps={30}
-        />,
+        <VirtualFrame src="/test.html" isolate="open" selector="#main" streamingFps={30} />,
       ),
     );
     expect(MockVF).toHaveBeenCalledOnce();
@@ -93,9 +88,7 @@ describe("VirtualFrame (React)", () => {
 
   it("forwards extra props to host div", async () => {
     await act(() =>
-      root.render(
-        <VirtualFrame src="/test.html" className="my-frame" data-testid="vf" />,
-      ),
+      root.render(<VirtualFrame src="/test.html" className="my-frame" data-testid="vf" />),
     );
     const host = container.querySelector("div");
     expect(host.className).toBe("my-frame");

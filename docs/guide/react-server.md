@@ -74,10 +74,8 @@ Fetch the frame props in a Server Component and hand them to a `"use client"` wr
 
 ```tsx
 // app/page.tsx (Server Component)
-import {
-  fetchVirtualFrame,
-  prepareVirtualFrameProps,
-} from "@virtual-frame/react-server";
+import { fetchVirtualFrame } from "@virtual-frame/react-server";
+import { prepareVirtualFrameProps } from "@virtual-frame/react-server/cache";
 import { HostFrames } from "./components/HostFrames";
 
 export default async function Page() {
@@ -108,9 +106,7 @@ export function HostFrames({ fullPage, counterCard }) {
   return (
     <>
       <p>Host count: {count ?? 0}</p>
-      <button onClick={() => (store.count = (count ?? 0) + 1)}>
-        Increment from host
-      </button>
+      <button onClick={() => (store.count = (count ?? 0) + 1)}>Increment from host</button>
       <button onClick={() => (store.count = 0)}>Reset</button>
 
       {/* Any VirtualFrame that receives store= joins the same sync bridge. */}
@@ -126,7 +122,7 @@ export function HostFrames({ fullPage, counterCard }) {
 :::
 
 - **Host reads/writes are direct**: `store.count` operates on the host's in-memory object — no serialisation, no round-trip.
-- **Passing `store={store}` wires up the bridge**: when the hidden iframe loads and the remote signals `vf-store:ready`, the component opens a `MessageChannel`, transfers one port to the iframe, and calls `connectPort()` on the host side. Multiple `<VirtualFrame>` instances sharing the same `src` share one iframe *and* one port — the store is bridged exactly once.
+- **Passing `store={store}` wires up the bridge**: when the hidden iframe loads and the remote signals `vf-store:ready`, the component opens a `MessageChannel`, transfers one port to the iframe, and calls `connectPort()` on the host side. Multiple `<VirtualFrame>` instances sharing the same `src` share one iframe _and_ one port — the store is bridged exactly once.
 
 #### Alternative: store via context
 
@@ -140,11 +136,7 @@ import { VirtualFrameStoreProvider } from "@virtual-frame/react-server";
 import { store } from "../store";
 
 export function StoreProvider({ children }: { children: React.ReactNode }) {
-  return (
-    <VirtualFrameStoreProvider store={store}>
-      {children}
-    </VirtualFrameStoreProvider>
-  );
+  return <VirtualFrameStoreProvider store={store}>{children}</VirtualFrameStoreProvider>;
 }
 ```
 
@@ -173,14 +165,10 @@ On the remote, use `useStore` from `@virtual-frame/react-server` in a `"use clie
 import { useStore } from "@virtual-frame/react-server";
 
 function Counter() {
-  const store = useStore();                    // StoreProxy singleton
-  const count = useStore<number>(["count"]);   // reactive value at path
+  const store = useStore(); // StoreProxy singleton
+  const count = useStore<number>(["count"]); // reactive value at path
 
-  return (
-    <button onClick={() => (store.count = (count ?? 0) + 1)}>
-      Count: {count ?? 0}
-    </button>
-  );
+  return <button onClick={() => (store.count = (count ?? 0) + 1)}>Count: {count ?? 0}</button>;
 }
 ```
 
@@ -290,25 +278,25 @@ When the remote page is loaded directly in the browser (not through a VirtualFra
 
 Works in Server Components and Client Components.
 
-| Prop           | Type                               | Default  | Description                             |
-| -------------- | ---------------------------------- | -------- | --------------------------------------- |
-| `src`          | `string`                           | ---        | Remote URL to fetch and project         |
-| `frame`        | `VirtualFrameResult`               | ---        | Pre-fetched result (Server Component only) |
-| `selector`     | `string`                           | ---        | CSS selector for partial projection     |
-| `isolate`      | `"open" \| "closed"`               | `"open"` | Shadow DOM mode                         |
-| `streamingFps` | `number \| Record<string, number>` | ---        | Canvas/video streaming FPS              |
-| `store`        | `StoreProxy`                       | ---        | Shared store for cross-frame state sync |
-| `proxy`        | `string`                           | ---        | Same-origin proxy prefix for client-side navigation |
-| `ref`          | `React.Ref`                        | ---        | Exposes `{ refresh() }`                 |
+| Prop           | Type                               | Default  | Description                                         |
+| -------------- | ---------------------------------- | -------- | --------------------------------------------------- |
+| `src`          | `string`                           | ---      | Remote URL to fetch and project                     |
+| `frame`        | `VirtualFrameResult`               | ---      | Pre-fetched result (Server Component only)          |
+| `selector`     | `string`                           | ---      | CSS selector for partial projection                 |
+| `isolate`      | `"open" \| "closed"`               | `"open"` | Shadow DOM mode                                     |
+| `streamingFps` | `number \| Record<string, number>` | ---      | Canvas/video streaming FPS                          |
+| `store`        | `StoreProxy`                       | ---      | Shared store for cross-frame state sync             |
+| `proxy`        | `string`                           | ---      | Same-origin proxy prefix for client-side navigation |
+| `ref`          | `React.Ref`                        | ---      | Exposes `{ refresh() }`                             |
 
 ### `<VirtualFrameStoreProvider>`
 
 Provides a store to all descendant `VirtualFrame` components via React context.
 
-| Prop       | Type             | Description                           |
-| ---------- | ---------------- | ------------------------------------- |
-| `store`    | `StoreProxy`     | Store instance from `createStore()`   |
-| `children` | `React.ReactNode`| Child components                      |
+| Prop       | Type              | Description                         |
+| ---------- | ----------------- | ----------------------------------- |
+| `store`    | `StoreProxy`      | Store instance from `createStore()` |
+| `children` | `React.ReactNode` | Child components                    |
 
 ### `useStore(selector?)`
 
@@ -327,11 +315,11 @@ Fetches a remote page and produces a server render result.
 
 Converts a server render result into serialisable props for `<VirtualFrame>`. Returns a **`Promise`** — always `await` it.
 
-| Option     | Type                 | Default  | Description                          |
-| ---------- | -------------------- | -------- | ------------------------------------ |
-| `selector` | `string`             | ---        | CSS selector for partial projection  |
-| `isolate`  | `"open" \| "closed"` | `"open"` | Shadow DOM mode                      |
-| `proxy`    | `string`             | ---        | Same-origin proxy prefix for client-side navigation |
+| Option     | Type                 | Default  | Description                                         |
+| ---------- | -------------------- | -------- | --------------------------------------------------- |
+| `selector` | `string`             | ---      | CSS selector for partial projection                 |
+| `isolate`  | `"open" \| "closed"` | `"open"` | Shadow DOM mode                                     |
+| `proxy`    | `string`             | ---      | Same-origin proxy prefix for client-side navigation |
 
 ## Examples
 

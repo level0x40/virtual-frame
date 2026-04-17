@@ -21,10 +21,7 @@ for (const mode of ["dev", "prod"] as const) {
 
     test.beforeAll(async () => {
       server = await spawnExample({
-        filters: [
-          "example-tanstack-start-host",
-          "example-tanstack-start-remote",
-        ],
+        filters: ["example-tanstack-start-host", "example-tanstack-start-remote"],
         mode,
       });
       url = server.urls[0] + "/";
@@ -48,17 +45,13 @@ for (const mode of ["dev", "prod"] as const) {
     test("remote app is reachable directly", async ({ page }) => {
       const res = await page.goto(remoteUrl);
       expect(res?.status()).toBe(200);
-      await expect(
-        page.getByRole("heading", { name: /Remote TanStack Start App/ }),
-      ).toBeVisible();
+      await expect(page.getByRole("heading", { name: /Remote TanStack Start App/ })).toBeVisible();
     });
 
     test("remote content is projected via SSR resume", async ({ page }) => {
       await page.goto(url);
       await expect(
-        page
-          .getByRole("heading", { name: /Remote TanStack Start App/ })
-          .first(),
+        page.getByRole("heading", { name: /Remote TanStack Start App/ }).first(),
       ).toBeVisible({ timeout: 30_000 });
     });
 

@@ -9,10 +9,7 @@ export default defineConfig({
     alias: {
       "@virtual-frame/store": resolve(__dirname, "../store/src/index.ts"),
       "@virtual-frame/svelte": resolve(__dirname, "../svelte/src/index.ts"),
-      "@virtual-frame/svelte/store": resolve(
-        __dirname,
-        "../svelte/src/store.ts",
-      ),
+      "@virtual-frame/svelte/store": resolve(__dirname, "../svelte/src/store.ts"),
     },
   },
   test: {
@@ -20,7 +17,8 @@ export default defineConfig({
     browser: {
       enabled: true,
       provider: playwright(),
-      instances: [{ browser: "chromium" }], headless: true,
+      instances: [{ browser: "chromium" }],
+      headless: true,
     },
     include: ["test/**/*.test.ts"],
   },

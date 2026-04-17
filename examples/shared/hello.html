@@ -295,12 +295,7 @@
       </div>
 
       <div class="interactive-section">
-        <input
-          type="text"
-          id="textInput"
-          placeholder="Type something..."
-          oninput="updateText()"
-        />
+        <input type="text" id="textInput" placeholder="Type something..." oninput="updateText()" />
         <div id="textOutput">Your text will appear here...</div>
       </div>
 
@@ -323,44 +318,19 @@
         <div>
           <div class="dnd-label">Drag from here</div>
           <div class="dnd-pool" id="dndPool">
-            <div
-              class="dnd-item"
-              draggable="true"
-              data-emoji="🍎"
-              style="background: #ff7675"
-            >
+            <div class="dnd-item" draggable="true" data-emoji="🍎" style="background: #ff7675">
               🍎
             </div>
-            <div
-              class="dnd-item"
-              draggable="true"
-              data-emoji="🍋"
-              style="background: #ffeaa7"
-            >
+            <div class="dnd-item" draggable="true" data-emoji="🍋" style="background: #ffeaa7">
               🍋
             </div>
-            <div
-              class="dnd-item"
-              draggable="true"
-              data-emoji="🫐"
-              style="background: #74b9ff"
-            >
+            <div class="dnd-item" draggable="true" data-emoji="🫐" style="background: #74b9ff">
               🫐
             </div>
-            <div
-              class="dnd-item"
-              draggable="true"
-              data-emoji="🥝"
-              style="background: #55efc4"
-            >
+            <div class="dnd-item" draggable="true" data-emoji="🥝" style="background: #55efc4">
               🥝
             </div>
-            <div
-              class="dnd-item"
-              draggable="true"
-              data-emoji="🍇"
-              style="background: #a29bfe"
-            >
+            <div class="dnd-item" draggable="true" data-emoji="🍇" style="background: #a29bfe">
               🍇
             </div>
           </div>
@@ -384,31 +354,15 @@
         <h3 style="color: #6c5ce7">Canvas (animated)</h3>
         <canvas id="demoCanvas" width="300" height="150"></canvas>
         <div style="text-align: center; margin-top: 8px">
-          <button onclick="toggleCanvasAnimation()" id="canvasToggle">
-            Pause
-          </button>
+          <button onclick="toggleCanvasAnimation()" id="canvasToggle">Pause</button>
         </div>
       </div>
 
       <!-- Video -->
       <div class="media-section">
         <h3 style="color: #00b894">Video (captureStream mirror)</h3>
-        <video
-          id="demoVideo"
-          controls
-          muted
-          loop
-          playsinline
-          crossorigin="anonymous"
-        ></video>
-        <p
-          style="
-            font-size: 12px;
-            color: #636e72;
-            text-align: center;
-            margin: 6px 0 0;
-          "
-        >
+        <video id="demoVideo" controls muted loop playsinline crossorigin="anonymous"></video>
+        <p style="font-size: 12px; color: #636e72; text-align: center; margin: 6px 0 0">
           Camera-generated test video via canvas → captureStream
         </p>
       </div>
@@ -421,18 +375,12 @@
           <button onclick="playMelody()">Play Melody</button>
           <span id="audioStatus">Ready</span>
         </div>
-        <audio
-          id="demoAudio"
-          controls
-          style="width: 100%; margin-top: 8px"
-        ></audio>
+        <audio id="demoAudio" controls style="width: 100%; margin-top: 8px"></audio>
       </div>
 
       <!-- Scrollable div with end detection -->
       <h3 style="color: #7e57c2; margin-bottom: 5px">Scroll to End</h3>
-      <div class="scroll-status idle" id="scrollStatus">
-        Scroll down to see all items
-      </div>
+      <div class="scroll-status idle" id="scrollStatus">Scroll down to see all items</div>
       <div class="scroll-container" id="scrollContainer">
         <div class="scroll-inner">
           <p>Item 1 — Keep scrolling!</p>
@@ -533,9 +481,7 @@
         newElement.style.borderRadius = "3px";
         newElement.onclick = () => {
           newElement.style.background =
-            newElement.style.background === "rgb(233, 236, 239)"
-              ? "#ffeaa7"
-              : "#e9ecef";
+            newElement.style.background === "rgb(233, 236, 239)" ? "#ffeaa7" : "#e9ecef";
         };
         container.appendChild(newElement);
       }
@@ -575,17 +521,9 @@
       }
 
       function changeColor() {
-        const colors = [
-          "#ff6b6b",
-          "#4ecdc4",
-          "#45b7d1",
-          "#96ceb4",
-          "#ffeaa7",
-          "#dda0dd",
-        ];
+        const colors = ["#ff6b6b", "#4ecdc4", "#45b7d1", "#96ceb4", "#ffeaa7", "#dda0dd"];
         const colorBox = document.getElementById("colorBox");
-        const currentColor =
-          colorBox.style.backgroundColor || "rgb(255, 107, 107)";
+        const currentColor = colorBox.style.backgroundColor || "rgb(255, 107, 107)";
         const currentIndex = colors.findIndex((color) => {
           const tempDiv = document.createElement("div");
           tempDiv.style.color = color;
@@ -609,22 +547,12 @@
           .setAttribute("transform", `rotate(${-svgRotation}, 170, 45)`);
       }
 
-      const svgColors = [
-        "#007acc",
-        "#4ecdc4",
-        "#ff6b6b",
-        "#96ceb4",
-        "#dda0dd",
-        "#45b7d1",
-      ];
+      const svgColors = ["#007acc", "#4ecdc4", "#ff6b6b", "#96ceb4", "#dda0dd", "#45b7d1"];
       let svgColorIndex = 0;
       function changeSvgColor() {
         svgColorIndex = (svgColorIndex + 1) % svgColors.length;
-        document
-          .getElementById("svgCircle")
-          .setAttribute("fill", svgColors[svgColorIndex]);
-        document.getElementById("svgText").textContent =
-          svgColors[svgColorIndex];
+        document.getElementById("svgCircle").setAttribute("fill", svgColors[svgColorIndex]);
+        document.getElementById("svgText").textContent = svgColors[svgColorIndex];
       }
 
       // ===== Drag and Drop =====
@@ -692,9 +620,7 @@
           const count = dndDrop.querySelectorAll(".dnd-item").length;
           const total = document.querySelectorAll(".dnd-item").length;
           dndStatus.textContent =
-            count > 0
-              ? `Dropped ${count} of ${total} fruits`
-              : "Drag fruits to the drop zone";
+            count > 0 ? `Dropped ${count} of ${total} fruits` : "Drag fruits to the drop zone";
           dndStatus.style.color = "#636e72";
           draggedEl = null;
         }
@@ -740,9 +666,7 @@
           lastItem.style.background = "#c8e6c9";
           lastItem.style.fontWeight = "bold";
         } else {
-          const pct = Math.round(
-            (scrollTop / (scrollHeight - clientHeight)) * 100,
-          );
+          const pct = Math.round((scrollTop / (scrollHeight - clientHeight)) * 100);
           scrollStatus.textContent = `Scrolling... ${pct}% (${Math.round(distanceFromEnd)}px remaining)`;
         }
 
@@ -818,9 +742,7 @@
 
       function toggleCanvasAnimation() {
         canvasRunning = !canvasRunning;
-        document.getElementById("canvasToggle").textContent = canvasRunning
-          ? "Pause"
-          : "Resume";
+        document.getElementById("canvasToggle").textContent = canvasRunning ? "Pause" : "Resume";
         if (canvasRunning) drawCanvas();
       }
       window.toggleCanvasAnimation = toggleCanvasAnimation;
@@ -873,8 +795,7 @@
       // ===== Audio (Web Audio API — generates tones) =====
       let audioCtx;
       function getAudioContext() {
-        if (!audioCtx)
-          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         return audioCtx;
       }
 
@@ -889,8 +810,7 @@
         osc.connect(gain).connect(ctx.destination);
         osc.start();
         osc.stop(ctx.currentTime + 0.8);
-        document.getElementById("audioStatus").textContent =
-          "Playing 440Hz tone...";
+        document.getElementById("audioStatus").textContent = "Playing 440Hz tone...";
         setTimeout(() => {
           document.getElementById("audioStatus").textContent = "Ready";
         }, 900);

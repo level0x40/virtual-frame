@@ -25,6 +25,4 @@ export type {
   RenderVirtualFrameOptions,
 } from "virtual-frame/ssr";
 
-export type {
-  PrepareVirtualFramePropsOptions,
-} from "./server";
+export type { PrepareVirtualFramePropsOptions } from "./server";

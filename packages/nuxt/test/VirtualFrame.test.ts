@@ -58,8 +58,7 @@ describe("VirtualFrame (Nuxt)", () => {
     app.mount(container);
     await nextTick();
     expect(MockVF).toHaveBeenCalledOnce();
-    const [iframe, host, opts] = (MockVF as unknown as ReturnType<typeof vi.fn>)
-      .mock.calls[0];
+    const [iframe, host, opts] = (MockVF as unknown as ReturnType<typeof vi.fn>).mock.calls[0];
     expect(iframe).toBeInstanceOf(HTMLIFrameElement);
     expect(host).toBeInstanceOf(HTMLDivElement);
     expect(opts).toEqual({
@@ -73,8 +72,7 @@ describe("VirtualFrame (Nuxt)", () => {
     app = createApp(VirtualFrame, { src: "/test.html" });
     app.mount(container);
     await nextTick();
-    const instance = (MockVF as unknown as ReturnType<typeof vi.fn>).mock
-      .results[0].value;
+    const instance = (MockVF as unknown as ReturnType<typeof vi.fn>).mock.results[0].value;
     const iframe = container.querySelector("iframe");
 
     app.unmount();

@@ -1,9 +1,6 @@
 {
   "$schema": "https://unpkg.com/@changesets/config@3.0.0/schema.json",
-  "changelog": [
-    "@changesets/changelog-github",
-    { "repo": "level0x40/virtual-frame" }
-  ],
+  "changelog": ["@changesets/changelog-github", { "repo": "level0x40/virtual-frame" }],
   "commit": false,
   "fixed": [],
   "linked": [],

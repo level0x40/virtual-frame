@@ -1,10 +1,6 @@
 import type { InferGetServerSidePropsType, GetServerSideProps } from "next";
 import Head from "next/head";
-import {
-  fetchVirtualFrame,
-  prepareVirtualFrameProps,
-  VirtualFrame,
-} from "@virtual-frame/next";
+import { fetchVirtualFrame, prepareVirtualFrameProps, VirtualFrame } from "@virtual-frame/next";
 
 const REMOTE_URL = process.env.REMOTE_URL ?? "http://localhost:3017";
 
@@ -47,24 +43,20 @@ export default function HostPage({
 
       <h1>Virtual Frame — Next.js Pages Router SSR Example</h1>
       <p className="subtitle">
-        Two separate Next.js <strong>Pages Router</strong> apps:{" "}
-        <strong>host</strong> (port 3002) fetches <strong>remote</strong> (port
-        3003) during SSR via <code>getServerSideProps</code>, then the
-        VirtualFrame core resumes on the client.
+        Two separate Next.js <strong>Pages Router</strong> apps: <strong>host</strong> (port 3002)
+        fetches <strong>remote</strong> (port 3003) during SSR via <code>getServerSideProps</code>,
+        then the VirtualFrame core resumes on the client.
       </p>
 
       <div className="layout">
         <div className="panel info">
-          <strong>How it works:</strong> The host calls{" "}
-          <code>fetchVirtualFrame()</code> in <code>getServerSideProps</code> to
-          fetch the remote Pages Router page during SSR.{" "}
-          <code>prepareVirtualFrameProps()</code> extracts the serialisable
-          props for the client. Two <code>&lt;VirtualFrame&gt;</code>{" "}
-          components are rendered — one showing the full page, one showing only{" "}
-          <code>#counter-card</code>. On the client, both components{" "}
-          <strong>share a single hidden iframe</strong> (ref-counted). The
-          diff-based resume delta reconstructs the full page from the shadow DOM
-          content — zero extra network requests.
+          <strong>How it works:</strong> The host calls <code>fetchVirtualFrame()</code> in{" "}
+          <code>getServerSideProps</code> to fetch the remote Pages Router page during SSR.{" "}
+          <code>prepareVirtualFrameProps()</code> extracts the serialisable props for the client.
+          Two <code>&lt;VirtualFrame&gt;</code> components are rendered — one showing the full page,
+          one showing only <code>#counter-card</code>. On the client, both components{" "}
+          <strong>share a single hidden iframe</strong> (ref-counted). The diff-based resume delta
+          reconstructs the full page from the shadow DOM content — zero extra network requests.
         </div>
 
         <div className="panel">

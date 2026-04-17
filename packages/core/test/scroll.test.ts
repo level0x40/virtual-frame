@@ -1,12 +1,6 @@
 import { describe, it, expect, afterEach } from "vitest";
 import { VirtualFrame } from "../src/core.js";
-import {
-  createIframe,
-  createHost,
-  waitForInit,
-  delay,
-  cleanup,
-} from "./helpers.js";
+import { createIframe, createHost, waitForInit, delay, cleanup } from "./helpers.js";
 
 describe("VirtualFrame — scroll sync", () => {
   let iframe;
@@ -88,16 +82,14 @@ describe("VirtualFrame — scroll sync", () => {
     const originalBox = iframe.contentDocument.getElementById("scroll-box");
 
     // Scroll projected to ~50% vertically
-    const projectedMaxScroll =
-      projectedBox.scrollHeight - projectedBox.clientHeight;
+    const projectedMaxScroll = projectedBox.scrollHeight - projectedBox.clientHeight;
     const targetPct = 0.5;
     projectedBox.scrollTop = Math.round(targetPct * projectedMaxScroll);
     projectedBox.dispatchEvent(new Event("scroll", { bubbles: true }));
     await delay(200);
 
     // Original should be ~50% too
-    const originalMaxScroll =
-      originalBox.scrollHeight - originalBox.clientHeight;
+    const originalMaxScroll = originalBox.scrollHeight - originalBox.clientHeight;
     if (originalMaxScroll > 0) {
       const originalPct = originalBox.scrollTop / originalMaxScroll;
       expect(originalPct).toBeCloseTo(targetPct, 1);

@@ -48,16 +48,14 @@ for (const mode of ["dev", "prod"] as const) {
     test("remote app is reachable directly", async ({ page }) => {
       const res = await page.goto(remoteUrl);
       expect(res?.status()).toBe(200);
-      await expect(
-        page.getByRole("heading", { name: "Remote SvelteKit App" }),
-      ).toBeVisible();
+      await expect(page.getByRole("heading", { name: "Remote SvelteKit App" })).toBeVisible();
     });
 
     test("remote content is projected via SSR resume", async ({ page }) => {
       await page.goto(url);
-      await expect(
-        page.getByRole("heading", { name: "Remote SvelteKit App" }).first(),
-      ).toBeVisible({ timeout: 30_000 });
+      await expect(page.getByRole("heading", { name: "Remote SvelteKit App" }).first()).toBeVisible(
+        { timeout: 30_000 },
+      );
     });
 
     test("counter card is projected (selector frame)", async ({ page }) => {
@@ -67,9 +65,7 @@ for (const mode of ["dev", "prod"] as const) {
       });
     });
 
-    test("host → remote store sync increments projected counter", async ({
-      page,
-    }) => {
+    test("host → remote store sync increments projected counter", async ({ page }) => {
       await page.goto(url);
       await expect(page.locator("#counter-card").first()).toBeVisible({
         timeout: 30_000,
@@ -80,9 +76,7 @@ for (const mode of ["dev", "prod"] as const) {
       // actionability, not for Svelte to have attached the on:click
       // handler. Asserting the client-rendered "0" is visible first
       // guarantees hydration has completed.
-      await expect(
-        page.getByText(/Host count:\s*0\b/),
-      ).toBeVisible({ timeout: 15_000 });
+      await expect(page.getByText(/Host count:\s*0\b/)).toBeVisible({ timeout: 15_000 });
 
       const incrementBtn = page.getByRole("button", {
         name: "Increment from host",
@@ -96,9 +90,7 @@ for (const mode of ["dev", "prod"] as const) {
         .poll(
           async () => {
             await incrementBtn.click();
-            return (await counterText.textContent())?.match(
-              /Host count:\s*(\d+)/,
-            )?.[1];
+            return (await counterText.textContent())?.match(/Host count:\s*(\d+)/)?.[1];
           },
           { timeout: 15_000, intervals: [250, 500, 1000] },
         )

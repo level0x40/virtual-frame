@@ -6,9 +6,7 @@ import { store } from "./store";
 // The Counter component is loaded from the remote at runtime via
 // Module Federation. It runs in the SAME JavaScript context as the
 // host — no iframe, no serialization boundary.
-const MFCounter = lazy(() =>
-  import("mf_remote/Counter").then((mod) => ({ default: mod.Counter })),
-);
+const MFCounter = lazy(() => import("mf_remote/Counter").then((mod) => ({ default: mod.Counter })));
 
 // ── Virtual Frame iframe URL ────────────────────────────────
 // Injected by rspack DefinePlugin from the REMOTE_URL env var.
@@ -28,12 +26,10 @@ export function App() {
     <div style={{ fontFamily: "system-ui, sans-serif", margin: 20 }}>
       <h1>Module Federation + Virtual Frame</h1>
       <p style={{ color: "#666", maxWidth: 700 }}>
-        This example uses <strong>both</strong> composition strategies with the
-        same remote app. Module Federation loads the Counter component directly
-        into the host's JS context. Virtual Frame mirrors the full remote app
-        via an iframe. Both share the same{" "}
-        <code>@virtual-frame/store</code> — click any button and all three
-        update in sync.
+        This example uses <strong>both</strong> composition strategies with the same remote app.
+        Module Federation loads the Counter component directly into the host's JS context. Virtual
+        Frame mirrors the full remote app via an iframe. Both share the same{" "}
+        <code>@virtual-frame/store</code> — click any button and all three update in sync.
       </p>
 
       <div
@@ -57,11 +53,7 @@ export function App() {
           }}
         >
           <h2 style={{ margin: "0 0 16px" }}>Host Counter</h2>
-          <div
-            style={{ fontSize: 48, fontWeight: "bold", marginBottom: 16 }}
-          >
-            {count ?? 0}
-          </div>
+          <div style={{ fontSize: 48, fontWeight: "bold", marginBottom: 16 }}>{count ?? 0}</div>
           <div style={{ display: "flex", gap: 8, justifyContent: "center" }}>
             <button
               onClick={() => {
@@ -117,9 +109,8 @@ export function App() {
       {/* ── Full remote app via Virtual Frame ──────────── */}
       <h2 style={{ marginTop: 32 }}>Full Remote App (Virtual Frame)</h2>
       <p style={{ color: "#666" }}>
-        The entire remote application mirrored from the iframe. The todo list
-        is also backed by the shared store — additions sync to the host
-        instantly.
+        The entire remote application mirrored from the iframe. The todo list is also backed by the
+        shared store — additions sync to the host instantly.
       </p>
       <VirtualFrame
         frame={frame}
@@ -137,8 +128,8 @@ export function App() {
       <div style={{ marginTop: 24 }}>
         <h3>Host's view of shared todos</h3>
         <p style={{ color: "#666", fontSize: 14 }}>
-          This list is rendered by the host, reading directly from the store.
-          Todos added in the remote's Virtual Frame UI appear here instantly.
+          This list is rendered by the host, reading directly from the store. Todos added in the
+          remote's Virtual Frame UI appear here instantly.
         </p>
         {((todos as unknown as string[]) ?? []).length === 0 ? (
           <p style={{ color: "#999" }}>No todos yet — add one in the remote above.</p>

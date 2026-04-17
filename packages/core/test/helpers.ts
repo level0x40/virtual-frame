@@ -13,8 +13,7 @@
 export async function createIframe(fixturePath) {
   const url = new URL(`./fixtures/${fixturePath}`, import.meta.url).href;
   const iframe = document.createElement("iframe");
-  iframe.style.cssText =
-    "position:fixed;left:-9999px;top:0;width:800px;height:600px;border:none;";
+  iframe.style.cssText = "position:fixed;left:-9999px;top:0;width:800px;height:600px;border:none;";
   iframe.src = url;
   document.body.appendChild(iframe);
   await new Promise((resolve) => iframe.addEventListener("load", resolve));

@@ -30,11 +30,7 @@ class VirtualFrameElement extends HTMLElement {
     this._teardown();
   }
 
-  attributeChangedCallback(
-    _name: string,
-    oldValue: string | null,
-    newValue: string | null,
-  ) {
+  attributeChangedCallback(_name: string, oldValue: string | null, newValue: string | null) {
     if (oldValue !== newValue && this.isConnected) {
       this._scheduleSetup();
     }
@@ -77,9 +73,7 @@ class VirtualFrameElement extends HTMLElement {
       // Reference to an existing iframe by ID
       const iframe = document.getElementById(src.slice(1));
       if (!iframe) {
-        console.error(
-          `VirtualFrame: No element found with id "${src.slice(1)}"`,
-        );
+        console.error(`VirtualFrame: No element found with id "${src.slice(1)}"`);
         return;
       }
       this._mirror = new VirtualFrame(iframe as HTMLIFrameElement, this, {
@@ -110,9 +104,7 @@ class VirtualFrameElement extends HTMLElement {
         // same-origin with the host and history.replaceState can set
         // the correct pathname — frameworks reading window.location
         // (e.g. usePathname) then see the remote URL, not about:srcdoc.
-        const resumeScript = this.querySelector(
-          'script[type="text/vf-resume"]',
-        );
+        const resumeScript = this.querySelector('script[type="text/vf-resume"]');
 
         // Style the iframe identically regardless of resume vs src.
         // position:fixed prevents focus-induced scrolling of the host.
@@ -165,9 +157,7 @@ class VirtualFrameElement extends HTMLElement {
       // If this element has a resume script but the iframe was already
       // created by a sibling, we still need to clean up our own resume
       // script and SSR marker.
-      const leftoverResume = this.querySelector(
-        'script[type="text/vf-resume"]',
-      );
+      const leftoverResume = this.querySelector('script[type="text/vf-resume"]');
       if (leftoverResume) {
         leftoverResume.remove();
         this.removeAttribute("data-vf-ssr");

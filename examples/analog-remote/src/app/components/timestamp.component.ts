@@ -3,16 +3,18 @@ import { Component, OnDestroy, afterNextRender } from "@angular/core";
 @Component({
   selector: "app-timestamp",
   standalone: true,
-  template: `<p class="timestamp">Rendered at: {{ time }}</p>`,
+  template: `
+    <p class="timestamp">Rendered at: {{ time }}</p>
+  `,
   styles: [
     `
-    .timestamp {
-      font-size: 12px;
-      text-align: right;
-      opacity: 0.6;
-      margin-top: 8px;
-    }
-  `,
+      .timestamp {
+        font-size: 12px;
+        text-align: right;
+        opacity: 0.6;
+        margin-top: 8px;
+      }
+    `,
   ],
 })
 export class TimestampComponent implements OnDestroy {

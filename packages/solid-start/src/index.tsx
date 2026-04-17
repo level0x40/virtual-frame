@@ -16,10 +16,7 @@ export type { VirtualFrameSSRProps } from "./VirtualFrameSSR";
 
 // Re-export reactive primitives from @virtual-frame/solid.
 export { useStore, createVirtualFrame } from "@virtual-frame/solid";
-export type {
-  VirtualFrameRef,
-  CreateVirtualFrameOptions,
-} from "@virtual-frame/solid";
+export type { VirtualFrameRef, CreateVirtualFrameOptions } from "@virtual-frame/solid";
 
 // Type-only re-exports so consumers can reference SSR types without
 // pulling the server module into the client bundle at runtime.

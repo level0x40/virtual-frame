@@ -73,9 +73,7 @@ describe("VirtualFrame (Next.js client)", () => {
 
   it("forwards extra props to host div", async () => {
     await act(() =>
-      root.render(
-        <VirtualFrame src="/test.html" className="my-frame" data-testid="vf" />,
-      ),
+      root.render(<VirtualFrame src="/test.html" className="my-frame" data-testid="vf" />),
     );
     const host = container.querySelector("[data-vf-host]");
     expect(host.className).toBe("my-frame");
@@ -83,9 +81,7 @@ describe("VirtualFrame (Next.js client)", () => {
   });
 
   it("filters underscore-prefixed props from DOM", async () => {
-    await act(() =>
-      root.render(<VirtualFrame src="/test.html" _vfId="123" />),
-    );
+    await act(() => root.render(<VirtualFrame src="/test.html" _vfId="123" />));
     const host = container.querySelector("[data-vf-host]");
     expect(host.hasAttribute("_vfId")).toBe(false);
   });

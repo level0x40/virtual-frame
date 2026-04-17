@@ -150,20 +150,20 @@
       <h3>How it works</h3>
       <ul>
         <li>
-          <strong>Real-time projection:</strong> Content from the source is
-          projected into the host element with full style preservation
+          <strong>Real-time projection:</strong> Content from the source is projected into the host
+          element with full style preservation
         </li>
         <li>
-          <strong>Mutation observation:</strong> Any changes in the source are
-          automatically reflected in the projection
+          <strong>Mutation observation:</strong> Any changes in the source are automatically
+          reflected in the projection
         </li>
         <li>
-          <strong>Event proxying:</strong> Interactions on the projected content
-          trigger events in the original source
+          <strong>Event proxying:</strong> Interactions on the projected content trigger events in
+          the original source
         </li>
         <li>
-          <strong>Canvas &amp; video:</strong> Animated canvas and video
-          elements are streamed in real-time
+          <strong>Canvas &amp; video:</strong> Animated canvas and video elements are streamed in
+          real-time
         </li>
       </ul>
     </div>
@@ -175,18 +175,11 @@
         <button data-page="media">Media</button>
         <button data-page="svg">SVG</button>
       </div>
-      <button id="toggleIframe" onclick="toggleIframeVisibility()">
-        Show Source
-      </button>
+      <button id="toggleIframe" onclick="toggleIframeVisibility()">Show Source</button>
       <button onclick="document.querySelector('virtual-frame')?.refresh()">
         Refresh Projection
       </button>
-      <button
-        onclick="
-          document.getElementById('src').src =
-            document.getElementById('src').src
-        "
-      >
+      <button onclick="document.getElementById('src').src = document.getElementById('src').src">
         Reload Source
       </button>
     </div>
@@ -200,8 +193,8 @@
       <div class="section">
         <h2>Projected via &lt;virtual-frame&gt;</h2>
         <p style="color: #666; font-size: 14px">
-          This projects the source content. Try interacting with elements here
-          &mdash; events are proxied back to the original source.
+          This projects the source content. Try interacting with elements here &mdash; events are
+          proxied back to the original source.
         </p>
         <virtual-frame src="#src" isolate="open"></virtual-frame>
       </div>
@@ -229,9 +222,7 @@
       tabs.addEventListener("click", (e) => {
         const btn = e.target.closest("button[data-page]");
         if (!btn) return;
-        tabs
-          .querySelectorAll("button")
-          .forEach((b) => b.classList.remove("active"));
+        tabs.querySelectorAll("button").forEach((b) => b.classList.remove("active"));
         btn.classList.add("active");
         document.getElementById("src").src = pages[btn.dataset.page];
       });

@@ -198,55 +198,31 @@
         <fieldset>
           <legend>Features (checkboxes)</legend>
           <div class="checkbox-group">
-            <label
-              ><input type="checkbox" name="features" value="canvas" /> Canvas
-              streaming</label
-            >
-            <label
-              ><input type="checkbox" name="features" value="video" /> Video
-              mirroring</label
-            >
-            <label
-              ><input type="checkbox" name="features" value="css" /> CSS
-              isolation</label
-            >
-            <label
-              ><input type="checkbox" name="features" value="events" /> Event
-              proxying</label
-            >
+            <label><input type="checkbox" name="features" value="canvas" /> Canvas streaming</label>
+            <label><input type="checkbox" name="features" value="video" /> Video mirroring</label>
+            <label><input type="checkbox" name="features" value="css" /> CSS isolation</label>
+            <label><input type="checkbox" name="features" value="events" /> Event proxying</label>
           </div>
         </fieldset>
         <fieldset>
           <legend>Difficulty (radios)</legend>
           <div class="radio-group">
-            <label
-              ><input type="radio" name="difficulty" value="easy" /> Easy</label
-            >
-            <label
-              ><input type="radio" name="difficulty" value="medium" />
-              Medium</label
-            >
-            <label
-              ><input type="radio" name="difficulty" value="hard" /> Hard</label
-            >
+            <label><input type="radio" name="difficulty" value="easy" /> Easy</label>
+            <label><input type="radio" name="difficulty" value="medium" /> Medium</label>
+            <label><input type="radio" name="difficulty" value="hard" /> Hard</label>
           </div>
         </fieldset>
 
         <h2>Range &amp; Color</h2>
         <div class="form-group">
-          <label for="opacity"
-            >Opacity:
-            <span class="range-value" id="opacityVal">50</span>%</label
-          >
+          <label for="opacity">Opacity: <span class="range-value" id="opacityVal">50</span>%</label>
           <input
             type="range"
             id="opacity"
             min="0"
             max="100"
             value="50"
-            oninput="
-              document.getElementById('opacityVal').textContent = this.value
-            "
+            oninput="document.getElementById('opacityVal').textContent = this.value"
           />
         </div>
         <div class="form-group">

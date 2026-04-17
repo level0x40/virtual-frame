@@ -82,10 +82,8 @@ describe("VirtualFrame (Svelte)", () => {
       props: { src: "/test.html" },
     });
     await tick();
-    const lastIdx =
-      (MockVF as unknown as ReturnType<typeof vi.fn>).mock.results.length - 1;
-    const instance = (MockVF as unknown as ReturnType<typeof vi.fn>).mock
-      .results[lastIdx].value;
+    const lastIdx = (MockVF as unknown as ReturnType<typeof vi.fn>).mock.results.length - 1;
+    const instance = (MockVF as unknown as ReturnType<typeof vi.fn>).mock.results[lastIdx].value;
     const iframe = container.querySelector("iframe");
 
     unmount(comp);
@@ -100,10 +98,8 @@ describe("VirtualFrame (Svelte)", () => {
       props: { src: "/test.html" },
     }) as { refresh: () => void };
     await tick();
-    const lastIdx =
-      (MockVF as unknown as ReturnType<typeof vi.fn>).mock.results.length - 1;
-    const instance = (MockVF as unknown as ReturnType<typeof vi.fn>).mock
-      .results[lastIdx].value;
+    const lastIdx = (MockVF as unknown as ReturnType<typeof vi.fn>).mock.results.length - 1;
+    const instance = (MockVF as unknown as ReturnType<typeof vi.fn>).mock.results[lastIdx].value;
 
     expect(typeof comp.refresh).toBe("function");
     comp.refresh();

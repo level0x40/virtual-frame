@@ -4,12 +4,12 @@ The core `virtual-frame` package has no framework dependency. You can use it two
 
 ## When to pick which
 
-| Scenario                                                                                          | Use                    |
-| ------------------------------------------------------------------------------------------------- | ---------------------- |
-| Plain HTML page, static site generator, or a server-rendered template                              | Custom element         |
+| Scenario                                                                                           | Use                             |
+| -------------------------------------------------------------------------------------------------- | ------------------------------- |
+| Plain HTML page, static site generator, or a server-rendered template                              | Custom element                  |
 | You control the source iframe yourself (an existing `<iframe>` in the page you want to project)    | Custom element with `src="#id"` |
-| You need to create, move, or destroy projections imperatively (e.g. animations, custom lifecycles) | `VirtualFrame` class   |
-| You're writing a framework binding or a wrapper component                                          | `VirtualFrame` class   |
+| You need to create, move, or destroy projections imperatively (e.g. animations, custom lifecycles) | `VirtualFrame` class            |
+| You're writing a framework binding or a wrapper component                                          | `VirtualFrame` class            |
 
 The two paths compose: the custom element is implemented in ~200 lines on top of `VirtualFrame`, and you can mix them freely in the same page.
 
@@ -22,8 +22,11 @@ Load the element once, then use it anywhere in your HTML:
   import "virtual-frame/element";
 </script>
 
-<virtual-frame src="./dashboard.html" isolate="open"
-               style="width: 100%; height: 400px"></virtual-frame>
+<virtual-frame
+  src="./dashboard.html"
+  isolate="open"
+  style="width: 100%; height: 400px"
+></virtual-frame>
 ```
 
 What happens when the element connects:
@@ -43,13 +46,13 @@ If you mount two `<virtual-frame>` elements with the same `src`, they share a si
 
 HTML attributes are kebab-case and always stringify. The element maps them to camelCase options at setup time.
 
-| Attribute       | Maps to         | Description                                                                                             |
-| --------------- | --------------- | ------------------------------------------------------------------------------------------------------- |
-| `src`           | —               | URL of the remote document, or `#id` to reference an existing in-page `<iframe>` (see below).           |
-| `isolate`       | `isolate`       | Shadow DOM mode: `"open"` or `"closed"`. Omit to render into the element's light DOM. See [Shadow DOM](/guide/shadow-dom). |
-| `selector`      | `selector`      | CSS selector — only project a matching subtree. See [Selector Projection](/guide/selector).             |
-| `streaming-fps` | `streamingFps`  | Either a number (`streaming-fps="30"`) or a JSON object (`streaming-fps='{"canvas":30,"video":60}'`). See [Streaming FPS](/guide/streaming-fps). |
-| `proxy`         | — (env shim)    | Same-origin proxy prefix for `fetch` / `XHR` rewriting. See [Cross-Origin](/guide/cross-origin).        |
+| Attribute       | Maps to        | Description                                                                                                                                      |
+| --------------- | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `src`           | —              | URL of the remote document, or `#id` to reference an existing in-page `<iframe>` (see below).                                                    |
+| `isolate`       | `isolate`      | Shadow DOM mode: `"open"` or `"closed"`. Omit to render into the element's light DOM. See [Shadow DOM](/guide/shadow-dom).                       |
+| `selector`      | `selector`     | CSS selector — only project a matching subtree. See [Selector Projection](/guide/selector).                                                      |
+| `streaming-fps` | `streamingFps` | Either a number (`streaming-fps="30"`) or a JSON object (`streaming-fps='{"canvas":30,"video":60}'`). See [Streaming FPS](/guide/streaming-fps). |
+| `proxy`         | — (env shim)   | Same-origin proxy prefix for `fetch` / `XHR` rewriting. See [Cross-Origin](/guide/cross-origin).                                                 |
 
 Any attribute change on a connected element triggers a teardown + re-setup on the next microtask. To refresh in place without recreating resources, use the element's [`refresh()`](#imperative-control) method.
 
@@ -58,8 +61,7 @@ Any attribute change on a connected element triggers a teardown + re-setup on th
 Pass `src="#id"` to project from an `<iframe>` that already exists in your page. The element will not create or manage the iframe — you own its lifetime.
 
 ```html
-<iframe id="my-source" src="./dashboard.html"
-        style="position: fixed; left: -9999px"></iframe>
+<iframe id="my-source" src="./dashboard.html" style="position: fixed; left: -9999px"></iframe>
 
 <virtual-frame src="#my-source" isolate="open"></virtual-frame>
 ```

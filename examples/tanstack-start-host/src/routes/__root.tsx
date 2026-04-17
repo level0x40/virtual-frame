@@ -1,9 +1,4 @@
-import {
-  HeadContent,
-  Outlet,
-  Scripts,
-  createRootRoute,
-} from "@tanstack/react-router";
+import { HeadContent, Outlet, Scripts, createRootRoute } from "@tanstack/react-router";
 import appCss from "../styles/globals.css?url";
 
 export const Route = createRootRoute({
@@ -13,8 +8,7 @@ export const Route = createRootRoute({
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       {
         name: "description",
-        content:
-          "Host app that embeds a remote TanStack Start app via virtual-frame SSR",
+        content: "Host app that embeds a remote TanStack Start app via virtual-frame SSR",
       },
     ],
     links: [{ rel: "stylesheet", href: appCss }],

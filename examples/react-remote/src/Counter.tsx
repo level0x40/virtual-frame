@@ -17,9 +17,7 @@ export function Counter() {
       }}
     >
       <h2 style={{ margin: "0 0 16px" }}>Remote Counter</h2>
-      <div style={{ fontSize: 48, fontWeight: "bold", marginBottom: 16 }}>
-        {count ?? 0}
-      </div>
+      <div style={{ fontSize: 48, fontWeight: "bold", marginBottom: 16 }}>{count ?? 0}</div>
       <div style={{ display: "flex", gap: 8, justifyContent: "center" }}>
         <button
           onClick={() => {

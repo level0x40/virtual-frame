@@ -55,11 +55,7 @@ Use `getServerSideProps` with the same `VirtualFrame` component:
 ```tsx
 // pages/index.tsx
 import type { GetServerSideProps } from "next";
-import {
-  fetchVirtualFrame,
-  prepareVirtualFrameProps,
-  VirtualFrame,
-} from "@virtual-frame/next";
+import { fetchVirtualFrame, prepareVirtualFrameProps, VirtualFrame } from "@virtual-frame/next";
 
 export const getServerSideProps: GetServerSideProps = async () => {
   const frame = await fetchVirtualFrame("http://remote:3003");
@@ -109,10 +105,7 @@ Because the store is a client-only object, fetch the frame props in a Server Com
 
 ```tsx
 // app/page.tsx (Server Component)
-import {
-  fetchVirtualFrame,
-  prepareVirtualFrameProps,
-} from "@virtual-frame/next";
+import { fetchVirtualFrame, prepareVirtualFrameProps } from "@virtual-frame/next";
 import { HostFrames } from "./components/HostFrames";
 
 export default async function Page() {
@@ -143,9 +136,7 @@ export function HostFrames({ frameProps, counterProps }) {
   return (
     <>
       <p>Host count: {count ?? 0}</p>
-      <button onClick={() => (store.count = (count ?? 0) + 1)}>
-        Increment from host
-      </button>
+      <button onClick={() => (store.count = (count ?? 0) + 1)}>Increment from host</button>
       <button onClick={() => (store.count = 0)}>Reset</button>
 
       {/* Any VirtualFrame that receives store= joins the same sync bridge. */}
@@ -157,7 +148,7 @@ export function HostFrames({ frameProps, counterProps }) {
 ```
 
 - **Host reads/writes are direct**: `store.count` operates on the host's in-memory object — no serialisation, no round-trip.
-- **Passing `store={store}` wires up the bridge**: when the hidden iframe loads and the remote signals `vf-store:ready`, the component opens a `MessageChannel`, transfers one port to the iframe, and calls `connectPort()` on the host side. Multiple `<VirtualFrame>` instances sharing the same `src` share one iframe *and* one port — the store is bridged exactly once.
+- **Passing `store={store}` wires up the bridge**: when the hidden iframe loads and the remote signals `vf-store:ready`, the component opens a `MessageChannel`, transfers one port to the iframe, and calls `connectPort()` on the host side. Multiple `<VirtualFrame>` instances sharing the same `src` share one iframe _and_ one port — the store is bridged exactly once.
 
 ### 3. Consume the store on the remote
 
@@ -169,14 +160,10 @@ On the remote, use `useStore` from `@virtual-frame/next` in a `"use client"` com
 import { useStore } from "@virtual-frame/next";
 
 function Counter() {
-  const store = useStore();                    // StoreProxy singleton
-  const count = useStore<number>(["count"]);   // reactive value at path
+  const store = useStore(); // StoreProxy singleton
+  const count = useStore<number>(["count"]); // reactive value at path
 
-  return (
-    <button onClick={() => (store.count = (count ?? 0) + 1)}>
-      Count: {count ?? 0}
-    </button>
-  );
+  return <button onClick={() => (store.count = (count ?? 0) + 1)}>Count: {count ?? 0}</button>;
 }
 ```
 
@@ -358,16 +345,16 @@ The proxy prefix (`/__vf`) is a convention — you can use any path that doesn't
 
 Works in Server Components, Client Components, and Pages Router.
 
-| Prop           | Type                               | Default  | Description                             |
-| -------------- | ---------------------------------- | -------- | --------------------------------------- |
-| `src`          | `string`                           | —        | Remote URL to fetch and project         |
+| Prop           | Type                               | Default  | Description                                                                                                                                  |
+| -------------- | ---------------------------------- | -------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| `src`          | `string`                           | —        | Remote URL to fetch and project                                                                                                              |
 | `frame`        | `VirtualFrameResult`               | —        | Pre-fetched result from `fetchVirtualFrame` — pass directly in an RSC, or via `prepareVirtualFrameProps` in both App Router and Pages Router |
-| `selector`     | `string`                           | —        | CSS selector for partial projection     |
-| `isolate`      | `"open" \| "closed"`               | `"open"` | Shadow DOM mode                         |
-| `streamingFps` | `number \| Record<string, number>` | —        | Canvas/video streaming FPS              |
-| `store`        | `StoreProxy`                       | —        | Shared store for cross-frame state sync |
-| `proxy`        | `string`                           | —        | Same-origin proxy prefix for `fetch` / `XHR` rewriting (see [Client-Side Navigation](#client-side-navigation-proxy)) |
-| `ref`          | `React.Ref<{ refresh(): void }>`   | —        | Exposes `{ refresh() }`                 |
+| `selector`     | `string`                           | —        | CSS selector for partial projection                                                                                                          |
+| `isolate`      | `"open" \| "closed"`               | `"open"` | Shadow DOM mode                                                                                                                              |
+| `streamingFps` | `number \| Record<string, number>` | —        | Canvas/video streaming FPS                                                                                                                   |
+| `store`        | `StoreProxy`                       | —        | Shared store for cross-frame state sync                                                                                                      |
+| `proxy`        | `string`                           | —        | Same-origin proxy prefix for `fetch` / `XHR` rewriting (see [Client-Side Navigation](#client-side-navigation-proxy))                         |
+| `ref`          | `React.Ref<{ refresh(): void }>`   | —        | Exposes `{ refresh() }`                                                                                                                      |
 
 ### `useStore()` <Badge type="tip" text="@virtual-frame/next" />
 
@@ -392,10 +379,10 @@ Fetches a remote page and produces a server render result.
 
 Converts a server render result into serialisable props for `<VirtualFrame>`. Returns a **`Promise`** — always `await` it.
 
-| Option     | Type                 | Default  | Description                          |
-| ---------- | -------------------- | -------- | ------------------------------------ |
-| `selector` | `string`             | —        | CSS selector for partial projection  |
-| `isolate`  | `"open" \| "closed"` | `"open"` | Shadow DOM mode                      |
+| Option     | Type                 | Default  | Description                                         |
+| ---------- | -------------------- | -------- | --------------------------------------------------- |
+| `selector` | `string`             | —        | CSS selector for partial projection                 |
+| `isolate`  | `"open" \| "closed"` | `"open"` | Shadow DOM mode                                     |
 | `proxy`    | `string`             | —        | Same-origin proxy prefix for client-side navigation |
 
 ## Examples

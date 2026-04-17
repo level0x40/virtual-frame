@@ -4,11 +4,11 @@ Virtual Frame hinges on real browser primitives — live iframes, MutationObserv
 
 ## Pick the right environment
 
-| Tool                                  | Good for                                                              | Why                                                                 |
-| ------------------------------------- | --------------------------------------------------------------------- | ------------------------------------------------------------------- |
-| **Vitest browser mode** + Playwright  | Unit / integration tests of code that uses `VirtualFrame` directly    | Real iframe + MutationObserver + Shadow DOM in a scriptable browser |
-| **Playwright** (end-to-end)           | Full app tests where you drive the host UI and assert on the projection | Covers routing, SSR resume, real-world timing                       |
-| **jsdom / happy-dom**                 | ❌ Don't use                                                           | No iframe `contentDocument`, no reliable Shadow DOM, no canvas capture |
+| Tool                                 | Good for                                                                | Why                                                                    |
+| ------------------------------------ | ----------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| **Vitest browser mode** + Playwright | Unit / integration tests of code that uses `VirtualFrame` directly      | Real iframe + MutationObserver + Shadow DOM in a scriptable browser    |
+| **Playwright** (end-to-end)          | Full app tests where you drive the host UI and assert on the projection | Covers routing, SSR resume, real-world timing                          |
+| **jsdom / happy-dom**                | ❌ Don't use                                                            | No iframe `contentDocument`, no reliable Shadow DOM, no canvas capture |
 
 The core package tests use Vitest browser mode (`@vitest/browser` + `@vitest/browser-playwright`) and the repo's cross-package / cross-framework e2e tests use Playwright directly against running example apps. Either is a fine starting point for your own tests.
 
@@ -43,8 +43,7 @@ These are the helpers the core package uses — copy them into your project as a
 export async function createIframe(fixturePath: string) {
   const url = new URL(`./fixtures/${fixturePath}`, import.meta.url).href;
   const iframe = document.createElement("iframe");
-  iframe.style.cssText =
-    "position:fixed;left:-9999px;top:0;width:800px;height:600px;border:none;";
+  iframe.style.cssText = "position:fixed;left:-9999px;top:0;width:800px;height:600px;border:none;";
   iframe.src = url;
   document.body.appendChild(iframe);
   await new Promise((r) => iframe.addEventListener("load", r));
@@ -158,7 +157,7 @@ it("inlines styles into the declarative shadow template", async () => {
   const html = `<html><head><style>h1{color:red}</style></head><body><h1>Hi</h1></body></html>`;
   const frame = await renderVirtualFrame(html, { url: "https://r.example.com/" });
 
-  expect(frame.html).toContain("<template shadowrootmode=\"open\">");
+  expect(frame.html).toContain('<template shadowrootmode="open">');
   expect(frame.styles).toContain("color:red");
 });
 ```

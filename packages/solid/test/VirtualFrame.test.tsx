@@ -46,12 +46,7 @@ describe("VirtualFrame (Solid)", () => {
   it("instantiates VirtualFrameCore with correct options", () => {
     dispose = render(
       () => (
-        <VirtualFrame
-          src="/test.html"
-          isolate="closed"
-          selector=".content"
-          streamingFps={15}
-        />
+        <VirtualFrame src="/test.html" isolate="closed" selector=".content" streamingFps={15} />
       ),
       container,
     );

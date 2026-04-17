@@ -88,24 +88,22 @@ for (const mode of ["dev", "prod"] as const) {
 
     test("default Hello page is projected", async ({ page }) => {
       await page.goto(url);
-      await expect(
-        page.getByRole("heading", { name: "Interactive Iframe Content" }),
-      ).toBeVisible({ timeout: 30_000 });
+      await expect(page.getByRole("heading", { name: "Interactive Iframe Content" })).toBeVisible({
+        timeout: 30_000,
+      });
     });
 
-    test("clicking the Forms tab swaps the projected page", async ({
-      page,
-    }) => {
+    test("clicking the Forms tab swaps the projected page", async ({ page }) => {
       await page.goto(url);
-      await expect(
-        page.getByRole("heading", { name: "Interactive Iframe Content" }),
-      ).toBeVisible({ timeout: 30_000 });
+      await expect(page.getByRole("heading", { name: "Interactive Iframe Content" })).toBeVisible({
+        timeout: 30_000,
+      });
 
       await page.getByRole("button", { name: "Forms" }).click();
 
-      await expect(
-        page.getByRole("heading", { name: "Form Elements" }),
-      ).toBeVisible({ timeout: 30_000 });
+      await expect(page.getByRole("heading", { name: "Form Elements" })).toBeVisible({
+        timeout: 30_000,
+      });
     });
   });
 }

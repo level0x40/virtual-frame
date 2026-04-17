@@ -18,8 +18,8 @@ export default function App() {
     <div style={{ fontFamily: "system-ui, sans-serif", margin: 20 }}>
       <h1>Virtual Frame — React Store Example</h1>
       <p style={{ color: "#666" }}>
-        The host and remote share a <code>@virtual-frame/store</code> instance.
-        Clicking buttons on either side updates both in real time.
+        The host and remote share a <code>@virtual-frame/store</code> instance. Clicking buttons on
+        either side updates both in real time.
       </p>
 
       <div
@@ -43,9 +43,7 @@ export default function App() {
           }}
         >
           <h2 style={{ margin: "0 0 16px" }}>Host Counter</h2>
-          <div style={{ fontSize: 48, fontWeight: "bold", marginBottom: 16 }}>
-            {count}
-          </div>
+          <div style={{ fontSize: 48, fontWeight: "bold", marginBottom: 16 }}>{count}</div>
           <div style={{ display: "flex", gap: 8, justifyContent: "center" }}>
             <button
               onClick={() => {

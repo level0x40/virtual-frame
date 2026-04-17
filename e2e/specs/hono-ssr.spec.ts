@@ -47,8 +47,7 @@ for (const mode of ["dev", "prod"] as const) {
     test("remote page is reachable directly", async ({ page }) => {
       const res = await page.goto(`${url}remote`);
       expect(res?.status()).toBe(200);
-      await expect(page.getByRole("heading", { name: /Remote App/ }))
-        .toBeVisible();
+      await expect(page.getByRole("heading", { name: /Remote App/ })).toBeVisible();
       await expect(page.locator("#counter-card")).toBeVisible();
     });
 
@@ -67,24 +66,18 @@ for (const mode of ["dev", "prod"] as const) {
       await expect(page.locator("#counter-card .counter").first()).toBeVisible();
     });
 
-    test("client-side: counter increment in projected frame works", async ({
-      page,
-    }) => {
+    test("client-side: counter increment in projected frame works", async ({ page }) => {
       await page.goto(url);
 
       // Wait for the projected shadow root to be live, then click the
       // Increment button inside it. Playwright pierces shadow DOM with
       // role/text locators by default.
-      const incrementButton = page
-        .getByRole("button", { name: /\+ Increment/ })
-        .first();
+      const incrementButton = page.getByRole("button", { name: /\+ Increment/ }).first();
       await expect(incrementButton).toBeVisible({ timeout: 30_000 });
       await incrementButton.click();
 
       // After click, the counter inside #counter-card should advance to 1.
-      await expect(page.locator("#counter-card .counter").first()).toContainText(
-        "1",
-      );
+      await expect(page.locator("#counter-card .counter").first()).toContainText("1");
     });
   });
 }

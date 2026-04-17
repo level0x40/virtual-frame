@@ -15,10 +15,7 @@ const current = ref(pages[0]);
 <template>
   <div style="font-family: system-ui, sans-serif; margin: 20px">
     <h1>Virtual Frame — Vue Example</h1>
-    <p>
-      This example uses <code>@virtual-frame/vue</code> to mirror pages into a
-      shadow DOM.
-    </p>
+    <p>This example uses <code>@virtual-frame/vue</code> to mirror pages into a shadow DOM.</p>
 
     <nav style="display: flex; gap: 8px; margin-bottom: 16px">
       <button

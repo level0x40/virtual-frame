@@ -230,17 +230,13 @@ describe("bridge.js — direct (same-page) tests", () => {
   describe("isFormElement", () => {
     it("returns true for input, textarea, select", () => {
       expect(bridge.isFormElement(document.createElement("input"))).toBe(true);
-      expect(bridge.isFormElement(document.createElement("textarea"))).toBe(
-        true,
-      );
+      expect(bridge.isFormElement(document.createElement("textarea"))).toBe(true);
       expect(bridge.isFormElement(document.createElement("select"))).toBe(true);
     });
 
     it("returns false for other elements", () => {
       expect(bridge.isFormElement(document.createElement("div"))).toBe(false);
-      expect(bridge.isFormElement(document.createElement("button"))).toBe(
-        false,
-      );
+      expect(bridge.isFormElement(document.createElement("button"))).toBe(false);
     });
   });
 
@@ -284,9 +280,7 @@ describe("bridge.js — direct (same-page) tests", () => {
 
     it("includes inline styles from style elements", () => {
       const css = bridge.collectCSS();
-      const inlineEntries = css.filter(
-        (e) => e.attr === "data-iframe-inline-style",
-      );
+      const inlineEntries = css.filter((e) => e.attr === "data-iframe-inline-style");
       expect(inlineEntries.length).toBeGreaterThan(0);
     });
 
@@ -424,9 +418,7 @@ describe("bridge.js — direct (same-page) tests", () => {
       await delay(100);
 
       const mutMsg = col.last("vf:mutations");
-      const charMut = mutMsg?.mutations?.find(
-        (m) => m.type === "characterData",
-      );
+      const charMut = mutMsg?.mutations?.find((m) => m.type === "characterData");
       expect(charMut).toBeTruthy();
       expect(charMut.data).toContain("changed text");
     });

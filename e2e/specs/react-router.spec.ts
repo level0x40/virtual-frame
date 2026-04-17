@@ -46,9 +46,7 @@ for (const mode of ["dev", "prod"] as const) {
     test("remote app is reachable directly", async ({ page }) => {
       const res = await page.goto(remoteUrl);
       expect(res?.status()).toBe(200);
-      await expect(
-        page.getByRole("heading", { name: /Remote React Router App/ }),
-      ).toBeVisible();
+      await expect(page.getByRole("heading", { name: /Remote React Router App/ })).toBeVisible();
     });
 
     test("remote content is projected via SSR resume", async ({ page }) => {

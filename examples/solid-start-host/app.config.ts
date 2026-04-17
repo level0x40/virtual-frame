@@ -6,11 +6,7 @@ export default defineConfig({
   ssr: true,
   vite: {
     ssr: {
-      noExternal: [
-        "@solidjs/router",
-        "@virtual-frame/solid",
-        "@virtual-frame/solid-start",
-      ],
+      noExternal: ["@solidjs/router", "@virtual-frame/solid", "@virtual-frame/solid-start"],
       resolve: {
         conditions: ["solid", "node", "import", "module", "default"],
       },

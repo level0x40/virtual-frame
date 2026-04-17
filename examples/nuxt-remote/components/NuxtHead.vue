@@ -11,13 +11,8 @@ onMounted(() => {
   meta.value = {
     title: document.title,
     description:
-      document
-        .querySelector('meta[name="description"]')
-        ?.getAttribute("content") ?? "\u2014",
-    viewport:
-      document
-        .querySelector('meta[name="viewport"]')
-        ?.getAttribute("content") ?? "\u2014",
+      document.querySelector('meta[name="description"]')?.getAttribute("content") ?? "\u2014",
+    viewport: document.querySelector('meta[name="viewport"]')?.getAttribute("content") ?? "\u2014",
   };
 });
 </script>
@@ -26,8 +21,8 @@ onMounted(() => {
   <div class="card" id="head-card">
     <h2>useHead()</h2>
     <p>
-      Nuxt's <code>useHead()</code> and <code>useSeoMeta()</code> set
-      <code>&lt;head&gt;</code> tags — fully SSR'd and reactive.
+      Nuxt's <code>useHead()</code> and <code>useSeoMeta()</code> set <code>&lt;head&gt;</code> tags
+      — fully SSR'd and reactive.
     </p>
     <div v-if="meta" class="meta-list">
       <div class="meta-item">

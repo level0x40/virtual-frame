@@ -10,8 +10,7 @@ export function NextLink() {
     <div className="card" id="link-card">
       <h2>next/link</h2>
       <p>
-        Client-side navigation with prefetching. Current path:{" "}
-        <code>{pathname}</code>
+        Client-side navigation with prefetching. Current path: <code>{pathname}</code>
       </p>
       <div className="link-list">
         <Link href="/" className="nav-link">

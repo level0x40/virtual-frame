@@ -9,11 +9,14 @@ packages/*/LICENSE
 **/.next
 **/.nuxt
 **/.output
+**/.react-router
 **/.react-server
 **/.svelte-kit
 **/build
+**/@mf-types
 .viteplus
 *.local
 .DS_Store
 *.tsbuildinfo
 **/__screenshots__
+**/routeTree.gen.ts

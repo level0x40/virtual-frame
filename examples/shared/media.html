@@ -110,12 +110,7 @@
 
       <h2>Web Audio Visualizer</h2>
       <div class="media-section">
-        <canvas
-          id="visualizer"
-          class="visualizer"
-          width="460"
-          height="80"
-        ></canvas>
+        <canvas id="visualizer" class="visualizer" width="460" height="80"></canvas>
         <div class="controls">
           <button onclick="playTone('sine')">Sine</button>
           <button onclick="playTone('square')">Square</button>
@@ -291,12 +286,7 @@
             const barHeight = (dataArray[i] / 255) * vCanvas.height;
             const hue = (i / bufferLength) * 360;
             vCtx.fillStyle = `hsl(${hue}, 80%, 55%)`;
-            vCtx.fillRect(
-              i * barWidth,
-              vCanvas.height - barHeight,
-              barWidth - 1,
-              barHeight,
-            );
+            vCtx.fillRect(i * barWidth, vCanvas.height - barHeight, barWidth - 1, barHeight);
           }
         }
         draw();
@@ -310,12 +300,7 @@
       function randomGradient() {
         cancelAnimationFrame(gradAnimId);
         gradAnimId = null;
-        const grad = gCtx.createLinearGradient(
-          0,
-          0,
-          gCanvas.width,
-          gCanvas.height,
-        );
+        const grad = gCtx.createLinearGradient(0, 0, gCanvas.width, gCanvas.height);
         grad.addColorStop(0, `hsl(${Math.random() * 360}, 80%, 60%)`);
         grad.addColorStop(0.5, `hsl(${Math.random() * 360}, 70%, 50%)`);
         grad.addColorStop(1, `hsl(${Math.random() * 360}, 80%, 60%)`);

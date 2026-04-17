@@ -19,9 +19,8 @@ export function NextSuspense() {
     <div className="card" id="suspense-card">
       <h2>React Suspense + Streaming</h2>
       <p>
-        Server Component with async data wrapped in{" "}
-        <code>&lt;Suspense&gt;</code> — the fallback streams first, then the
-        resolved content replaces it.
+        Server Component with async data wrapped in <code>&lt;Suspense&gt;</code> — the fallback
+        streams first, then the resolved content replaces it.
       </p>
       <Suspense fallback={<LoadingFallback />}>
         <SlowData />

@@ -9,9 +9,9 @@
     "start": "vite preview"
   },
   "dependencies": {
-    "@angular/core": "^20.2.0",
     "@angular/common": "^20.2.0",
     "@angular/compiler": "^20.2.0",
+    "@angular/core": "^20.2.0",
     "@angular/platform-browser": "^20.2.0",
     "@angular/platform-browser-dynamic": "^20.2.0",
     "@virtual-frame/angular": "workspace:*",

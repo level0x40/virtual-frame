@@ -46,9 +46,7 @@ for (const mode of ["dev", "prod"] as const) {
     test("remote app is reachable directly", async ({ page }) => {
       const res = await page.goto(remoteUrl);
       expect(res?.status()).toBe(200);
-      await expect(
-        page.getByRole("heading", { name: "Remote SolidStart App" }),
-      ).toBeVisible();
+      await expect(page.getByRole("heading", { name: "Remote SolidStart App" })).toBeVisible();
     });
 
     test("remote content is projected via SSR resume", async ({ page }) => {
@@ -65,9 +63,7 @@ for (const mode of ["dev", "prod"] as const) {
       });
     });
 
-    test("host → remote store sync increments projected counter", async ({
-      page,
-    }) => {
+    test("host → remote store sync increments projected counter", async ({ page }) => {
       await page.goto(url);
       await expect(page.locator("#counter-card").first()).toBeVisible({
         timeout: 30_000,

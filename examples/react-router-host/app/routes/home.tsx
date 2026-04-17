@@ -1,7 +1,4 @@
-import {
-  fetchVirtualFrame,
-  prepareVirtualFrameProps,
-} from "@virtual-frame/react-router/server";
+import { fetchVirtualFrame, prepareVirtualFrameProps } from "@virtual-frame/react-router/server";
 import { HostFrames } from "../components/HostFrames";
 import type { Route } from "./+types/home";
 
@@ -25,9 +22,9 @@ export default function HostPage({ loaderData }: Route.ComponentProps) {
     <>
       <h1>Virtual Frame — React Router SSR Example</h1>
       <p className="subtitle">
-        Two separate React Router apps: <strong>host</strong> (port 3006)
-        fetches <strong>remote</strong> (port 3007) during SSR via a route{" "}
-        <code>loader</code>, then the VirtualFrame core mirrors on the client.
+        Two separate React Router apps: <strong>host</strong> (port 3006) fetches{" "}
+        <strong>remote</strong> (port 3007) during SSR via a route <code>loader</code>, then the
+        VirtualFrame core mirrors on the client.
       </p>
 
       <HostFrames frameProps={fullFrame} counterProps={counterFrame} />

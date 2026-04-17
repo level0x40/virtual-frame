@@ -13,19 +13,15 @@ export default defineConfig({
     jsxImportSource: "react",
   },
   optimizeDeps: {
-    include: [
-      "react",
-      "react/jsx-runtime",
-      "react/jsx-dev-runtime",
-      "react-dom/client",
-    ],
+    include: ["react", "react/jsx-runtime", "react/jsx-dev-runtime", "react-dom/client"],
   },
   test: {
     name: "react",
     browser: {
       enabled: true,
       provider: playwright(),
-      instances: [{ browser: "chromium" }], headless: true,
+      instances: [{ browser: "chromium" }],
+      headless: true,
     },
     include: ["test/**/*.test.{ts,tsx}"],
     setupFiles: ["./test/setup.ts"],

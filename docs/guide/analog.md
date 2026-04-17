@@ -14,10 +14,7 @@ Create an Analog API route (Nitro server handler) to fetch the remote page durin
 
 ```ts
 // src/server/routes/api/frame.ts
-import {
-  fetchVirtualFrame,
-  prepareVirtualFrameProps,
-} from "@virtual-frame/analog/server";
+import { fetchVirtualFrame, prepareVirtualFrameProps } from "@virtual-frame/analog/server";
 import { defineEventHandler } from "h3";
 
 const REMOTE_URL = process.env["REMOTE_URL"] ?? "http://localhost:3011";
@@ -35,9 +32,10 @@ import { HttpClient } from "@angular/common/http";
 import { toSignal } from "@angular/core/rxjs-interop";
 import { VirtualFrameComponent } from "@virtual-frame/analog";
 
-const FRAME_KEY = makeStateKey<Awaited<
-  ReturnType<typeof import("@virtual-frame/analog/server").prepareVirtualFrameProps>
->>("vf-frame");
+const FRAME_KEY =
+  makeStateKey<
+    Awaited<ReturnType<typeof import("@virtual-frame/analog/server").prepareVirtualFrameProps>>
+  >("vf-frame");
 
 @Component({
   selector: "app-home",
@@ -45,11 +43,7 @@ const FRAME_KEY = makeStateKey<Awaited<
   imports: [VirtualFrameComponent],
   template: `
     @if (frame(); as f) {
-      <virtual-frame
-        [src]="f.src"
-        [isolate]="f.isolate"
-        [vfHtml]="f._vfHtml"
-      ></virtual-frame>
+      <virtual-frame [src]="f.src" [isolate]="f.isolate" [vfHtml]="f._vfHtml"></virtual-frame>
     }
   `,
 })
@@ -57,11 +51,13 @@ export default class HomeComponent {
   private http = inject(HttpClient);
   private state = inject(TransferState);
 
-  frame = toSignal(this.http.get("/api/frame").pipe(
-    // Cache SSR-fetched props via TransferState so the client
-    // does not re-fetch after hydration.
-    (src) => src,
-  ));
+  frame = toSignal(
+    this.http.get("/api/frame").pipe(
+      // Cache SSR-fetched props via TransferState so the client
+      // does not re-fetch after hydration.
+      (src) => src,
+    ),
+  );
 }
 ```
 
@@ -108,7 +104,7 @@ template: `
                    [selector]="d.counterFrame.selector"
                    [vfHtml]="d.counterFrame._vfHtml"></virtual-frame>
   }
-`
+`;
 ```
 
 See the [Shared Store](#shared-store) section below for host + remote bridge wiring.
@@ -180,14 +176,18 @@ import { store } from "../store";
 export default class HomeComponent {
   store = store;
   count = injectStoreValue<number>(store, ["count"]);
-  inc() { store["count"] = (this.count() ?? 0) + 1; }
-  reset() { store["count"] = 0; }
+  inc() {
+    store["count"] = (this.count() ?? 0) + 1;
+  }
+  reset() {
+    store["count"] = 0;
+  }
   frame = signal({ src: "", isolate: "open" as const, _vfHtml: "" });
 }
 ```
 
 - **Host reads/writes are direct**: `store["count"]` operates on the host's in-memory object — no serialisation, no round-trip.
-- **Passing `[store]` wires up the bridge**: when the hidden iframe loads and the remote signals `vf-store:ready`, the component opens a `MessageChannel`, transfers one port to the iframe, and calls `connectPort()` on the host side. Multiple `<virtual-frame>` instances sharing the same `src` share one iframe *and* one port — the store is bridged exactly once.
+- **Passing `[store]` wires up the bridge**: when the hidden iframe loads and the remote signals `vf-store:ready`, the component opens a `MessageChannel`, transfers one port to the iframe, and calls `connectPort()` on the host side. Multiple `<virtual-frame>` instances sharing the same `src` share one iframe _and_ one port — the store is bridged exactly once.
 
 ### 3. Consume the store on the remote
 
@@ -205,14 +205,16 @@ import { injectStore, injectStoreValue } from "@virtual-frame/analog/store";
 export class CounterComponent {
   store = injectStore();
   count = injectStoreValue<number>(this.store, ["count"]);
-  inc() { this.store["count"] = (this.count() ?? 0) + 1; }
+  inc() {
+    this.store["count"] = (this.count() ?? 0) + 1;
+  }
 }
 ```
 
-| Call                                 | Returns       | Purpose                                                                           |
-| ------------------------------------ | ------------- | --------------------------------------------------------------------------------- |
-| `injectStore()`                      | `StoreProxy`  | **Remote singleton.** Connects to the host store over `MessagePort` on first call. |
-| `injectStoreValue(store, ["count"])` | `Signal<T>`   | **Reactive subscription.** Re-renders dependents via Angular signals.             |
+| Call                                 | Returns      | Purpose                                                                            |
+| ------------------------------------ | ------------ | ---------------------------------------------------------------------------------- |
+| `injectStore()`                      | `StoreProxy` | **Remote singleton.** Connects to the host store over `MessagePort` on first call. |
+| `injectStoreValue(store, ["count"])` | `Signal<T>`  | **Reactive subscription.** Re-renders dependents via Angular signals.              |
 
 ### Standalone fallback
 

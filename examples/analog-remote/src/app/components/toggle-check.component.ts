@@ -17,22 +17,24 @@ import { FormsModule } from "@angular/forms";
   `,
   styles: [
     `
-    .card {
-      background: rgba(255, 255, 255, 0.15);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      border-radius: 16px;
-      padding: 24px;
-      margin-bottom: 16px;
-    }
-    h2 { margin-bottom: 12px; }
-    .checkbox-label {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 8px;
-    }
-  `,
+      .card {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 16px;
+        padding: 24px;
+        margin-bottom: 16px;
+      }
+      h2 {
+        margin-bottom: 12px;
+      }
+      .checkbox-label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 8px;
+      }
+    `,
   ],
 })
 export class ToggleCheckComponent {

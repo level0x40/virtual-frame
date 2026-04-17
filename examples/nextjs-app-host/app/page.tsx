@@ -17,9 +17,9 @@ export default async function HostPage() {
     <>
       <h1>Virtual Frame — Next.js SSR Example</h1>
       <p className="subtitle">
-        Two separate Next.js App Router apps: <strong>host</strong> (port 3000)
-        fetches <strong>remote</strong> (port 3001) during SSR, then the
-        VirtualFrame core resumes on the client.
+        Two separate Next.js App Router apps: <strong>host</strong> (port 3000) fetches{" "}
+        <strong>remote</strong> (port 3001) during SSR, then the VirtualFrame core resumes on the
+        client.
       </p>
 
       <HostFrames frameProps={frameProps} counterProps={counterProps} />

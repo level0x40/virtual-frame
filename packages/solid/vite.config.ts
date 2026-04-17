@@ -32,10 +32,7 @@ function scopedSolid(envName: "client" | "ssr", ssr: boolean): Plugin[] {
 }
 
 export default defineConfig({
-  plugins: [
-    ...scopedSolid("client", false),
-    ...scopedSolid("ssr", true),
-  ],
+  plugins: [...scopedSolid("client", false), ...scopedSolid("ssr", true)],
   environments: {
     client: {
       build: {

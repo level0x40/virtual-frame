@@ -1,6 +1,6 @@
 import { onDestroy } from "svelte";
 import { readable, type Readable } from "svelte/store";
-import { getStore as _getStore, type StoreProxy } from "@virtual-frame/store";
+import { getStore as _getStore, connectPort, type StoreProxy } from "@virtual-frame/store";
 
 // ── useStore ────────────────────────────────────────────────
 
@@ -32,10 +32,7 @@ import { getStore as _getStore, type StoreProxy } from "@virtual-frame/store";
  *                  omitted the readable updates on any mutation.
  * @returns A Svelte `Readable` with the current value at the path.
  */
-export function useStore<T = unknown>(
-  store: StoreProxy,
-  selector?: PropertyKey[],
-): Readable<T> {
+export function useStore<T = unknown>(store: StoreProxy, selector?: PropertyKey[]): Readable<T> {
   const handle = _getStore(store);
 
   function getSnapshot(): T {
@@ -101,41 +98,34 @@ export function createVirtualFrame(
   const frame: VirtualFrameRef = { _iframe: iframe, _refCount: 0 };
 
   // ── Store bridge ────────────────────────────────────
+  // `connectPort` is imported statically — `@virtual-frame/store` is
+  // already pulled into the chunk by `getStore`/`StoreProxy` above, so
+  // the prior `import("@virtual-frame/store").then(…)` wrapper was a
+  // no-op lazy load (Rollup warned INEFFECTIVE_DYNAMIC_IMPORT).
   const store = options?.store;
-  if (store) {
-    import("@virtual-frame/store").then(({ connectPort }) => {
-      if (frame._storeCleanup) return;
+  if (store && !frame._storeCleanup) {
+    let portCleanup: (() => void) | undefined;
 
-      let portCleanup: (() => void) | undefined;
+    const connect = () => {
+      if (portCleanup) return;
+      if (!iframe.contentWindow) return;
+      const channel = new MessageChannel();
+      iframe.contentWindow.postMessage({ type: "vf-store:connect" }, "*", [channel.port2]);
+      portCleanup = connectPort(store, channel.port1);
+    };
 
-      const connect = () => {
-        if (portCleanup) return;
-        if (!iframe.contentWindow) return;
-        const channel = new MessageChannel();
-        iframe.contentWindow.postMessage(
-          { type: "vf-store:connect" },
-          "*",
-          [channel.port2],
-        );
-        portCleanup = connectPort(store, channel.port1);
-      };
+    const onMessage = (e: MessageEvent) => {
+      if (e.source === iframe.contentWindow && e.data?.type === "vf-store:ready") {
+        connect();
+      }
+    };
 
-      const onMessage = (e: MessageEvent) => {
-        if (
-          e.source === iframe.contentWindow &&
-          e.data?.type === "vf-store:ready"
-        ) {
-          connect();
-        }
-      };
+    window.addEventListener("message", onMessage);
 
-      window.addEventListener("message", onMessage);
-
-      frame._storeCleanup = () => {
-        window.removeEventListener("message", onMessage);
-        portCleanup?.();
-      };
-    });
+    frame._storeCleanup = () => {
+      window.removeEventListener("message", onMessage);
+      portCleanup?.();
+    };
   }
 
   onDestroy(() => {

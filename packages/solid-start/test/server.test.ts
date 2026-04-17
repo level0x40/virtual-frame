@@ -8,9 +8,7 @@ vi.mock("virtual-frame/ssr", () => ({
 import { prepareVirtualFrameProps } from "../src/server";
 import type { VirtualFrameResult } from "virtual-frame/ssr";
 
-function makeFrame(
-  overrides?: Partial<VirtualFrameResult>,
-): VirtualFrameResult {
+function makeFrame(overrides?: Partial<VirtualFrameResult>): VirtualFrameResult {
   const base = {
     body: "<main>body</main>",
     styles: "<style>main{color:red}</style>",
@@ -37,8 +35,7 @@ describe("prepareVirtualFrameProps (SolidStart server)", () => {
     expect(props._vfHtml).toMatch(/<\/template>$/);
     expect(props.selector).toBeUndefined();
     expect(props.proxy).toBeUndefined();
-    expect(frame.render as unknown as ReturnType<typeof vi.fn>).not
-      .toHaveBeenCalled();
+    expect(frame.render as unknown as ReturnType<typeof vi.fn>).not.toHaveBeenCalled();
   });
 
   it("honours explicit isolate='closed'", async () => {

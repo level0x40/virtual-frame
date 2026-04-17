@@ -29,7 +29,7 @@ jobs:
       pull-requests: read
     steps:
       - name: Validate Conventional Commits format
-        uses: amannn/action-semantic-pull-request@v5
+        uses: amannn/action-semantic-pull-request@v6
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -57,71 +57,106 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: ./.github/actions/setup
 
       - name: Check formatting
-        run: pnpm format:check
+        run: vp run format:check
 
       - name: Lint
-        run: pnpm lint
+        run: vp run lint
 
   # ──────────────────────────────────────────────────────────────────────
-  # Type-check across the workspace. Today this is a real CI gap.
-  # ──────────────────────────────────────────────────────────────────────
-  typecheck:
-    name: Typecheck
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/setup
-
-      - name: Typecheck all packages
-        run: pnpm typecheck
-
-  # ──────────────────────────────────────────────────────────────────────
-  # Unit + browser tests via vitest.
-  # ──────────────────────────────────────────────────────────────────────
-  test:
-    name: Unit Tests
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/setup
-
-      - name: Install Playwright browsers
-        # vitest browser mode uses Playwright's chromium under the hood.
-        run: pnpm exec playwright install --with-deps chromium
-
-      - name: Run vitest
-        run: pnpm test:run
-
-      - name: Upload coverage
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage
-          path: coverage/
-          if-no-files-found: ignore
-          retention-days: 14
-
-  # ──────────────────────────────────────────────────────────────────────
-  # Build all packages. Produces dist/ artifacts that e2e relies on
-  # implicitly (e2e prod-mode builds each example, which transitively
-  # consumes built packages).
+  # Build all packages and examples. Uploads dist/ artifacts for
+  # downstream jobs (typecheck, test, e2e) so they don't rebuild.
   # ──────────────────────────────────────────────────────────────────────
   build:
     name: Build
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: ./.github/actions/setup
 
       - name: Build all packages
-        run: pnpm build
+        run: vp run build
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v5
+        with:
+          name: build-output
+          path: |
+            packages/*/dist
+          retention-days: 1
+
+      - name: Upload generated route files
+        uses: actions/upload-artifact@v5
+        with:
+          name: generated-routes
+          path: |
+            examples/*/src/routeTree.gen.ts
+          retention-days: 1
+
+  # ──────────────────────────────────────────────────────────────────────
+  # Type-check across the workspace.
+  # ──────────────────────────────────────────────────────────────────────
+  typecheck:
+    name: Typecheck
+    needs: [build]
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+      - uses: ./.github/actions/setup
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v5
+        with:
+          name: build-output
+          path: packages
+
+      - name: Download generated route files
+        uses: actions/download-artifact@v5
+        with:
+          name: generated-routes
+          path: examples
+
+      - name: Typecheck all packages
+        run: vp run typecheck
+
+  # ──────────────────────────────────────────────────────────────────────
+  # Unit + browser tests via vitest.
+  # ──────────────────────────────────────────────────────────────────────
+  test:
+    name: Unit Tests
+    needs: [build]
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+      - uses: ./.github/actions/setup
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v5
+        with:
+          name: build-output
+          path: packages
+
+      - name: Install Playwright browsers
+        # vitest browser mode uses Playwright's chromium under the hood.
+        run: npx playwright install --with-deps chromium
+
+      - name: Run vitest
+        run: vp run test:run
+
+      - name: Upload coverage
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: coverage
+          path: coverage/
+          if-no-files-found: ignore
+          retention-days: 14
 
   # ──────────────────────────────────────────────────────────────────────
   # End-to-end Playwright suite — boots real example apps in dev and prod
@@ -133,19 +168,27 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: ./.github/actions/setup
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v5
+        with:
+          name: build-output
+          path: packages
 
       - name: Install Playwright browsers
         working-directory: e2e
-        run: pnpm exec playwright install --with-deps chromium
+        run: npx playwright install --with-deps chromium
 
       - name: Run E2E suite
-        run: pnpm test:e2e
+        run: vp run test:e2e
+        env:
+          VF_E2E_VERBOSE: "1"
 
       - name: Upload Playwright report
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: playwright-report
           path: |
@@ -166,14 +209,14 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           # changeset status needs main as a comparison base.
           fetch-depth: 0
       - uses: ./.github/actions/setup
 
       - name: Verify changeset present
-        run: pnpm changeset status --since=origin/${{ github.base_ref }}
+        run: vp run changeset status --since=origin/${{ github.base_ref }}
 
   # ──────────────────────────────────────────────────────────────────────
   # Aggregate gate — single status for branch protection to require.

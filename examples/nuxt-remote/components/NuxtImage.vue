@@ -1,13 +1,11 @@
-<script setup lang="ts">
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <div class="card" id="image-card">
     <h2>NuxtImg</h2>
     <p>
-      Optimized image component via <code>@nuxt/image</code> — processed
-      through IPX with automatic format conversion, lazy loading, and
-      responsive sizing.
+      Optimized image component via <code>@nuxt/image</code> — processed through IPX with automatic
+      format conversion, lazy loading, and responsive sizing.
     </p>
     <div class="image-grid">
       <div class="image-item">

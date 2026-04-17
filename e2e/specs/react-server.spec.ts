@@ -52,23 +52,17 @@ for (const mode of ["dev", "prod"] as const) {
     test("remote app is reachable directly", async ({ page }) => {
       const res = await page.goto(remoteUrl);
       expect(res?.status()).toBe(200);
-      await expect(
-        page.getByRole("heading", { name: "Remote react-server App" }),
-      ).toBeVisible();
+      await expect(page.getByRole("heading", { name: "Remote react-server App" })).toBeVisible();
     });
 
     test("remote content is projected via SSR resume", async ({ page }) => {
       await page.goto(url);
       await expect(
-        page
-          .getByRole("heading", { name: "Remote react-server App" })
-          .first(),
+        page.getByRole("heading", { name: "Remote react-server App" }).first(),
       ).toBeVisible({ timeout: 30_000 });
     });
 
-    test("counter-card selector projection renders the counter", async ({
-      page,
-    }) => {
+    test("counter-card selector projection renders the counter", async ({ page }) => {
       await page.goto(url);
       // Both VirtualFrame instances render the projected #counter-card.
       // The selector-only one isolates just that element.
@@ -86,9 +80,7 @@ for (const mode of ["dev", "prod"] as const) {
 
       await page.goto(url);
       await expect(
-        page
-          .getByRole("heading", { name: "Remote react-server App" })
-          .first(),
+        page.getByRole("heading", { name: "Remote react-server App" }).first(),
       ).toBeVisible({ timeout: 30_000 });
 
       expect(errors, errors.map((e) => e.message).join("\n")).toEqual([]);

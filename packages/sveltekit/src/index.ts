@@ -14,10 +14,7 @@ export { default as VirtualFrame } from "./VirtualFrameSSR.svelte";
 
 // Re-export the reactive store helper from @virtual-frame/svelte
 export { useStore, createVirtualFrame } from "@virtual-frame/svelte";
-export type {
-  VirtualFrameRef,
-  CreateVirtualFrameOptions,
-} from "@virtual-frame/svelte";
+export type { VirtualFrameRef, CreateVirtualFrameOptions } from "@virtual-frame/svelte";
 
 // Type-only re-exports so consumers can reference these without
 // pulling the server module into the client bundle at runtime.

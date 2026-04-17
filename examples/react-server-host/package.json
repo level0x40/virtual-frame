@@ -10,8 +10,8 @@
   },
   "dependencies": {
     "@lazarv/react-server": "catalog:",
-    "@virtual-frame/react-server": "workspace:*",
     "@virtual-frame/react": "workspace:*",
+    "@virtual-frame/react-server": "workspace:*",
     "@virtual-frame/store": "workspace:*",
     "virtual-frame": "workspace:*"
   },

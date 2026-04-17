@@ -1,14 +1,6 @@
-import {
-  Directive,
-  ElementRef,
-  Input,
-  OnInit,
-  OnDestroy,
-  OnChanges,
-  inject,
-} from "@angular/core";
+import { Directive, ElementRef, Input, OnInit, OnDestroy, OnChanges, inject } from "@angular/core";
 import { VirtualFrame } from "virtual-frame";
-import type { StoreProxy } from "@virtual-frame/store";
+import { connectPort, type StoreProxy } from "@virtual-frame/store";
 
 // ── Shared frame handle ─────────────────────────────────────
 
@@ -64,41 +56,34 @@ export function createVirtualFrame(
   const frame: VirtualFrameRef = { _iframe: iframe, _refCount: 0 };
 
   // ── Store bridge ────────────────────────────────────
+  // `connectPort` is imported statically — `@virtual-frame/store` is
+  // already pulled into the same bundle chunk via the `./store`
+  // re-export in `index.ts`, so the prior dynamic `import(…)` was a
+  // no-op lazy load (Rollup warned INEFFECTIVE_DYNAMIC_IMPORT).
   const store = options?.store;
-  if (store) {
-    import("@virtual-frame/store").then(({ connectPort }) => {
-      if (frame._storeCleanup) return;
+  if (store && !frame._storeCleanup) {
+    let portCleanup: (() => void) | undefined;
 
-      let portCleanup: (() => void) | undefined;
+    const connect = () => {
+      if (portCleanup) return;
+      if (!iframe.contentWindow) return;
+      const channel = new MessageChannel();
+      iframe.contentWindow.postMessage({ type: "vf-store:connect" }, "*", [channel.port2]);
+      portCleanup = connectPort(store, channel.port1);
+    };
 
-      const connect = () => {
-        if (portCleanup) return;
-        if (!iframe.contentWindow) return;
-        const channel = new MessageChannel();
-        iframe.contentWindow.postMessage(
-          { type: "vf-store:connect" },
-          "*",
-          [channel.port2],
-        );
-        portCleanup = connectPort(store, channel.port1);
-      };
+    const onMessage = (e: MessageEvent) => {
+      if (e.source === iframe.contentWindow && e.data?.type === "vf-store:ready") {
+        connect();
+      }
+    };
 
-      const onMessage = (e: MessageEvent) => {
-        if (
-          e.source === iframe.contentWindow &&
-          e.data?.type === "vf-store:ready"
-        ) {
-          connect();
-        }
-      };
+    window.addEventListener("message", onMessage);
 
-      window.addEventListener("message", onMessage);
-
-      frame._storeCleanup = () => {
-        window.removeEventListener("message", onMessage);
-        portCleanup?.();
-      };
-    });
+    frame._storeCleanup = () => {
+      window.removeEventListener("message", onMessage);
+      portCleanup?.();
+    };
   }
 
   return frame;
@@ -179,40 +164,35 @@ export class VirtualFrameDirective implements OnInit, OnDestroy, OnChanges {
       this.ownedIframe = iframe;
 
       // ── Store bridge (owned source only) ─────────────
+      // Static `connectPort` — see comment on the `createVirtualFrame`
+      // store bridge above.
       if (this.store) {
         const store = this.store;
         const capturedIframe = iframe;
-        import("@virtual-frame/store").then(({ connectPort }) => {
-          let portCleanup: (() => void) | undefined;
+        let portCleanup: (() => void) | undefined;
 
-          const connect = () => {
-            if (portCleanup) return;
-            if (!capturedIframe.contentWindow) return;
-            const channel = new MessageChannel();
-            capturedIframe.contentWindow.postMessage(
-              { type: "vf-store:connect" },
-              "*",
-              [channel.port2],
-            );
-            portCleanup = connectPort(store, channel.port1);
-          };
+        const connect = () => {
+          if (portCleanup) return;
+          if (!capturedIframe.contentWindow) return;
+          const channel = new MessageChannel();
+          capturedIframe.contentWindow.postMessage({ type: "vf-store:connect" }, "*", [
+            channel.port2,
+          ]);
+          portCleanup = connectPort(store, channel.port1);
+        };
 
-          const onMessage = (e: MessageEvent) => {
-            if (
-              e.source === capturedIframe.contentWindow &&
-              e.data?.type === "vf-store:ready"
-            ) {
-              connect();
-            }
-          };
+        const onMessage = (e: MessageEvent) => {
+          if (e.source === capturedIframe.contentWindow && e.data?.type === "vf-store:ready") {
+            connect();
+          }
+        };
 
-          window.addEventListener("message", onMessage);
+        window.addEventListener("message", onMessage);
 
-          this.storeCleanup = () => {
-            window.removeEventListener("message", onMessage);
-            portCleanup?.();
-          };
-        });
+        this.storeCleanup = () => {
+          window.removeEventListener("message", onMessage);
+          portCleanup?.();
+        };
       }
     } else {
       return;

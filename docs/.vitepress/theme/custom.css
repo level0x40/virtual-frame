@@ -89,26 +89,72 @@
   background-position: center;
 }
 
-.vp-code-group .tabs label[data-title="npm"]::before { background-image: var(--icon-npm); }
-.vp-code-group .tabs label[data-title="pnpm"]::before { background-image: var(--icon-pnpm); }
-.vp-code-group .tabs label[data-title="yarn"]::before { background-image: var(--icon-yarn); }
-.vp-code-group .tabs label[data-title="React"]::before { background-image: var(--icon-react); }
-.vp-code-group .tabs label[data-title="Vue"]::before { background-image: var(--icon-vue); }
-.vp-code-group .tabs label[data-title="Svelte"]::before { background-image: var(--icon-svelte); }
-.vp-code-group .tabs label[data-title="Solid"]::before { background-image: var(--icon-solid); }
-.vp-code-group .tabs label[data-title="Angular"]::before { background-image: var(--icon-angular); }
-.vp-code-group .tabs label[data-title="Next.js"]::before { background-image: var(--icon-nextjs); }
-.vp-code-group .tabs label[data-title="React Router"]::before { background-image: var(--icon-react-router); }
-.vp-code-group .tabs label[data-title="TanStack Start"]::before { background-image: var(--icon-tanstack); }
-.vp-code-group .tabs label[data-title="@lazarv/react-server"]::before { background-image: var(--icon-react-server); }
-.vp-code-group .tabs label[data-title="Nuxt"]::before { background-image: var(--icon-nuxt); }
-.vp-code-group .tabs label[data-title="Analog"]::before { background-image: var(--icon-analog); }
-.vp-code-group .tabs label[data-title="SvelteKit"]::before { background-image: var(--icon-svelte); }
-.vp-code-group .tabs label[data-title="SolidStart"]::before { background-image: var(--icon-solid); }
-.vp-code-group .tabs label[data-title="Vanilla JS"]::before { background-image: var(--icon-js); }
+.vp-code-group .tabs label[data-title="npm"]::before {
+  background-image: var(--icon-npm);
+}
+.vp-code-group .tabs label[data-title="pnpm"]::before {
+  background-image: var(--icon-pnpm);
+}
+.vp-code-group .tabs label[data-title="yarn"]::before {
+  background-image: var(--icon-yarn);
+}
+.vp-code-group .tabs label[data-title="React"]::before {
+  background-image: var(--icon-react);
+}
+.vp-code-group .tabs label[data-title="Vue"]::before {
+  background-image: var(--icon-vue);
+}
+.vp-code-group .tabs label[data-title="Svelte"]::before {
+  background-image: var(--icon-svelte);
+}
+.vp-code-group .tabs label[data-title="Solid"]::before {
+  background-image: var(--icon-solid);
+}
+.vp-code-group .tabs label[data-title="Angular"]::before {
+  background-image: var(--icon-angular);
+}
+.vp-code-group .tabs label[data-title="Next.js"]::before {
+  background-image: var(--icon-nextjs);
+}
+.vp-code-group .tabs label[data-title="React Router"]::before {
+  background-image: var(--icon-react-router);
+}
+.vp-code-group .tabs label[data-title="TanStack Start"]::before {
+  background-image: var(--icon-tanstack);
+}
+.vp-code-group .tabs label[data-title="@lazarv/react-server"]::before {
+  background-image: var(--icon-react-server);
+}
+.vp-code-group .tabs label[data-title="Nuxt"]::before {
+  background-image: var(--icon-nuxt);
+}
+.vp-code-group .tabs label[data-title="Analog"]::before {
+  background-image: var(--icon-analog);
+}
+.vp-code-group .tabs label[data-title="SvelteKit"]::before {
+  background-image: var(--icon-svelte);
+}
+.vp-code-group .tabs label[data-title="SolidStart"]::before {
+  background-image: var(--icon-solid);
+}
+.vp-code-group .tabs label[data-title="Vanilla JS"]::before {
+  background-image: var(--icon-js);
+}
 
 /* Hide ::before for tabs without a matching icon */
-.vp-code-group .tabs label:not([data-title="npm"]):not([data-title="pnpm"]):not([data-title="yarn"]):not([data-title="React"]):not([data-title="Vue"]):not([data-title="Svelte"]):not([data-title="Solid"]):not([data-title="Angular"]):not([data-title="Next.js"]):not([data-title="React Router"]):not([data-title="TanStack Start"]):not([data-title="@lazarv/react-server"]):not([data-title="Nuxt"]):not([data-title="Analog"]):not([data-title="SvelteKit"]):not([data-title="SolidStart"]):not([data-title="Vanilla JS"])::before {
+.vp-code-group
+  .tabs
+  label:not([data-title="npm"]):not([data-title="pnpm"]):not([data-title="yarn"]):not(
+    [data-title="React"]
+  ):not([data-title="Vue"]):not([data-title="Svelte"]):not([data-title="Solid"]):not(
+    [data-title="Angular"]
+  ):not([data-title="Next.js"]):not([data-title="React Router"]):not(
+    [data-title="TanStack Start"]
+  ):not([data-title="@lazarv/react-server"]):not([data-title="Nuxt"]):not(
+    [data-title="Analog"]
+  ):not([data-title="SvelteKit"]):not([data-title="SolidStart"]):not(
+    [data-title="Vanilla JS"]
+  )::before {
   display: none;
 }
 
@@ -139,20 +185,48 @@
   background-position: center;
 }
 
-.VPSidebar a[href$="/guide/vanilla"] .text::before { background-image: var(--icon-js); }
-.VPSidebar a[href$="/guide/react"] .text::before { background-image: var(--icon-react); }
-.VPSidebar a[href$="/guide/vue"] .text::before { background-image: var(--icon-vue); }
-.VPSidebar a[href$="/guide/svelte"] .text::before { background-image: var(--icon-svelte); }
-.VPSidebar a[href$="/guide/sveltekit"] .text::before { background-image: var(--icon-svelte); }
-.VPSidebar a[href$="/guide/solid-start"] .text::before { background-image: var(--icon-solid); }
-.VPSidebar a[href$="/guide/solid"] .text::before { background-image: var(--icon-solid); }
-.VPSidebar a[href$="/guide/angular"] .text::before { background-image: var(--icon-angular); }
-.VPSidebar a[href$="/guide/nextjs"] .text::before { background-image: var(--icon-nextjs); }
-.VPSidebar a[href$="/guide/react-router"] .text::before { background-image: var(--icon-react-router); }
-.VPSidebar a[href$="/guide/tanstack-start"] .text::before { background-image: var(--icon-tanstack); }
-.VPSidebar a[href$="/guide/react-server"] .text::before { background-image: var(--icon-react-server); }
-.VPSidebar a[href$="/guide/nuxt"] .text::before { background-image: var(--icon-nuxt); }
-.VPSidebar a[href$="/guide/analog"] .text::before { background-image: var(--icon-analog); }
+.VPSidebar a[href$="/guide/vanilla"] .text::before {
+  background-image: var(--icon-js);
+}
+.VPSidebar a[href$="/guide/react"] .text::before {
+  background-image: var(--icon-react);
+}
+.VPSidebar a[href$="/guide/vue"] .text::before {
+  background-image: var(--icon-vue);
+}
+.VPSidebar a[href$="/guide/svelte"] .text::before {
+  background-image: var(--icon-svelte);
+}
+.VPSidebar a[href$="/guide/sveltekit"] .text::before {
+  background-image: var(--icon-svelte);
+}
+.VPSidebar a[href$="/guide/solid-start"] .text::before {
+  background-image: var(--icon-solid);
+}
+.VPSidebar a[href$="/guide/solid"] .text::before {
+  background-image: var(--icon-solid);
+}
+.VPSidebar a[href$="/guide/angular"] .text::before {
+  background-image: var(--icon-angular);
+}
+.VPSidebar a[href$="/guide/nextjs"] .text::before {
+  background-image: var(--icon-nextjs);
+}
+.VPSidebar a[href$="/guide/react-router"] .text::before {
+  background-image: var(--icon-react-router);
+}
+.VPSidebar a[href$="/guide/tanstack-start"] .text::before {
+  background-image: var(--icon-tanstack);
+}
+.VPSidebar a[href$="/guide/react-server"] .text::before {
+  background-image: var(--icon-react-server);
+}
+.VPSidebar a[href$="/guide/nuxt"] .text::before {
+  background-image: var(--icon-nuxt);
+}
+.VPSidebar a[href$="/guide/analog"] .text::before {
+  background-image: var(--icon-analog);
+}
 
 /* ── Page title (h1) framework icons ──────────────────────── */
 
@@ -198,21 +272,48 @@ h1#analog::before {
   background-position: center;
 }
 
-
-h1#vanilla-js::before { background-image: var(--icon-js); }
-h1#react::before { background-image: var(--icon-react); }
-h1#vue::before { background-image: var(--icon-vue); }
-h1#svelte::before { background-image: var(--icon-svelte); }
-h1#sveltekit::before { background-image: var(--icon-svelte); }
-h1#solidstart::before { background-image: var(--icon-solid); }
-h1#solid::before { background-image: var(--icon-solid); }
-h1#angular::before { background-image: var(--icon-angular); }
-h1#next-js::before { background-image: var(--icon-nextjs); }
-h1#react-router::before { background-image: var(--icon-react-router); }
-h1#tanstack-start::before { background-image: var(--icon-tanstack); }
-h1#lazarv-react-server::before { background-image: var(--icon-react-server); }
-h1#nuxt::before { background-image: var(--icon-nuxt); }
-h1#analog::before { background-image: var(--icon-analog); }
+h1#vanilla-js::before {
+  background-image: var(--icon-js);
+}
+h1#react::before {
+  background-image: var(--icon-react);
+}
+h1#vue::before {
+  background-image: var(--icon-vue);
+}
+h1#svelte::before {
+  background-image: var(--icon-svelte);
+}
+h1#sveltekit::before {
+  background-image: var(--icon-svelte);
+}
+h1#solidstart::before {
+  background-image: var(--icon-solid);
+}
+h1#solid::before {
+  background-image: var(--icon-solid);
+}
+h1#angular::before {
+  background-image: var(--icon-angular);
+}
+h1#next-js::before {
+  background-image: var(--icon-nextjs);
+}
+h1#react-router::before {
+  background-image: var(--icon-react-router);
+}
+h1#tanstack-start::before {
+  background-image: var(--icon-tanstack);
+}
+h1#lazarv-react-server::before {
+  background-image: var(--icon-react-server);
+}
+h1#nuxt::before {
+  background-image: var(--icon-nuxt);
+}
+h1#analog::before {
+  background-image: var(--icon-analog);
+}
 
 /* ═══════════════════════════════════════════════════════════════
    Dark mode overrides

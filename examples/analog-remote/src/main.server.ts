@@ -13,9 +13,9 @@ if (import.meta.env.PROD) {
 }
 
 export default async function render(url: string, document: string) {
-  const html = await renderApplication(
-    (ctx) => bootstrapApplication(AppComponent, config, ctx),
-    { document, url },
-  );
+  const html = await renderApplication((ctx) => bootstrapApplication(AppComponent, config, ctx), {
+    document,
+    url,
+  });
   return html;
 }

@@ -1,7 +1,4 @@
-import {
-  fetchVirtualFrame,
-  prepareVirtualFrameProps,
-} from "@virtual-frame/sveltekit/server";
+import { fetchVirtualFrame, prepareVirtualFrameProps } from "@virtual-frame/sveltekit/server";
 
 const REMOTE_URL = process.env["REMOTE_URL"] ?? "http://localhost:3019";
 

@@ -217,10 +217,7 @@ export function createProxy(meta: ProxyMeta): object {
 /**
  * Navigate the state tree to get the value at a given path.
  */
-function getValueAtPath(
-  state: Record<string, unknown>,
-  path: PropertyKey[],
-): unknown {
+function getValueAtPath(state: Record<string, unknown>, path: PropertyKey[]): unknown {
   let current: unknown = state;
   for (const segment of path) {
     if (current == null || typeof current !== "object") return undefined;
@@ -238,10 +235,7 @@ function getValueAtPath(
 /**
  * Get or create a child proxy, using the WeakRef cache.
  */
-function getOrCreateChildProxy(
-  childPath: PropertyKey[],
-  parentMeta: ProxyMeta,
-): object {
+function getOrCreateChildProxy(childPath: PropertyKey[], parentMeta: ProxyMeta): object {
   const cacheKey = JSON.stringify(childPath);
   const cached = parentMeta.proxyCache.get(cacheKey)?.deref();
   if (cached) return cached;
@@ -255,10 +249,7 @@ function getOrCreateChildProxy(
 /**
  * Invalidate cached proxies for a path and all sub-paths.
  */
-function invalidateProxyCache(
-  cache: Map<string, WeakRef<object>>,
-  path: PropertyKey[],
-): void {
+function invalidateProxyCache(cache: Map<string, WeakRef<object>>, path: PropertyKey[]): void {
   const prefix = JSON.stringify(path);
   // Remove exact match and any sub-paths
   for (const key of cache.keys()) {
@@ -295,9 +286,7 @@ function getArrayTrap(
     // For non-mutating methods like map, filter, etc., return them bound to
     // a snapshot of the array. For numeric index or 'length', return undefined
     // to fall through to get handler.
-    if (
-      typeof (array as unknown as Record<string, unknown>)[prop] === "function"
-    ) {
+    if (typeof (array as unknown as Record<string, unknown>)[prop] === "function") {
       return (array as unknown as Record<string, Function>)[prop].bind(array);
     }
     return undefined; // Fall through to get handler
@@ -378,20 +367,12 @@ function getArrayTrap(
     case "splice":
       return (start: number, deleteCount?: number, ...items: unknown[]) => {
         const normalizedStart =
-          start < 0
-            ? Math.max(array.length + start, 0)
-            : Math.min(start, array.length);
+          start < 0 ? Math.max(array.length + start, 0) : Math.min(start, array.length);
         const normalizedDeleteCount =
           deleteCount === undefined
             ? array.length - normalizedStart
-            : Math.max(
-                0,
-                Math.min(deleteCount, array.length - normalizedStart),
-              );
-        const removed = array.slice(
-          normalizedStart,
-          normalizedStart + normalizedDeleteCount,
-        );
+            : Math.max(0, Math.min(deleteCount, array.length - normalizedStart));
+        const removed = array.slice(normalizedStart, normalizedStart + normalizedDeleteCount);
         const op: Operation = {
           ts: performance.now(),
           source: sourceId,
@@ -444,13 +425,9 @@ function getArrayTrap(
     case "fill":
       return (value: unknown, start = 0, end = array.length) => {
         const normalizedStart =
-          start < 0
-            ? Math.max(array.length + start, 0)
-            : Math.min(start, array.length);
+          start < 0 ? Math.max(array.length + start, 0) : Math.min(start, array.length);
         const normalizedEnd =
-          end < 0
-            ? Math.max(array.length + end, 0)
-            : Math.min(end, array.length);
+          end < 0 ? Math.max(array.length + end, 0) : Math.min(end, array.length);
         const items = [...array];
         items.fill(value, normalizedStart, normalizedEnd);
         const op: Operation = {
@@ -552,9 +529,8 @@ function getMapTrap(
     case "entries":
       return () => map.entries();
     case "forEach":
-      return (
-        cb: (value: unknown, key: unknown, map: Map<unknown, unknown>) => void,
-      ) => map.forEach(cb);
+      return (cb: (value: unknown, key: unknown, map: Map<unknown, unknown>) => void) =>
+        map.forEach(cb);
     case Symbol.iterator:
       return () => map[Symbol.iterator]();
     default:
@@ -622,8 +598,7 @@ function getSetTrap(
     case "entries":
       return () => set.entries();
     case "forEach":
-      return (cb: (value: unknown, key: unknown, set: Set<unknown>) => void) =>
-        set.forEach(cb);
+      return (cb: (value: unknown, key: unknown, set: Set<unknown>) => void) => set.forEach(cb);
     case Symbol.iterator:
       return () => set[Symbol.iterator]();
     default:

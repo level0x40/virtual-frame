@@ -1,9 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
-import {
-  fetchVirtualFrame,
-  prepareVirtualFrameProps,
-} from "@virtual-frame/tanstack-start/server";
+import { fetchVirtualFrame, prepareVirtualFrameProps } from "@virtual-frame/tanstack-start/server";
 import { HostFrames } from "../components/HostFrames";
 
 const REMOTE_URL = process.env.REMOTE_URL ?? "http://localhost:3005";
@@ -31,9 +28,9 @@ function HostPage() {
     <>
       <h1>Virtual Frame — TanStack Start SSR Example</h1>
       <p className="subtitle">
-        Two separate TanStack Start apps: <strong>host</strong> (port 3004)
-        fetches <strong>remote</strong> (port 3005) during SSR via a route{" "}
-        <code>loader</code>, then the VirtualFrame core mirrors on the client.
+        Two separate TanStack Start apps: <strong>host</strong> (port 3004) fetches{" "}
+        <strong>remote</strong> (port 3005) during SSR via a route <code>loader</code>, then the
+        VirtualFrame core mirrors on the client.
       </p>
 
       <HostFrames frameProps={fullFrame} counterProps={counterFrame} />

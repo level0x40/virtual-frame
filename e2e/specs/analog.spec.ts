@@ -46,16 +46,14 @@ for (const mode of ["dev", "prod"] as const) {
     test("remote app is reachable directly", async ({ page }) => {
       const res = await page.goto(remoteUrl);
       expect(res?.status()).toBe(200);
-      await expect(
-        page.getByRole("heading", { name: "Remote Analog App" }),
-      ).toBeVisible();
+      await expect(page.getByRole("heading", { name: "Remote Analog App" })).toBeVisible();
     });
 
     test("remote content is projected via SSR resume", async ({ page }) => {
       await page.goto(url);
-      await expect(
-        page.getByRole("heading", { name: "Remote Analog App" }).first(),
-      ).toBeVisible({ timeout: 30_000 });
+      await expect(page.getByRole("heading", { name: "Remote Analog App" }).first()).toBeVisible({
+        timeout: 30_000,
+      });
     });
 
     test("counter card is projected (selector frame)", async ({ page }) => {

@@ -1,9 +1,4 @@
-import {
-  HeadContent,
-  Outlet,
-  Scripts,
-  createRootRoute,
-} from "@tanstack/react-router";
+import { HeadContent, Outlet, Scripts, createRootRoute } from "@tanstack/react-router";
 import appCss from "../styles/globals.css?url";
 
 // Virtual Frame bridge — auto-initialises when loaded inside an iframe
@@ -19,8 +14,7 @@ export const Route = createRootRoute({
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       {
         name: "description",
-        content:
-          "A TanStack Start remote app embedded via virtual-frame SSR",
+        content: "A TanStack Start remote app embedded via virtual-frame SSR",
       },
     ],
     links: [{ rel: "stylesheet", href: appCss }],

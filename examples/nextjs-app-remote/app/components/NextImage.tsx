@@ -7,8 +7,8 @@ export function NextImage() {
     <div className="card" id="image-card">
       <h2>next/image</h2>
       <p>
-        Optimized image component with automatic format conversion, lazy
-        loading, and responsive sizing.
+        Optimized image component with automatic format conversion, lazy loading, and responsive
+        sizing.
       </p>
       <div className="image-grid">
         <div className="image-item">

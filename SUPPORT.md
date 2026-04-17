@@ -13,15 +13,15 @@ The fastest answer is usually in the docs:
 
 ## Where to ask
 
-| You want to…                                                     | Go here                                                                                              |
-| ---------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| Ask a question, share an idea, get architectural advice          | [GitHub Discussions](https://github.com/level0x40/virtual-frame/discussions)                         |
-| Report a reproducible bug                                        | [Open a bug report](https://github.com/level0x40/virtual-frame/issues/new?template=bug_report.yml)   |
-| Request a feature or API change                                  | [Open a feature request](https://github.com/level0x40/virtual-frame/issues/new?template=feature_request.yml) |
-| Request a new framework binding                                  | [Open an integration request](https://github.com/level0x40/virtual-frame/issues/new?template=framework_integration.yml) |
-| Report a documentation problem                                   | [Open a docs issue](https://github.com/level0x40/virtual-frame/issues/new?template=documentation.yml) |
-| Report a security vulnerability                                  | See [SECURITY.md](./SECURITY.md) — **do not open a public issue**                                    |
-| Discuss commercial use, licensing, partnerships, or consulting   | <hello@level0x40.com>                                                                                |
+| You want to…                                                   | Go here                                                                                                                 |
+| -------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| Ask a question, share an idea, get architectural advice        | [GitHub Discussions](https://github.com/level0x40/virtual-frame/discussions)                                            |
+| Report a reproducible bug                                      | [Open a bug report](https://github.com/level0x40/virtual-frame/issues/new?template=bug_report.yml)                      |
+| Request a feature or API change                                | [Open a feature request](https://github.com/level0x40/virtual-frame/issues/new?template=feature_request.yml)            |
+| Request a new framework binding                                | [Open an integration request](https://github.com/level0x40/virtual-frame/issues/new?template=framework_integration.yml) |
+| Report a documentation problem                                 | [Open a docs issue](https://github.com/level0x40/virtual-frame/issues/new?template=documentation.yml)                   |
+| Report a security vulnerability                                | See [SECURITY.md](./SECURITY.md) — **do not open a public issue**                                                       |
+| Discuss commercial use, licensing, partnerships, or consulting | <hello@level0x40.com>                                                                                                   |
 
 ## Before opening an issue
 
