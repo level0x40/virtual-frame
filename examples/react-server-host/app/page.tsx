@@ -1,4 +1,5 @@
-import { fetchVirtualFrame, prepareVirtualFrameProps } from "@virtual-frame/react-server";
+import { fetchVirtualFrame } from "@virtual-frame/react-server";
+import { prepareVirtualFrameProps } from "@virtual-frame/react-server/cache";
 import { HostFrames } from "./components/HostFrames";
 
 const REMOTE_URL = process.env.REMOTE_URL ?? "http://localhost:3003";

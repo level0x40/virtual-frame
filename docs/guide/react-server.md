@@ -74,7 +74,8 @@ Fetch the frame props in a Server Component and hand them to a `"use client"` wr
 
 ```tsx
 // app/page.tsx (Server Component)
-import { fetchVirtualFrame, prepareVirtualFrameProps } from "@virtual-frame/react-server";
+import { fetchVirtualFrame } from "@virtual-frame/react-server";
+import { prepareVirtualFrameProps } from "@virtual-frame/react-server/cache";
 import { HostFrames } from "./components/HostFrames";
 
 export default async function Page() {
