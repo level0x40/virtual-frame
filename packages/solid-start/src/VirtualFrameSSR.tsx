@@ -1,7 +1,7 @@
 import { onMount, onCleanup, createEffect, createSignal, mergeProps, type JSX } from "solid-js";
 import { isServer } from "solid-js/web";
-import type { VirtualFrame as VirtualFrameCore, VirtualFrameOptions } from "virtual-frame";
-import type { StoreProxy } from "@virtual-frame/store";
+import { VirtualFrame as VirtualFrameCore, type VirtualFrameOptions } from "virtual-frame";
+import { connectPort, type StoreProxy } from "@virtual-frame/store";
 
 // ── Shared iframe registry (module-scoped) ─────────────────────────
 // Multiple VirtualFrame instances pointing to the same `src` share a
@@ -59,10 +59,15 @@ export function VirtualFrame(rawProps: VirtualFrameSSRProps) {
   let sharedKey: string | null = null;
   const [mounted, setMounted] = createSignal(false);
 
-  async function setup() {
+  function setup() {
     teardown();
     if (!hostEl || !props.src) return;
-    const { VirtualFrame: VirtualFrameCoreCtor } = await import("virtual-frame");
+    // `virtual-frame` is imported statically — it is already pulled
+    // into the bundle by `@virtual-frame/solid` (re-exported from
+    // `./index.tsx`), so the prior `await import("virtual-frame")` was
+    // a no-op lazy load (Rollup warned INEFFECTIVE_DYNAMIC_IMPORT).
+    // Core module is SSR-safe at load time — browser-API work happens
+    // inside methods, not at module top level.
 
     // On client-side navigation, the browser's HTML parser doesn't
     // process <template shadowrootmode> in innerHTML. Use
@@ -92,9 +97,9 @@ export function VirtualFrame(rawProps: VirtualFrameSSRProps) {
       iframe.setAttribute("aria-hidden", "true");
       iframe.setAttribute("tabindex", "-1");
       // iframe is position:fixed + invisible, so attaching to <body>
-      // is fine and avoids relying on hostEl being in the DOM yet
-      // (setup() is async and hostEl.parentNode may be null in tests
-      // or during rapid mount/unmount cycles).
+      // is fine and avoids relying on hostEl being in the DOM yet —
+      // hostEl.parentNode may be null in tests or during rapid
+      // mount/unmount cycles.
       (hostEl.parentNode ?? document.body).insertBefore(iframe, hostEl.parentNode ? hostEl : null);
 
       shared = { iframe, refCount: 1 };
@@ -102,41 +107,40 @@ export function VirtualFrame(rawProps: VirtualFrameSSRProps) {
     }
 
     // ── Store bridge ────────────────────────────────────
+    // `connectPort` is imported statically — `@virtual-frame/store` is
+    // already pulled into the chunk by `@virtual-frame/solid` (re-exported
+    // from `./index.tsx`), so the prior dynamic `import(…)` was a no-op
+    // lazy load.
     if (props.store && !shared.storeCleanup) {
-      const capturedStore = props.store;
-      const capturedSrc = props.src;
-      import("@virtual-frame/store").then(({ connectPort }) => {
-        const s = _sharedIframes.get(capturedSrc);
-        if (!s || s.storeCleanup) return;
+      const store = props.store;
+      const s = shared;
+      let portCleanup: (() => void) | undefined;
 
-        let portCleanup: (() => void) | undefined;
+      const connect = () => {
+        if (portCleanup) return;
+        if (!s.iframe.contentWindow) return;
+        const channel = new MessageChannel();
+        s.iframe.contentWindow.postMessage({ type: "vf-store:connect" }, "*", [channel.port2]);
+        portCleanup = connectPort(store, channel.port1);
+      };
 
-        const connect = () => {
-          if (portCleanup) return;
-          if (!s.iframe.contentWindow) return;
-          const channel = new MessageChannel();
-          s.iframe.contentWindow.postMessage({ type: "vf-store:connect" }, "*", [channel.port2]);
-          portCleanup = connectPort(capturedStore, channel.port1);
-        };
+      const onMessage = (e: MessageEvent) => {
+        if (e.source === s.iframe.contentWindow && e.data?.type === "vf-store:ready") {
+          connect();
+        }
+      };
 
-        const onMessage = (e: MessageEvent) => {
-          if (e.source === s.iframe.contentWindow && e.data?.type === "vf-store:ready") {
-            connect();
-          }
-        };
+      window.addEventListener("message", onMessage);
 
-        window.addEventListener("message", onMessage);
-
-        s.storeCleanup = () => {
-          window.removeEventListener("message", onMessage);
-          portCleanup?.();
-        };
-      });
+      s.storeCleanup = () => {
+        window.removeEventListener("message", onMessage);
+        portCleanup?.();
+      };
     }
 
     sharedKey = props.src;
 
-    core = new VirtualFrameCoreCtor(iframe, hostEl, {
+    core = new VirtualFrameCore(iframe, hostEl, {
       isolate: props.isolate,
       selector: props.selector,
       streamingFps: props.streamingFps,

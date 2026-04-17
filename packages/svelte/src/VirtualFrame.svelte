@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount, onDestroy } from "svelte";
   import { VirtualFrame as VirtualFrameCore, type VirtualFrameOptions } from "virtual-frame";
-  import type { StoreProxy } from "@virtual-frame/store";
+  import { connectPort, type StoreProxy } from "@virtual-frame/store";
   import type { VirtualFrameRef } from "./composables.js";
 
   let { src, frame, isolate, selector, streamingFps, store, children, ...rest }: {
@@ -40,40 +40,42 @@
       ownedIframe = iframe;
 
       // ── Store bridge (owned source only) ──────────────
+      // `connectPort` is imported statically — `@virtual-frame/store`
+      // is already pulled into the chunk via `./composables` (also
+      // re-exported from `index.ts`), so the prior dynamic `import(…)`
+      // was a no-op lazy load.
       if (store) {
         const capturedStore = store;
         const capturedIframe = iframe;
-        import("@virtual-frame/store").then(({ connectPort }) => {
-          let portCleanup: (() => void) | undefined;
+        let portCleanup: (() => void) | undefined;
 
-          const connect = () => {
-            if (portCleanup) return;
-            if (!capturedIframe.contentWindow) return;
-            const channel = new MessageChannel();
-            capturedIframe.contentWindow.postMessage(
-              { type: "vf-store:connect" },
-              "*",
-              [channel.port2],
-            );
-            portCleanup = connectPort(capturedStore, channel.port1);
-          };
+        const connect = () => {
+          if (portCleanup) return;
+          if (!capturedIframe.contentWindow) return;
+          const channel = new MessageChannel();
+          capturedIframe.contentWindow.postMessage(
+            { type: "vf-store:connect" },
+            "*",
+            [channel.port2],
+          );
+          portCleanup = connectPort(capturedStore, channel.port1);
+        };
 
-          const onMessage = (e: MessageEvent) => {
-            if (
-              e.source === capturedIframe.contentWindow &&
-              e.data?.type === "vf-store:ready"
-            ) {
-              connect();
-            }
-          };
+        const onMessage = (e: MessageEvent) => {
+          if (
+            e.source === capturedIframe.contentWindow &&
+            e.data?.type === "vf-store:ready"
+          ) {
+            connect();
+          }
+        };
 
-          window.addEventListener("message", onMessage);
+        window.addEventListener("message", onMessage);
 
-          storeCleanup = () => {
-            window.removeEventListener("message", onMessage);
-            portCleanup?.();
-          };
-        });
+        storeCleanup = () => {
+          window.removeEventListener("message", onMessage);
+          portCleanup?.();
+        };
       }
     } else {
       return;

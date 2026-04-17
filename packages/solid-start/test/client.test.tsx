@@ -15,11 +15,11 @@ import { VirtualFrame } from "../src/VirtualFrameSSR";
 type MockVFFn = ReturnType<typeof vi.fn>;
 
 async function flush() {
-  // Let onMount fire and the async setup() chain settle:
-  //   onMount → setup() → await import("virtual-frame") → mock resolution →
-  //   iframe insertion + VirtualFrameCore construction.
-  // A handful of microtasks plus a macrotask covers all of the above,
-  // regardless of whether the dynamic import resolves on this tick.
+  // Let onMount fire and setup() settle:
+  //   onMount → setup() → iframe insertion + VirtualFrameCore construction.
+  // setup() is now synchronous, but Solid's render/onMount schedules the
+  // mount on a microtask. A handful of microtasks plus a macrotask
+  // covers that scheduling regardless of timing.
   for (let i = 0; i < 5; i++) await Promise.resolve();
   await new Promise((r) => setTimeout(r, 0));
   for (let i = 0; i < 5; i++) await Promise.resolve();
@@ -38,9 +38,9 @@ describe("VirtualFrame (SolidStart, SSR-aware)", () => {
   afterEach(async () => {
     dispose?.();
     dispose = undefined;
-    // Drain any in-flight async setup() chains from the test we just
-    // tore down so their VirtualFrameCore construction doesn't leak
-    // into the next test's mock call count.
+    // Drain any queued microtasks from the test we just tore down so
+    // their VirtualFrameCore construction doesn't leak into the next
+    // test's mock call count.
     await flush();
     container.innerHTML = "";
     container.remove();
