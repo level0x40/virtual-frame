@@ -67,18 +67,44 @@ jobs:
         run: vp run lint
 
   # ──────────────────────────────────────────────────────────────────────
-  # Type-check across the workspace. Today this is a real CI gap.
+  # Build all packages and examples. Uploads dist/ artifacts for
+  # downstream jobs (typecheck, test, e2e) so they don't rebuild.
   # ──────────────────────────────────────────────────────────────────────
-  typecheck:
-    name: Typecheck
+  build:
+    name: Build
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
 
       - name: Build all packages
         run: vp run build
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-output
+          path: |
+            packages/*/dist
+          retention-days: 1
+
+  # ──────────────────────────────────────────────────────────────────────
+  # Type-check across the workspace.
+  # ──────────────────────────────────────────────────────────────────────
+  typecheck:
+    name: Typecheck
+    needs: [build]
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-output
 
       - name: Typecheck all packages
         run: vp run typecheck
@@ -88,14 +114,17 @@ jobs:
   # ──────────────────────────────────────────────────────────────────────
   test:
     name: Unit Tests
+    needs: [build]
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
 
-      - name: Build all packages
-        run: vp run build
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-output
 
       - name: Install Playwright browsers
         # vitest browser mode uses Playwright's chromium under the hood.
@@ -114,22 +143,6 @@ jobs:
           retention-days: 14
 
   # ──────────────────────────────────────────────────────────────────────
-  # Build all packages. Produces dist/ artifacts that e2e relies on
-  # implicitly (e2e prod-mode builds each example, which transitively
-  # consumes built packages).
-  # ──────────────────────────────────────────────────────────────────────
-  build:
-    name: Build
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/setup
-
-      - name: Build all packages
-        run: vp run build
-
-  # ──────────────────────────────────────────────────────────────────────
   # End-to-end Playwright suite — boots real example apps in dev and prod
   # mode against a real browser. This is a required gate.
   # ──────────────────────────────────────────────────────────────────────
@@ -141,6 +154,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-output
 
       - name: Install Playwright browsers
         working-directory: e2e
