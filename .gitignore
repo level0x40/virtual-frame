@@ -17,3 +17,4 @@ packages/*/LICENSE
 .DS_Store
 *.tsbuildinfo
 **/__screenshots__
+**/routeTree.gen.ts
