@@ -77,6 +77,9 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
 
+      - name: Build all packages
+        run: vp run build
+
       - name: Typecheck all packages
         run: vp run typecheck
 
@@ -91,9 +94,12 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
 
+      - name: Build all packages
+        run: vp run build
+
       - name: Install Playwright browsers
         # vitest browser mode uses Playwright's chromium under the hood.
-        run: pnpm exec playwright install --with-deps chromium
+        run: npx playwright install --with-deps chromium
 
       - name: Run vitest
         run: vp run test:run
@@ -138,7 +144,7 @@ jobs:
 
       - name: Install Playwright browsers
         working-directory: e2e
-        run: pnpm exec playwright install --with-deps chromium
+        run: npx playwright install --with-deps chromium
 
       - name: Run E2E suite
         run: vp run test:e2e
