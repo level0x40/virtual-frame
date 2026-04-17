@@ -40,8 +40,13 @@ export function buildSsrHtml(result: VirtualFrameResult, isolate?: "open" | "clo
   const deltaJson = JSON.stringify(result.resumeDelta).replace(/<\//g, "<\\/");
   const resumeScript = `<script type="text/vf-resume">${deltaJson}</script>`;
 
+  // result.styles and result.body are intentionally raw HTML sourced from the
+  // remote virtual-frame endpoint — embedding them unescaped is the core
+  // purpose of this library (similar to an iframe).  The isolate attribute is
+  // validated to prevent attribute injection.
+  const safeIsolate = isolate === "closed" ? "closed" : "open";
   return isolate
-    ? `<template shadowrootmode="${isolate}">${result.styles}\n${result.body}${resumeScript}</template>`
+    ? `<template shadowrootmode="${safeIsolate}">${result.styles}\n${result.body}${resumeScript}</template>`
     : `${result.styles}\n${result.body}${resumeScript}`;
 }
 

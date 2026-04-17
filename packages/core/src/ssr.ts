@@ -93,27 +93,21 @@ function _extractStyles(html: string, baseUrl?: string): StyleEntry[] {
     styles.push({ css: m[2], index: index++, type: "inline" });
   }
 
-  // <link rel="stylesheet"> hrefs — these need to be fetched separately
-  const linkRegex = /<link\s[^>]*rel=["']stylesheet["'][^>]*href=["']([^"']+)["'][^>]*\/?>/gi;
-  while ((m = linkRegex.exec(html)) !== null) {
-    let href = m[1];
+  // <link rel="stylesheet"> hrefs — match all <link> tags with a single
+  // non-overlapping regex, then inspect attributes on each match to avoid
+  // polynomial backtracking (ReDoS).
+  const linkTagRegex = /<link\s[^>]*>/gi;
+  while ((m = linkTagRegex.exec(html)) !== null) {
+    const tag = m[0];
+    if (!/rel=["']stylesheet["']/i.test(tag)) continue;
+    const hrefMatch = tag.match(/href=["']([^"']+)["']/i);
+    if (!hrefMatch) continue;
+    let href = hrefMatch[1];
     // Resolve relative URLs
     if (baseUrl && !/^https?:\/\//i.test(href)) {
       href = new URL(href, baseUrl).href;
     }
     styles.push({ href, index: index++, type: "link" });
-  }
-  // Also match href before rel
-  const linkRegex2 = /<link\s[^>]*href=["']([^"']+)["'][^>]*rel=["']stylesheet["'][^>]*\/?>/gi;
-  while ((m = linkRegex2.exec(html)) !== null) {
-    let href = m[1];
-    if (baseUrl && !/^https?:\/\//i.test(href)) {
-      href = new URL(href, baseUrl).href;
-    }
-    // Avoid duplicates
-    if (!styles.some((s) => s.href === href)) {
-      styles.push({ href, index: index++, type: "link" });
-    }
   }
 
   return styles;
