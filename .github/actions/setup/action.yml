@@ -5,7 +5,11 @@ inputs:
   node-version:
     description: Node.js version
     required: false
-    default: "22"
+    # Node 24 ships with npm 11, which has native OIDC / Trusted
+    # Publishers support — required by the `release` job to exchange a
+    # GitHub OIDC token for an npm publish credential. Node 22 LTS's
+    # bundled npm 10.x does not support this flow.
+    default: "24"
 
 runs:
   using: composite

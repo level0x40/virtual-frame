@@ -1,6 +1,6 @@
 {
   "name": "@virtual-frame/sveltekit",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "SvelteKit integration for Virtual Frame — SSR via load functions with client-side resume",
   "homepage": "https://virtual-frame.level0x40.com",
   "bugs": {

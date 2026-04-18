@@ -1,6 +1,6 @@
 {
   "name": "@virtual-frame/solid-start",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "SolidStart integration for Virtual Frame — SSR via route queries with client-side resume",
   "homepage": "https://virtual-frame.level0x40.com",
   "bugs": {

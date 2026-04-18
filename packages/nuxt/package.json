@@ -1,6 +1,6 @@
 {
   "name": "@virtual-frame/nuxt",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Nuxt integration for Virtual Frame — SSR with server API routes and client-side resume",
   "homepage": "https://virtual-frame.level0x40.com",
   "bugs": {
