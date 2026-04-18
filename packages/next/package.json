@@ -1,6 +1,6 @@
 {
   "name": "@virtual-frame/next",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Next.js integration for Virtual Frame — async Server Component with SSR resume",
   "homepage": "https://virtual-frame.level0x40.com",
   "bugs": {

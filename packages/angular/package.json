@@ -1,6 +1,6 @@
 {
   "name": "@virtual-frame/angular",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Angular directive for Virtual Frame",
   "homepage": "https://virtual-frame.level0x40.com",
   "bugs": {

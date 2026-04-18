@@ -1,6 +1,6 @@
 {
   "name": "@virtual-frame/react-server",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "React Server integration for Virtual Frame — async Server Component with SSR resume for @lazarv/react-server",
   "homepage": "https://virtual-frame.level0x40.com",
   "bugs": {

@@ -1,6 +1,6 @@
 {
   "name": "@virtual-frame/analog",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Analog.js integration for Virtual Frame — SSR with Nitro server routes and client-side resume",
   "homepage": "https://virtual-frame.level0x40.com",
   "bugs": {

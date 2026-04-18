@@ -1,6 +1,6 @@
 {
   "name": "@virtual-frame/store",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Event-sourced synchronized store for Virtual Frame — Proxy-based shared state across runtimes via MessagePort",
   "homepage": "https://virtual-frame.level0x40.com",
   "bugs": {
