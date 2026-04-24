@@ -40,7 +40,11 @@
       }
 
       body {
-        font-family: "Inter", system-ui, -apple-system, sans-serif;
+        font-family:
+          "Inter",
+          system-ui,
+          -apple-system,
+          sans-serif;
         background: var(--bg);
         color: var(--text);
         line-height: 1.5;
@@ -261,9 +265,8 @@
   <body>
     <h1>Top-layer projection test</h1>
     <p class="sub">
-      Verifies that <code>&lt;dialog&gt;.showModal()</code> and the
-      <code>popover</code> API escape the &lt;virtual-frame&gt; stacking /
-      clipping context via the browser's top layer.
+      Verifies that <code>&lt;dialog&gt;.showModal()</code> and the <code>popover</code> API escape
+      the &lt;virtual-frame&gt; stacking / clipping context via the browser's top layer.
     </p>
 
     <div class="grid">
@@ -282,8 +285,8 @@
       <div class="card">
         <h2>Nested in clipped parent</h2>
         <p>
-          Dialog triggered from inside an <code>overflow: hidden</code> ancestor.
-          The top layer should still let it escape.
+          Dialog triggered from inside an <code>overflow: hidden</code> ancestor. The top layer
+          should still let it escape.
         </p>
         <div class="clip-test">
           <div class="inner">
@@ -303,8 +306,8 @@
     <dialog id="demoDialog">
       <h3>Sign-in required</h3>
       <p>
-        This dialog was opened via <code>showModal()</code>. If you're reading this inside
-        the projection and it covers the whole page, top-layer escape works.
+        This dialog was opened via <code>showModal()</code>. If you're reading this inside the
+        projection and it covers the whole page, top-layer escape works.
       </p>
       <form id="dialogForm">
         <label>
@@ -326,9 +329,7 @@
     <div popover id="pop1">
       <h3>I'm a popover</h3>
       <p>Opened via the <code>popovertarget</code> attribute. ESC or click-outside closes me.</p>
-      <button popovertarget="pop1" popovertargetaction="hide" class="secondary">
-        Dismiss
-      </button>
+      <button popovertarget="pop1" popovertargetaction="hide" class="secondary">Dismiss</button>
     </div>
 
     <script>
