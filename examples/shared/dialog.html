@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dialog / Popover projection</title>
+    <style>
+      :root {
+        --bg: #0f1117;
+        --surface: #1a1d27;
+        --surface-2: #232733;
+        --border: #2d3140;
+        --text: #e4e6ef;
+        --text-muted: #8b8fa3;
+        --accent: #6366f1;
+        --accent-hover: #818cf8;
+        --green: #22c55e;
+        --red: #ef4444;
+        --amber: #f59e0b;
+        --radius: 12px;
+        --radius-sm: 8px;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      /* Scoped reset — do NOT blanket-zero margin/padding,
+         that would override UA `margin: auto` on `dialog[open]` and `[popover]`,
+         which is how the browser centers them in the viewport top layer. */
+      body,
+      h1,
+      h2,
+      h3,
+      p {
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Inter", system-ui, -apple-system, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.5;
+        padding: 24px;
+        min-height: 100vh;
+      }
+
+      h1 {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 4px;
+      }
+
+      .sub {
+        font-size: 13px;
+        color: var(--text-muted);
+        margin-bottom: 20px;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 16px;
+        margin-bottom: 20px;
+      }
+
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 16px;
+      }
+
+      .card h2 {
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 6px;
+      }
+
+      .card p {
+        font-size: 12px;
+        color: var(--text-muted);
+        margin-bottom: 12px;
+      }
+
+      button {
+        background: var(--accent);
+        color: white;
+        border: none;
+        padding: 8px 14px;
+        border-radius: var(--radius-sm);
+        font-size: 13px;
+        font-weight: 500;
+        cursor: pointer;
+        font-family: inherit;
+        transition: background 0.15s;
+      }
+
+      button:hover {
+        background: var(--accent-hover);
+      }
+
+      button.secondary {
+        background: var(--surface-2);
+        color: var(--text);
+        border: 1px solid var(--border);
+      }
+
+      button.danger {
+        background: var(--red);
+      }
+
+      .log {
+        font-family: "SF Mono", "Cascadia Code", monospace;
+        font-size: 11px;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 10px 12px;
+        max-height: 120px;
+        overflow-y: auto;
+        color: var(--text-muted);
+        line-height: 1.7;
+      }
+
+      .log .ok {
+        color: var(--green);
+      }
+
+      .log .info {
+        color: var(--accent-hover);
+      }
+
+      /* ── Native <dialog> ───────────────────────── */
+      dialog {
+        background: var(--surface);
+        color: var(--text);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 24px;
+        min-width: 320px;
+        max-width: 480px;
+        box-shadow: 0 24px 48px rgba(0, 0, 0, 0.4);
+      }
+
+      dialog::backdrop {
+        background: rgba(15, 17, 23, 0.7);
+        backdrop-filter: blur(4px);
+      }
+
+      dialog h3 {
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+
+      dialog p {
+        font-size: 13px;
+        color: var(--text-muted);
+        margin-bottom: 16px;
+      }
+
+      dialog form {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 16px;
+      }
+
+      dialog label {
+        font-size: 12px;
+        color: var(--text-muted);
+      }
+
+      dialog input[type="text"],
+      dialog input[type="email"] {
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+        color: var(--text);
+        padding: 8px 10px;
+        border-radius: var(--radius-sm);
+        font-size: 13px;
+        font-family: inherit;
+        width: 100%;
+      }
+
+      dialog input:focus {
+        outline: 2px solid var(--accent);
+        outline-offset: 1px;
+      }
+
+      .dialog-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+      }
+
+      /* ── Popover ──────────────────────────────── */
+      [popover] {
+        background: var(--surface);
+        color: var(--text);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 16px;
+        min-width: 240px;
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+      }
+
+      [popover]::backdrop {
+        background: rgba(15, 17, 23, 0.4);
+      }
+
+      [popover] h3 {
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 6px;
+      }
+
+      [popover] p {
+        font-size: 12px;
+        color: var(--text-muted);
+        margin-bottom: 10px;
+      }
+
+      /* ── Deliberate visual clue: clipping parent ─── */
+      .clip-test {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 16px;
+        overflow: hidden;
+        position: relative;
+        height: 120px;
+      }
+
+      .clip-test .inner {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        background: repeating-linear-gradient(
+          45deg,
+          var(--surface),
+          var(--surface) 10px,
+          var(--surface-2) 10px,
+          var(--surface-2) 20px
+        );
+      }
+
+      .clip-test p {
+        font-size: 11px;
+        color: var(--text-muted);
+        text-align: center;
+        max-width: 240px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Top-layer projection test</h1>
+    <p class="sub">
+      Verifies that <code>&lt;dialog&gt;.showModal()</code> and the
+      <code>popover</code> API escape the &lt;virtual-frame&gt; stacking /
+      clipping context via the browser's top layer.
+    </p>
+
+    <div class="grid">
+      <div class="card">
+        <h2>Native &lt;dialog&gt;</h2>
+        <p>Modal. Should cover the entire host viewport — not just the frame.</p>
+        <button id="openDialog">Open dialog</button>
+      </div>
+
+      <div class="card">
+        <h2>Popover API</h2>
+        <p>Non-modal. Should appear above everything with no manual z-index.</p>
+        <button popovertarget="pop1">Toggle popover</button>
+      </div>
+
+      <div class="card">
+        <h2>Nested in clipped parent</h2>
+        <p>
+          Dialog triggered from inside an <code>overflow: hidden</code> ancestor.
+          The top layer should still let it escape.
+        </p>
+        <div class="clip-test">
+          <div class="inner">
+            <button id="openDialogClipped" class="secondary">Open from here</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Event log</h2>
+      <p>Events fire on the source iframe — interactions on the projection are proxied.</p>
+      <div class="log" id="log">Waiting for events…</div>
+    </div>
+
+    <!-- ── Modal dialog ─────────────────────────── -->
+    <dialog id="demoDialog">
+      <h3>Sign-in required</h3>
+      <p>
+        This dialog was opened via <code>showModal()</code>. If you're reading this inside
+        the projection and it covers the whole page, top-layer escape works.
+      </p>
+      <form id="dialogForm">
+        <label>
+          Email
+          <input type="email" name="email" placeholder="you@example.com" required />
+        </label>
+        <label>
+          Code
+          <input type="text" name="code" placeholder="000000" required />
+        </label>
+      </form>
+      <div class="dialog-actions">
+        <button type="button" class="secondary" id="cancelDialog">Cancel</button>
+        <button type="submit" form="dialogForm">Submit</button>
+      </div>
+    </dialog>
+
+    <!-- ── Popover ──────────────────────────────── -->
+    <div popover id="pop1">
+      <h3>I'm a popover</h3>
+      <p>Opened via the <code>popovertarget</code> attribute. ESC or click-outside closes me.</p>
+      <button popovertarget="pop1" popovertargetaction="hide" class="secondary">
+        Dismiss
+      </button>
+    </div>
+
+    <script>
+      const log = document.getElementById("log");
+      let firstEvent = true;
+      function note(msg, cls = "info") {
+        if (firstEvent) {
+          log.textContent = "";
+          firstEvent = false;
+        }
+        const line = document.createElement("div");
+        line.className = cls;
+        line.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+        log.appendChild(line);
+        log.scrollTop = log.scrollHeight;
+      }
+
+      const dialog = document.getElementById("demoDialog");
+      document.getElementById("openDialog").addEventListener("click", () => {
+        dialog.showModal();
+        note("dialog.showModal() called");
+      });
+      document.getElementById("openDialogClipped").addEventListener("click", () => {
+        dialog.showModal();
+        note("dialog.showModal() called from clipped parent", "ok");
+      });
+      document.getElementById("cancelDialog").addEventListener("click", () => {
+        dialog.close("cancel");
+      });
+      document.getElementById("dialogForm").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const fd = new FormData(e.target);
+        note(`form submit → email=${fd.get("email")} code=${fd.get("code")}`, "ok");
+        dialog.close("submit");
+      });
+      dialog.addEventListener("close", () => {
+        note(`dialog closed (returnValue=${dialog.returnValue || "none"})`, "ok");
+      });
+      dialog.addEventListener("cancel", () => {
+        note("dialog cancelled (ESC)");
+      });
+
+      const pop = document.getElementById("pop1");
+      pop.addEventListener("toggle", (e) => {
+        note(`popover toggled → ${e.newState}`);
+      });
+    </script>
+  </body>
+</html>
