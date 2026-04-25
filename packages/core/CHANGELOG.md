@@ -1,5 +1,11 @@
 # virtual-frame
 
+## 0.1.2
+
+### Patch Changes
+
+- [#3](https://github.com/level0x40/virtual-frame/pull/3) [`5e5b976`](https://github.com/level0x40/virtual-frame/commit/5e5b9768ddb2a439c02984057a292ad7f89dff46) Thanks [@lazarv](https://github.com/lazarv)! - Support native dialog/popover elements
+
 ## 0.1.1
 
 ### Patch Changes
