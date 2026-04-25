@@ -486,6 +486,9 @@ export function createBridge(config: BridgeConfig = {}) {
       case "vf:navigate":
         window.location.href = d.url;
         break;
+      case "vf:invokeMethod":
+        invokeMethodOnSource(d);
+        break;
       case "vf:requestSnapshot":
         waitForReady().then(sendSnapshot);
         break;
@@ -704,6 +707,89 @@ export function createBridge(config: BridgeConfig = {}) {
   }
 
   // ------------------------------------------------------------------
+  // Top-layer method interception  (bridge ⇄ host)
+  //
+  // showModal / show / close on <dialog> and showPopover / hidePopover /
+  // togglePopover on popover elements are imperative calls.  The browser
+  // only promotes the element to the document's top layer for the specific
+  // element the method was called on — mirroring the `open` attribute via
+  // MutationObserver is not enough.  To make the projected clone appear in
+  // the host's top layer (with real `::backdrop`, `:modal`, focus trap and
+  // correct `position: fixed` centering) we mirror the call itself:
+  //
+  //   source.showModal() → send vf:invokeMethod → host calls clone.showModal()
+  //
+  // The reverse direction is handled by the host re-sending vf:invokeMethod
+  // on the clone's `close` / `toggle` events — handled in the switch below.
+  // The _suppressInvoke flag prevents an echo loop when we call the
+  // original method in response to a host-origin invocation.
+  // ------------------------------------------------------------------
+
+  const TOP_LAYER_DIALOG_METHODS = ["showModal", "show", "close"] as const;
+  const TOP_LAYER_POPOVER_METHODS = ["showPopover", "hidePopover", "togglePopover"] as const;
+  let _suppressInvoke = 0;
+
+  function setupTopLayerInterception() {
+    if (typeof HTMLDialogElement !== "undefined") {
+      for (const method of TOP_LAYER_DIALOG_METHODS) {
+        const proto = HTMLDialogElement.prototype as any;
+        const original = proto[method];
+        if (typeof original !== "function") continue;
+        proto[method] = function (...args: unknown[]) {
+          const result = original.apply(this, args);
+          if (_suppressInvoke === 0) {
+            const id = getId(this);
+            if (id != null) {
+              send("vf:invokeMethod", {
+                targetId: id,
+                method,
+                args: args.length > 0 ? [args[0]] : [],
+              });
+            }
+          }
+          return result;
+        };
+      }
+    }
+
+    if (typeof HTMLElement !== "undefined") {
+      for (const method of TOP_LAYER_POPOVER_METHODS) {
+        const proto = HTMLElement.prototype as any;
+        const original = proto[method];
+        if (typeof original !== "function") continue;
+        proto[method] = function (...args: unknown[]) {
+          const result = original.apply(this, args);
+          if (_suppressInvoke === 0) {
+            const id = getId(this);
+            if (id != null) {
+              send("vf:invokeMethod", {
+                targetId: id,
+                method,
+                args: args.length > 0 ? [args[0]] : [],
+              });
+            }
+          }
+          return result;
+        };
+      }
+    }
+  }
+
+  function invokeMethodOnSource(d: { targetId: number; method: string; args?: unknown[] }) {
+    const el: any = idToNode.get(d.targetId);
+    if (!el || typeof el[d.method] !== "function") return;
+    _suppressInvoke++;
+    try {
+      el[d.method](...(d.args || []));
+    } catch {
+      // e.g. showModal() on an already-open dialog throws InvalidStateError.
+      // Swallow — the source is already in the requested state, no-op.
+    } finally {
+      _suppressInvoke--;
+    }
+  }
+
+  // ------------------------------------------------------------------
   // Boot
   // ------------------------------------------------------------------
 
@@ -783,6 +869,7 @@ export function createBridge(config: BridgeConfig = {}) {
       setupObserver();
       setupFormListeners();
       setupScrollListeners();
+      setupTopLayerInterception();
     });
   }
 
@@ -860,6 +947,8 @@ export function createBridge(config: BridgeConfig = {}) {
     syncScroll,
     setupScrollListeners,
     setupFormListeners,
+    setupTopLayerInterception,
+    invokeMethodOnSource,
     waitForReady,
     boot,
     start,

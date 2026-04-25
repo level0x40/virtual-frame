@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      body {
+        margin: 0;
+        font-family: sans-serif;
+      }
+      dialog {
+        padding: 16px;
+      }
+      [popover] {
+        padding: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <button id="open-dialog">Open dialog</button>
+    <button id="open-popover" popovertarget="pop">Toggle popover</button>
+
+    <dialog id="dlg">
+      <p>Hello dialog</p>
+      <button id="close-dialog">Close</button>
+    </dialog>
+
+    <div id="pop" popover="auto">
+      <p>Hello popover</p>
+    </div>
+
+    <script>
+      document.getElementById("open-dialog").addEventListener("click", () => {
+        document.getElementById("dlg").showModal();
+      });
+      document.getElementById("close-dialog").addEventListener("click", () => {
+        document.getElementById("dlg").close("ok");
+      });
+    </script>
+  </body>
+</html>

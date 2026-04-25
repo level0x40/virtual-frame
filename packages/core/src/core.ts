@@ -689,11 +689,130 @@ export class VirtualFrame {
     this.setupMutationObserver();
     _vflog("_initSameOrigin() observer set up, calling mirrorContent");
 
+    // Patch top-layer methods in the iframe's realm so showModal / show /
+    // close / showPopover / hidePopover / togglePopover on a source node
+    // also fire on its mirror in the host shadow root.  Must run inside
+    // the iframe's window so the prototypes patched are the source's own.
+    this._installSameOriginTopLayerInterception();
+
     // Mirror whatever content is available now - mutation observer will handle the rest
     await this.mirrorContent();
 
     this.isInitialized = true;
     _vflog("_initSameOrigin() DONE, isInitialized=true");
+  }
+
+  /**
+   * Same-origin equivalent of the bridge's setupTopLayerInterception().
+   *
+   * The cross-origin path patches prototypes from inside the iframe (the
+   * bridge runs there).  For same-origin, the host has direct access to
+   * the iframe's window and can wrap the prototypes itself, avoiding a
+   * postMessage round-trip and any node-identity serialisation — the
+   * wrapper closure captures the source node reference and looks up the
+   * mirror via `this.elementMap` directly.
+   *
+   * Idempotent per iframe window: the first install tags the window via
+   * `__vfTopLayerPatched` so subsequent calls (e.g. after an MPA reload
+   * that reuses the same window) are no-ops.  For a fresh window the flag
+   * isn't present and we patch anew.
+   */
+  _installSameOriginTopLayerInterception() {
+    const win = this.iframe?.contentWindow as any;
+    if (!win || win.__vfTopLayerPatched) return;
+
+    const DIALOG_METHODS = ["showModal", "show", "close"] as const;
+    const POPOVER_METHODS = ["showPopover", "hidePopover", "togglePopover"] as const;
+    const SUPPRESS = Symbol.for("__vfTopLayerSuppress");
+    // WeakSet-style token stored per mirror node to prevent re-entry:
+    // when we call mirror.close() in response to source.close(), the
+    // mirror's own close listener must not echo back to the source.
+    const suppressed = new WeakSet<object>();
+    const elementMap = this.elementMap;
+    const attachCloseMirror = this._attachSameOriginCloseMirror.bind(this);
+
+    const wrap = (proto: any, method: string, isOpener: boolean) => {
+      const original = proto[method];
+      if (typeof original !== "function") return;
+      proto[method] = function (...args: unknown[]) {
+        const result = original.apply(this, args);
+        if (!(this as any)[SUPPRESS]) {
+          const mirror = elementMap.get(this as Node) as any;
+          if (mirror && typeof mirror[method] === "function") {
+            suppressed.add(mirror);
+            try {
+              mirror[method](...args);
+            } catch {
+              // Source and mirror out of sync — ignore.
+            } finally {
+              suppressed.delete(mirror);
+            }
+            if (isOpener) attachCloseMirror(mirror, this as Node, method);
+          }
+        }
+        return result;
+      };
+    };
+
+    const HTMLDialogElement = win.HTMLDialogElement;
+    if (HTMLDialogElement) {
+      for (const m of DIALOG_METHODS) {
+        wrap(HTMLDialogElement.prototype, m, m === "showModal" || m === "show");
+      }
+    }
+    const HTMLElement = win.HTMLElement;
+    if (HTMLElement) {
+      for (const m of POPOVER_METHODS) {
+        wrap(HTMLElement.prototype, m, m === "showPopover" || m === "togglePopover");
+      }
+    }
+
+    // Store so the close-mirror can flip the suppress flag on sources.
+    (this as any)._topLayerSuppressSymbol = SUPPRESS;
+    (this as any)._topLayerSuppressSet = suppressed;
+    win.__vfTopLayerPatched = true;
+  }
+
+  /**
+   * Same-origin reverse direction: when the user dismisses the mirror
+   * (ESC, backdrop click, declarative `popovertarget` hide), fire the
+   * corresponding close on the source so both sides stay in sync.
+   */
+  _attachSameOriginCloseMirror(mirror: any, source: Node, method: string) {
+    const SUPPRESS = (this as any)._topLayerSuppressSymbol;
+    const suppressed = (this as any)._topLayerSuppressSet as WeakSet<object>;
+    const isDialog = method === "showModal" || method === "show";
+
+    if (isDialog) {
+      const onClose = () => {
+        mirror.removeEventListener("close", onClose);
+        if (suppressed.has(mirror)) return;
+        (source as any)[SUPPRESS] = true;
+        try {
+          (source as any).close(mirror.returnValue);
+        } catch {
+          // ignore
+        } finally {
+          (source as any)[SUPPRESS] = false;
+        }
+      };
+      mirror.addEventListener("close", onClose);
+    } else {
+      const onToggle = (e: any) => {
+        if (e.newState !== "closed") return;
+        mirror.removeEventListener("toggle", onToggle);
+        if (suppressed.has(mirror)) return;
+        (source as any)[SUPPRESS] = true;
+        try {
+          (source as any).hidePopover();
+        } catch {
+          // ignore
+        } finally {
+          (source as any)[SUPPRESS] = false;
+        }
+      };
+      mirror.addEventListener("toggle", onToggle);
+    }
   }
 
   // ---------------------------------------------------------------
@@ -813,10 +932,69 @@ export class VirtualFrame {
           }
           case "vf:eventResult":
             break;
+          case "vf:invokeMethod": {
+            // Mirror a top-layer method call from the source onto the
+            // projected clone.  This is how the clone actually enters the
+            // host document's top layer (showModal, showPopover etc.) —
+            // setting the `open` attribute alone would not promote it.
+            const el = this._remoteIdToNode.get(d.targetId) as any;
+            if (!el || typeof el[d.method] !== "function") break;
+            try {
+              el[d.method](...(d.args || []));
+            } catch {
+              // InvalidStateError etc. — source and clone are out of sync;
+              // swallow rather than throw in the message handler.
+              break;
+            }
+            // For "open" methods, wire the reverse direction so that
+            // closing the clone (ESC, backdrop click, close button proxied
+            // through event replay that didn't close the source) keeps
+            // the source in sync.  Without this, the source stays open
+            // and the next showModal() throws InvalidStateError.
+            this._attachTopLayerCloseMirror(el, d.targetId, d.method);
+            break;
+          }
         }
       };
       window.addEventListener("message", this._onMessage);
     });
+  }
+
+  /**
+   * After the clone has been promoted to the top layer, attach one-shot
+   * listeners that echo a close back to the source when the user dismisses
+   * the clone from the host side.
+   *
+   *   <dialog>:  `close` event  → source.close(returnValue)
+   *   popover:   `toggle` event → source.hidePopover() when newState = "closed"
+   */
+  _attachTopLayerCloseMirror(el: any, targetId: number, method: string) {
+    const isDialogOpen = method === "showModal" || method === "show";
+    const isPopoverOpen = method === "showPopover" || method === "togglePopover";
+    if (!isDialogOpen && !isPopoverOpen) return;
+
+    if (isDialogOpen) {
+      const onClose = () => {
+        el.removeEventListener("close", onClose);
+        this._sendToBridge("vf:invokeMethod", {
+          targetId,
+          method: "close",
+          args: el.returnValue != null ? [el.returnValue] : [],
+        });
+      };
+      el.addEventListener("close", onClose);
+    } else {
+      const onToggle = (e: any) => {
+        if (e.newState !== "closed") return;
+        el.removeEventListener("toggle", onToggle);
+        this._sendToBridge("vf:invokeMethod", {
+          targetId,
+          method: "hidePopover",
+          args: [],
+        });
+      };
+      el.addEventListener("toggle", onToggle);
+    }
   }
 
   _sendToBridge(type: string, payload: Record<string, unknown> = {}) {
@@ -3674,6 +3852,10 @@ export class VirtualFrame {
       try {
         _vflog("_reinitOnNavigation() setting up observer + mirrorContent");
         this.setupMutationObserver();
+        // Re-patch the iframe's top-layer methods.  A fresh document may
+        // have a fresh realm (new HTMLDialogElement.prototype); if the
+        // window object is the same we early-out via __vfTopLayerPatched.
+        this._installSameOriginTopLayerInterception();
         await this.mirrorContent();
         _vflog("_reinitOnNavigation() mirrorContent DONE");
       } catch (e) {
